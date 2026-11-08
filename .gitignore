@@ -1,5 +1,6 @@
 ﻿data/
-outputs/
+outputs/temp/
+outputs/cache/
 .venv/
 __pycache__/
 .pytest_cache/
