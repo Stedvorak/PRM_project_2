@@ -1,0 +1,128 @@
+{
+  "source": "actual Microsoft Edge rendering of real ESP32 HTTP page",
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Edg/156.0.4314.58",
+    "revision": "@7806b68d20d1c1273d5b07b4f4de18e8f5852581",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "jsVersion": "15.6.12.10"
+  },
+  "before": {
+    "stateTitle": "PREDICTION UNAVAILABLE",
+    "stateIdText": "-",
+    "heroConfidenceText": "N/A",
+    "statusText": "Status unavailable / connection or contract error",
+    "signalStatus": "Signal unavailable / connection or contract error",
+    "deviceTime": "boot time unavailable",
+    "valProbCalm": "N/A",
+    "valProbFast": "N/A",
+    "valProbUnattached": "N/A",
+    "valProbShaking": "N/A"
+  },
+  "after": {
+    "stateTitle": "Not Attached",
+    "stateIdText": "2",
+    "heroConfidenceText": "100.0%",
+    "statusText": "Connected / valid prediction",
+    "signalStatus": "100 real samples / 3.96 s / 25 Hz target / latest 128574 ms since boot",
+    "deviceTime": "device uptime 128.6 s",
+    "valProbCalm": "0.0%",
+    "valProbFast": "0.0%",
+    "valProbUnattached": "100.0%",
+    "valProbShaking": "0.0%"
+  },
+  "responses": [
+    {
+      "url": "http://192.168.4.1/",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/status",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/signal",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/favicon.ico",
+      "status": 404
+    },
+    {
+      "url": "http://192.168.4.1/api/status",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/signal",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/status",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/signal",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/status",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/status",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/signal",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/status",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/signal",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/status",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/signal",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/status",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/signal",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/status",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/signal",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/status",
+      "status": 200
+    },
+    {
+      "url": "http://192.168.4.1/api/signal",
+      "status": 200
+    }
+  ],
+  "exceptions": [],
+  "liveStatusAdvanced": true,
+  "liveSignalAdvanced": true,
+  "connected": true,
+  "realSamplesRendered": true,
+  "apiStatusResponses": 10,
+  "apiSignalResponses": 9,
+  "passed": true
+}

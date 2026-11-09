@@ -21,7 +21,9 @@ Export verification:324 actual feature vectors match final training predictions
 with zero probability error; target C++ compilation passes. This is software
 parity evidence, not a hardware accuracy test.
 
-Implementation/model commit: pending immediate trained-model integration commit.
+Selected model integration commit:619e0c6b3005f175d9e11638cd51de7ba227dc9c,
+verified on origin/codex/firmware. Later RGB/documentation/integration commits
+preserve the exact selected header SHA-256 above.
 Verified raw dataset remote commit: fa89ca242ae11dccdc65ededd9f67d704043e643
 on origin/codex/firmware (all24 originals/metadata tracked).
 Hardware verification: trained monitoring inference-check image uploaded toCOM3,
@@ -29,9 +31,18 @@ written flash hashes verified. H01_onboard_inference contains22 genuine events
 at2Hz; total feature+prediction2.377–2.458ms, model prediction9–10us, no deadline
 violations. Sensor0x68 boot detection passed. Physical state was not labeled;
 these results verify real-time execution, not live class correctness.
-PC BLE tests H02/H03 failed with Windows adapter-not-ready error. HTTP/AP and
-RGB visual verification remain pending. RGB state pin remains disabled.
-USB diagnostic telemetry is testing-only; final silent esp32-s3 build required.
+PC BLE tests H02/H03 failed with Windows adapter-not-ready error.
+H05_http_ap passed over actual Wi-Fi AP: ready=True,100real samples andHTTP200
+embedded page. GPIO48 RGB colors were explicitly visually confirmed by user
+(H04 operator-confirmation); state colors are enabled, test cycling disabled.
+H06 operator-confirmed unattached:22/22matching events; H07 calm:15/30matching,
+an unstable result retained transparently. Both met real-time timing checks.
+User reports teacher acceptance of sections1 and2; this does not change recorded
+offline or live metrics. USB telemetry is testing-only. Final silent esp32-s3
+image was built/flashed with verified hashes and GPIO48 state output. Its page
+was rendered in actual Edge with four probabilities and real X/Y/Z data;
+H09_browser_board records10status/9signal HTTP200responses, no JSexceptions
+and the screenshot. Final upload/merge hashes recorded at delivery.
 
 Limitations: same-device/operator data, only two inferred rounds, correlated
 windows, placement dependence and weak unseen unattached orientations. Do not

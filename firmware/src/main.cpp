@@ -473,7 +473,7 @@ void acquisitionTask(void*) {
   }
 }
 
-#if PRM_INFERENCE_DIAGNOSTICS
+#if PRM_INFERENCE_DIAGNOSTICS && defined(PRM_RGB_TEST_COMMANDS)
 // Testing-only command; unavailable in the silent final demonstration build.
 // Only the two user-approved candidate pins can be driven.
 void rgbDiagnostic(uint8_t pin) {
@@ -536,7 +536,7 @@ void setup() {
 }
 
 void loop() {
-#if PRM_INFERENCE_DIAGNOSTICS
+#if PRM_INFERENCE_DIAGNOSTICS && defined(PRM_RGB_TEST_COMMANDS)
   pollDiagnosticCommand();
 #endif
   http.handleClient();

@@ -1,36 +1,33 @@
-﻿# Assignment checklist — real-time AI
+﻿# Assignment checklist — delivery
 
-- [x] Read the complete real-time AI assignment
-- [x] Identify deliverables: own labeled data, trained on-board classifier, four LED states, BLE GitHub Pages monitor/timeline/alarms, AP-hosted signal/probabilities, own extension, rebuild documentation
-- [x] Approve interface v0.2 and verify shared main/firmware remote commit 91667e00e0bfef30a313fe35c800e566fdda7835
-- [ ] Confirm actual lab start/end time and reserve final 30 minutes
-- [x] Confirm ESP32-S3 rev0.2 on COM3, 16MB quad flash, user-verified8MB PSRAM; configure N16R8 target
-- [x] Configure sensor3.3V, SDA8/SCL9, preferred0x68 with verified0x69 fallback
-- [ ] Physically verify MPU-6050 connection and detection, LED GPIO/type and power-only demo mode
-- [ ] Collect and inspect real labeled sensor recordings (four classes, multiple independent recordings)
-- [ ] Evaluate registered methods with recording-group held-out data
-- [ ] Select exactly one genuinely evaluated final method
-- [x] Build demo firmware for explicit N16R8 and pass50 software tests (including14 actual client-JS runtime tests)
-- [x] Build separate50Hz acquisition firmware and pass68 integrated software tests (18 client-JS,14 recorder)
-- [x] Flash checked acquisition image to COM3 and verify written flash hashes
-- [x] Run actual sensor detection test: FAILED, no ACK at0x68/0x69 on GPIO8/9; no measurements fabricated
-- [x] Repeat physical detection successfully: address0x68, WHO_AM_I0x68,50Hz on SDA8/SCL9 (V05 log)
-- [x] Record and independently validate first real unattached/table30-second session:1499 valid samples,49.943Hz,20-21ms intervals; one malformed line rejected, no missing CSV fields or timestamp-gap loss
-- [ ] Flash and verify sensor acquisition, failure handling and LED on physical board
-- [ ] Verify BLE read/notify, 1 Hz heartbeat, reconnect and Wi-Fi coexistence on hardware
-- [x] Integrate Antigravity embedded PROGMEM page and BLE monitor source from verified2064cf8; adapt to v0.2
-- [ ] Verify GitHub Pages deployment and actual browser pairing
-- [ ] Demonstrate live signal, probabilities, timeline, both duration alarms and lost connection
-- [ ] Implement and demonstrate one agreed own extension
-- [ ] Save real evaluation results and required figures
-- [ ] Complete wiring photo, group members, monitoring link, build/train instructions and AI-tool disclosure
-- [ ] Verify at least three intermediate lab commits pushed as work proceeds
-- [x] Verify teacher tomasvicar access (GitHub API returned write permission; recheck at delivery)
-- [ ] Final tests, tracked model/report/results, PR integration and remote commit comparison
-- [ ] Demonstrate every completed part to teacher before lab ends
-- [ ] Verify final submission
+- [x] Read complete real-time AI assignment and identify deliverables.
+- [x] Shared interfacev0.2 approved and preserved.
+- [x] All12 genuine recordings/four classes validated;17993samples;3files and2separated bouts/class.
+- [x] All24 original CSV/metadata files force-added individually with byte preservation and pushed.
+- [x] Explicit50Hz-to25Hz derived dataset preserved and grouped before validation/window splitting.
+- [x] Six classifiers evaluated with two whole collection-round folds; no random overlapping-window split.
+- [x] Exactly one selected method:M01v1; model, parameters, actual scores, export and integrity recorded.
+- [x]115software tests passed, including selected-export and actual client-JS execution.
+- [x] Monitoring firmware built/flashed with trained M01, genuine MPU detection and on-board predictions.
+- [x] Real inference timing verified at2Hz; compute below2.5ms against500ms deadline.
+- [x] Live unattached22/22matching; live calm15/30recorded transparently; no fabricated accuracy.
+- [x] Teacher accepted sections1 and2 (explicit user report); no additional classifier experiments.
+- [x] GPIO48 WS2812/NeoPixel colors visually verified; state mapping enabled; cycling disabled.
+- [x] Real ESP32 AP joined; status/signal JSONcontract and embedded webpageHTTP200 verified.
+- [ ] BLE physical connection/notifications/timeline/alarms: PC Bluetooth adapter not ready; operator device test pending.
+- [x] David prepared sections4 and5; preserve source and coordinate grading (user report).
+- [x] GitHub Pages HTTPS monitor/web-station URL returnsHTTP200.
+- [x] Real grouped evaluation results and required scientific figures saved.
+- [x] Group member names, monitoring link, wiring table, build/train instructions and AI-tool disclosure documented.
+- [ ] Actual wiring photograph included; docs/wiring.jpg currently absent.
+- [x] At least3 meaningful intermediate pushes verified as work proceeded; see SUBMISSION.md.
+- [x] Teacher tomasvicar access reverified via GitHub API:write permission.
+- [x] Final silent monitor upload verified; actual Edge page and both live APIs checked over board AP.
+- [ ] BLE hardware connection/notifications confirmed on available operator device.
+- [ ] Both development histories integrated into main; final tests/push/fetch/hash/file verification.
+- [ ] GitHub Pages publishes integrated main; exact deployed monitor verified.
+- [ ] Final teacher demonstration/submission acknowledgement.
 
-Software tests using synthetic fixtures must never be reported as real sensor or model evaluation.
-One real unattached recording exists; the other classes and multiple independent
-recordings are still needed. No trained model exists. Demo firmware must report
-unavailable predictions until genuine model training/evaluation is complete.
+User-directed delivery mode: no new algorithms or optional feature development.
+Keep measured failures/limitations in results. A built component is not automatically a
+physically verified component; a pushed repository is not a teacher acknowledgement.

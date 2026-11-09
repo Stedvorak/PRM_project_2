@@ -12,9 +12,8 @@ using Arduino `WebServer::send_P(200, "text/html", INDEX_HTML)`. No external CDN
 script, font or network service is required. Open the board's own AP address
 from a browser connected to that AP. This HTTP page does not use Web Bluetooth.
 
-The older `firmware/data/index.html` is a teammate-supplied filesystem alternative
-and is not the authoritative v0.2 embedded dashboard. Do not upload or serve that
-older copy in preference to `INDEX_HTML` without updating it to this contract.
+No `firmware/data/index.html` is present in either integrated branch. The
+PROGMEM header is the supplied and authoritative embedded dashboard.
 
 The integrated page polls both `/api/status` and `/api/signal` approximately twice
 per second. There is one guarded polling cycle with two endpoint requests, a

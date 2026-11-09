@@ -1,0 +1,37 @@
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x1 (POWERON),boot:0x2b (SPI_FAST_FLASH_BOOT)
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce3808,len:0x4bc
+load:0x403c9700,len:0xbd8
+load:0x403cc700,len:0x2a0c
+entry 0x403c98d0
+E (72) esp_littlefs: ./components/esp_littlefs/src/littlefs/lfs.c:1367:error: Corrupted dir pair at {0x0, 0x1}
+
+E (72) esp_littlefs: mount failed,  (-84)
+E (75) esp_littlefs: Failed to initialize LittleFS
+[   290][E][LittleFS.cpp:98] begin(): Mounting LittleFS failed! Error: -1
+# I2C detection: MPU-6050 verified at 0x68
+# INFERENCE {"t_ms":4423,"state_id":2,"feature_us":2344,"predict_us":10,"total_us":2374,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":420,"window_last_ms":4419,"sample_gap_ms":79}
+# INFERENCE {"t_ms":4923,"state_id":2,"feature_us":2337,"predict_us":10,"total_us":2368,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":939,"window_last_ms":4899,"sample_gap_ms":40}
+# INFERENCE {"t_ms":5423,"state_id":2,"feature_us":2351,"predict_us":16,"total_us":2385,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":1459,"window_last_ms":5419,"sample_gap_ms":40}
+# INFERENCE {"t_ms":5923,"state_id":2,"feature_us":2362,"predict_us":10,"total_us":2393,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":1939,"window_last_ms":5899,"sample_gap_ms":40}
+# INFERENCE {"t_ms":6423,"state_id":2,"feature_us":2341,"predict_us":9,"total_us":2371,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":2459,"window_last_ms":6419,"sample_gap_ms":40}
+# INFERENCE {"t_ms":6923,"state_id":2,"feature_us":2338,"predict_us":9,"total_us":2368,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":2939,"window_last_ms":6899,"sample_gap_ms":40}
+# INFERENCE {"t_ms":7423,"state_id":2,"feature_us":2350,"predict_us":9,"total_us":2378,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":3459,"window_last_ms":7419,"sample_gap_ms":40}
+# INFERENCE {"t_ms":7923,"state_id":2,"feature_us":2347,"predict_us":9,"total_us":2376,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":3939,"window_last_ms":7899,"sample_gap_ms":40}
+# INFERENCE {"t_ms":8423,"state_id":2,"feature_us":2344,"predict_us":9,"total_us":2372,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":4459,"window_last_ms":8419,"sample_gap_ms":40}
+# INFERENCE {"t_ms":8923,"state_id":2,"feature_us":2338,"predict_us":9,"total_us":2367,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":4939,"window_last_ms":8899,"sample_gap_ms":41}
+# INFERENCE {"t_ms":9423,"state_id":2,"feature_us":2344,"predict_us":9,"total_us":2373,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":5459,"window_last_ms":9419,"sample_gap_ms":41}
+# INFERENCE {"t_ms":9923,"state_id":2,"feature_us":2342,"predict_us":9,"total_us":2371,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":5939,"window_last_ms":9899,"sample_gap_ms":41}
+# INFERENCE {"t_ms":10423,"state_id":2,"feature_us":2324,"predict_us":9,"total_us":2354,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":6459,"window_last_ms":10419,"sample_gap_ms":41}
+# INFERENCE {"t_ms":10923,"state_id":2,"feature_us":2337,"predict_us":9,"total_us":2368,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":6939,"window_last_ms":10899,"sample_gap_ms":41}
+# INFERENCE {"t_ms":11423,"state_id":2,"feature_us":2343,"predict_us":9,"total_us":2372,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":7459,"window_last_ms":11419,"sample_gap_ms":41}
+# INFERENCE {"t_ms":11923,"state_id":2,"feature_us":2333,"predict_us":9,"total_us":2364,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":7939,"window_last_ms":11899,"sample_gap_ms":41}
+# INFERENCE {"t_ms":12423,"state_id":2,"feature_us":2339,"predict_us":9,"total_us":2367,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":8459,"window_last_ms":12419,"sample_gap_ms":41}
+# INFERENCE {"t_ms":12923,"state_id":2,"feature_us":2344,"predict_us":9,"total_us":2374,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":8939,"window_last_ms":12899,"sample_gap_ms":40}
+# INFERENCE {"t_ms":13423,"state_id":2,"feature_us":2348,"predict_us":9,"total_us":2377,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":9459,"window_last_ms":13419,"sample_gap_ms":40}
+# INFERENCE {"t_ms":13923,"state_id":2,"feature_us":2328,"predict_us":9,"total_us":2357,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":9939,"window_last_ms":13899,"sample_gap_ms":40}
+# INFERENCE {"t_ms":14423,"state_id":2,"feature_us":2365,"predict_us":10,"total_us":2394,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":10459,"window_last_ms":14419,"sample_gap_ms":40}
+# INFERENCE {"t_ms":14923,"state_id":2,"feature_us":2332,"predict_us":9,"total_us":2361,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":10939,"window_last_ms":14899,"sample_gap_ms":40}

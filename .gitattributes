@@ -8,3 +8,6 @@ firmware/include/prm_model.h -text whitespace=cr-at-eol
 outputs/results/*/prm_model.h -text whitespace=cr-at-eol
 # Matplotlib SVG path formatting legitimately contains trailing separators.
 outputs/figures/**/*.svg -text -whitespace
+# Captured device/browser evidence retains its original serialization.
+outputs/verification/**/*.log -text -whitespace
+outputs/verification/**/*.html -whitespace

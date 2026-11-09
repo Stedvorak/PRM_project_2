@@ -19,7 +19,8 @@ static_assert(PRM_MPU_ADDRESS == 0x68 || PRM_MPU_ADDRESS == 0x69,
 static_assert(PRM_MPU_AUTO_DETECT == 0 || PRM_MPU_AUTO_DETECT == 1,
               "PRM_MPU_AUTO_DETECT must be 0 or 1");
 #ifndef PRM_RGB_PIN
-#define PRM_RGB_PIN -1
+// Visually verified WS2812/NeoPixel GRB on GPIO48 by the operator.
+#define PRM_RGB_PIN 48
 #endif
 #ifndef PRM_CAPTURE_SERIAL
 #define PRM_CAPTURE_SERIAL 0

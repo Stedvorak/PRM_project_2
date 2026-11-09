@@ -1,0 +1,18 @@
+{
+  "pin": 48,
+  "requested_colors": [
+    "red",
+    "green",
+    "blue",
+    "magenta"
+  ],
+  "firmware_reported_colors": [
+    "red",
+    "green",
+    "blue",
+    "magenta"
+  ],
+  "command_sequence_completed": true,
+  "visual_confirmation": "PENDING operator observation",
+  "physical_led_verified": false
+}

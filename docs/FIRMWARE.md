@@ -16,9 +16,9 @@ browser assets and deployment belong to Antigravity.
   recovery retries detection before sensor configuration/acquisition. Physical
   sensor connection is not assumed. Capture builds report detection diagnostics
   before measurements; demo builds keep application USB serial silent.
-- RGB LED is disabled until its GPIO and type are confirmed. The implementation
-  supports a WS2812/NeoPixel RGB LED; do not guess a pin or assume a discrete LED
-  has the same driver. Set the configured LED pin only after checking the board.
+- The operator visually verified the WS2812/NeoPixel-compatible RGB LED onGPIO48
+  with red, green, blue and magenta. PRM_RGB_PIN defaults to48 and remains
+  configurable. Diagnostic cycling is disabled; runtime colors follow the model.
 - COM3 was verified as ESP32-S3 revision 0.2 using esptool; flash_id detected
   16MB quad flash. The user verified 8MB PSRAM, dual-core 240MHz and CH343.
   The carrier's GPIO wiring/LED remains unconfirmed. The capture environment uses UART0

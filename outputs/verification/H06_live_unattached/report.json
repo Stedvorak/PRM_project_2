@@ -1,0 +1,68 @@
+{
+  "source": "real_on_board_serial_telemetry",
+  "valid_events": 22,
+  "execution_budget_us": 500000,
+  "max_allowed_sample_gap_ms": 80,
+  "max_allowed_event_gap_ms": 1000,
+  "feature_us": {
+    "min": 2324,
+    "median": 2342.5,
+    "p95": 2362,
+    "max": 2365,
+    "mean": 2342.318181818182
+  },
+  "predict_us": {
+    "min": 9,
+    "median": 9.0,
+    "p95": 10,
+    "max": 16,
+    "mean": 9.5
+  },
+  "total_us": {
+    "min": 2354,
+    "median": 2371.5,
+    "p95": 2393,
+    "max": 2394,
+    "mean": 2372
+  },
+  "inference_event_interval_ms": {
+    "min": 500,
+    "median": 500,
+    "p95": 500,
+    "max": 500,
+    "mean": 500
+  },
+  "observed_event_rate_hz": 2.0,
+  "sample_gap_ms": {
+    "min": 40,
+    "median": 40.0,
+    "p95": 41,
+    "max": 79,
+    "mean": 42.13636363636363
+  },
+  "state_event_counts": {
+    "calm": 0,
+    "fast": 0,
+    "unattached": 22,
+    "shaking": 0
+  },
+  "operator_state_check": {
+    "operator_expected_state": "unattached",
+    "matching_events": 22,
+    "total_events": 22,
+    "matching_fraction": 1.0,
+    "limitation": "Single operator-observed state; not independent held-out accuracy."
+  },
+  "violations": [],
+  "real_time_checks_passed": true,
+  "limitations": [
+    "Telemetry checks computation time and data continuity, not physical class correctness.",
+    "USB telemetry is testing-only; final demonstration firmware must disable it.",
+    "Serial transmission time is outside feature/prediction timing; event cadence is checked separately."
+  ],
+  "started_at_utc": "2026-11-09T14:37:41.565896+00:00",
+  "requested_duration_s": 15.0,
+  "host_elapsed_s": 15.234999999869615,
+  "interrupted": false,
+  "rejected_diagnostics": []
+}

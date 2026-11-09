@@ -3,6 +3,9 @@
 ESP32-S3 N16R8 + MPU-6050 real-time four-state classifier and monitoring
 interfaces. [Assignment](https://tomasvicar.github.io/AUI-public/labs/real-time-ai.html).
 
+Group members: **David Bártek** and **Štěpán Dvořák**.
+Live BLE station: [Open the monitoring page](https://stedvorak.github.io/PRM_project_2/web-station/).
+
 ## Current status
 
 Trained M01 v1 monitoring firmware is now flashed to COM3. It detected the
@@ -17,8 +20,13 @@ M01 pooled held-out accuracy83.64%, mean-fold balanced accuracy86.11%, macroF1
 See docs/RESULTS.md and docs/FINAL_METHOD.md for exact evidence and versions.
 
 The trained monitoring image includes BLE, AP, HTTP and the embedded webpage.
-PC BLE verification currently fails because Windows reports its adapter not
-ready. HTTP/AP and LED visual/state demonstrations are still pending.
+GPIO48 WS2812/NeoPixel colors were visually confirmed by the operator; the LED
+now follows real states (calm green, fast red, unattached blue, shaking magenta).
+The PC joined the ESP32 AP: both real JSON APIs passed v0.2 checks with a ready
+prediction and100 sensor samples; the embedded page returned HTTP200.
+PC BLE verification is blocked by Windows reporting its adapter not ready.
+The user reports teacher acceptance of grading sections1 and2. David prepared
+sections4 and5; their existing frontend implementation is preserved.
 
 - [Shared BLE/HTTP interface v0.2](docs/INTERFACES.md)
 - [Build, wiring assumptions and hardware acceptance checks](docs/FIRMWARE.md)
@@ -36,7 +44,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m platformio run -e esp32-s3
 ```
 
-See FIRMWARE.md before uploading. Sensor pins are SDA8/SCL9; RGB defaults disabled,
+See FIRMWARE.md before uploading. Sensor pins are SDA8/SCL9; verified RGB is GPIO48,
 and the capture build is training-only. Default demo firmware does not transmit
 USB serial data. The board performs acquisition/features/inference independently.
 
@@ -47,11 +55,9 @@ recordings; `firmware/data/` is reserved for tracked LittleFS frontend assets.
 
 ## Required submission details still pending
 
-- Actual group member names.
 - A photo of the actual wiring and confirmed pin mapping.
-- Deployed GitHub Pages monitoring URL.
-- Real recordings, labels, held-out evaluation and installed model identity.
-- All live demonstrations, chosen extension evidence and final remote commit.
+- Live BLE connection, timeline and alarm demonstration on a supported device.
+- David's sections4/5 demonstration and final teacher/submission confirmation.
 
 The separate acquisition project records all six real axes at50Hz over CH343
 COM3, with identity/configuration tests and a Python recorder. Its raw files must
@@ -61,8 +67,9 @@ The board now runs trained monitoring firmware, replacing acquisition firmware.
 The inference-check build emits testing-only USB diagnostics; the esp32-s3
 build disables this stream for the required power-only USB demonstration.
 
-The proposed own extension is explicit sensor-fault/unavailable detection and
-recovery. It must be demonstrated on hardware before claiming completion.
+David owns the prepared section5 extension; preserve his implementation and
+coordinate its demonstration. Sensor-fault/unavailable guards are implemented
+in firmware and must not be confused with a completed teacher demonstration.
 Teacher account `tomasvicar` was verified to have write access during preparation;
 recheck at delivery. Three intermediate commits must be pushed during the lab.
 
@@ -70,7 +77,7 @@ recheck at delivery. Three intermediate commits must be pushed during the lab.
 
 OpenAI Codex and native subagents were used for interface validation, firmware,
 data-collection/training tools, software tests and documentation. Antigravity
-develops the web clients separately; its exact tool/model disclosure belongs in
-the integrated report. Every group member must understand and explain the code.
+developed the web clients using Antigravity/Gemini, as disclosed in the teammate
+README. Every group member must understand and explain the code.
 Synthetic software fixtures are never presented as real sensor measurements or
 model evaluation.
