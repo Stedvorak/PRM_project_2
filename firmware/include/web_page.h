@@ -1,0 +1,348 @@
+#pragma once
+
+#include <pgmspace.h>
+
+/**
+ * ESP32-hosted client web page embedded as PROGMEM string literal.
+ * Can be served directly via:
+ *   server.send_P(200, "text/html", INDEX_HTML);
+ * or read from LittleFS file /data/index.html.
+ */
+static const char INDEX_HTML[] PROGMEM = R"rawliteral(<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESP32 Real-Time AI | Patient Breathing Monitor</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #131b2e;
+      --card-border: #1e2942;
+      --text: #f1f5f9;
+      --text-dim: #94a3b8;
+      --accent: #38bdf8;
+      --color-calm: #10b981;
+      --color-fast: #ef4444;
+      --color-unattached: #3b82f6;
+      --color-shaking: #d946ef;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding: 1rem; display: flex; flex-direction: column; align-items: center; }
+    .container { width: 100%; max-width: 800px; display: flex; flex-direction: column; gap: 1rem; }
+    header { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 0.75rem; padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+    .header-title h1 { font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+    .badge-ap { background: rgba(56, 189, 248, 0.15); color: var(--accent); border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.15rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 600; }
+    .header-status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; }
+    .dot.active { background: #10b981; box-shadow: 0 0 8px #10b981; }
+    .hero-card { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 1rem; padding: 2rem 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: border-color 0.3s, box-shadow 0.3s; }
+    .hero-card.calm { border-color: var(--color-calm); box-shadow: 0 0 25px rgba(16, 185, 129, 0.2); }
+    .hero-card.fast { border-color: var(--color-fast); box-shadow: 0 0 25px rgba(239, 68, 68, 0.25); }
+    .hero-card.unattached { border-color: var(--color-unattached); box-shadow: 0 0 25px rgba(59, 130, 246, 0.2); }
+    .hero-card.shaking { border-color: var(--color-shaking); box-shadow: 0 0 25px rgba(217, 70, 239, 0.25); }
+    .state-badge { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); margin-bottom: 0.5rem; }
+    .state-name { font-size: 2.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 0.5rem; text-align: center; }
+    .state-sub { font-size: 0.85rem; color: var(--text-dim); display: flex; align-items: center; gap: 0.75rem; }
+    .metrics-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    @media (min-width: 600px) { .metrics-grid { grid-template-columns: 1fr 1fr; } }
+    .metric-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 0.75rem; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .metric-title { font-size: 0.8rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between; }
+    .metric-val { font-size: 2rem; font-weight: 800; font-variant-numeric: tabular-nums; display: flex; align-items: baseline; gap: 0.3rem; }
+    .metric-unit { font-size: 0.85rem; font-weight: 500; color: var(--text-dim); }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 0.75rem; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+    .card-title { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.05em; }
+    .prob-rows { display: flex; flex-direction: column; gap: 0.75rem; }
+    .prob-row { display: flex; flex-direction: column; gap: 0.25rem; }
+    .prob-info { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; }
+    .prob-bar-bg { height: 8px; background: #1e293b; border-radius: 4px; overflow: hidden; }
+    .prob-bar-fill { height: 100%; width: 0%; transition: width 0.3s ease; border-radius: 4px; }
+    .bar-calm { background-color: var(--color-calm); }
+    .bar-fast { background-color: var(--color-fast); }
+    .bar-unattached { background-color: var(--color-unattached); }
+    .bar-shaking { background-color: var(--color-shaking); }
+    .canvas-container { width: 100%; height: 90px; background: #0f172a; border-radius: 0.5rem; overflow: hidden; position: relative; }
+    canvas#signalCanvas { width: 100%; height: 100%; display: block; }
+    .footer-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; font-size: 0.75rem; color: var(--text-dim); padding: 0.5rem 0; }
+    button { padding: 0.4rem 0.8rem; border-radius: 0.375rem; border: 1px solid var(--card-border); background: #1e293b; color: var(--text); font-size: 0.75rem; cursor: pointer; transition: background 0.2s; }
+    button:hover { background: #334155; }
+    .null-indicator { color: #64748b; font-size: 1.1rem; font-weight: normal; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-title">
+        <h1>ESP32 On-Device AI</h1>
+        <span class="badge-ap">Wi-Fi AP</span>
+      </div>
+      <div class="header-status">
+        <span id="statusDot" class="dot"></span>
+        <span id="statusText">Connecting to /api/status...</span>
+        <span id="latencyText" style="color: var(--text-dim); font-variant-numeric: tabular-nums;"></span>
+      </div>
+    </header>
+
+    <div id="heroCard" class="hero-card">
+      <div class="state-badge">Predicted Classification</div>
+      <div id="stateTitle" class="state-name">AWAITING /api/status</div>
+      <div class="state-sub">
+        <span>State ID: <strong id="stateIdText">-</strong></span>
+        <span>•</span>
+        <span>Confidence: <strong id="heroConfidenceText">N/A</strong></span>
+      </div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-title">
+          <span>Breathing Rate</span>
+          <span>🫁</span>
+        </div>
+        <div class="metric-val">
+          <span id="bpmValue" class="null-indicator">N/A</span>
+          <span id="bpmUnit" class="metric-unit" style="display: none;">BPM</span>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-dim);">Direct respiratory rate estimation</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-title">
+          <span>Classifier Confidence</span>
+          <span>🎯</span>
+        </div>
+        <div class="metric-val">
+          <span id="confValue" class="null-indicator">N/A</span>
+          <span id="confUnit" class="metric-unit" style="display: none;">%</span>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-dim);">Probability of winning class</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Class Probabilities</div>
+      <div id="probWarning" style="font-size: 0.8rem; color: #64748b; display: none;">Probabilities currently null / unavailable from endpoint.</div>
+      <div id="probRows" class="prob-rows">
+        <div class="prob-row">
+          <div class="prob-info"><span>0: Calm Breathing</span><span id="valProbCalm">-</span></div>
+          <div class="prob-bar-bg"><div id="barProbCalm" class="prob-bar-fill bar-calm"></div></div>
+        </div>
+        <div class="prob-row">
+          <div class="prob-info"><span>1: Fast Breathing</span><span id="valProbFast">-</span></div>
+          <div class="prob-bar-bg"><div id="barProbFast" class="prob-bar-fill bar-fast"></div></div>
+        </div>
+        <div class="prob-row">
+          <div class="prob-info"><span>2: Not Attached</span><span id="valProbUnattached">-</span></div>
+          <div class="prob-bar-bg"><div id="barProbUnattached" class="prob-bar-fill bar-unattached"></div></div>
+        </div>
+        <div class="prob-row">
+          <div class="prob-info"><span>3: Shaking</span><span id="valProbShaking">-</span></div>
+          <div class="prob-bar-bg"><div id="barProbShaking" class="prob-bar-fill bar-shaking"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Live Prediction History (Past 30s)</div>
+      <div class="canvas-container">
+        <canvas id="signalCanvas"></canvas>
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <div>API Endpoint: <code>GET /api/status</code></div>
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <button id="btnMockToggle">Toggle Preview / Mock</button>
+        <button id="btnRefreshNow">Poll Now</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STATE_CONFIG = {
+      0: { name: 'Calm Breathing', key: 'calm', color: '#10b981' },
+      1: { name: 'Fast Breathing', key: 'fast', color: '#ef4444' },
+      2: { name: 'Not Attached', key: 'unattached', color: '#3b82f6' },
+      3: { name: 'Shaking', key: 'shaking', color: '#d946ef' }
+    };
+
+    let isMockMode = false;
+    let pollInterval = null;
+    let historyPoints = [];
+
+    const heroCard = document.getElementById('heroCard');
+    const stateTitle = document.getElementById('stateTitle');
+    const stateIdText = document.getElementById('stateIdText');
+    const heroConfidenceText = document.getElementById('heroConfidenceText');
+    const bpmValue = document.getElementById('bpmValue');
+    const bpmUnit = document.getElementById('bpmUnit');
+    const confValue = document.getElementById('confValue');
+    const confUnit = document.getElementById('confUnit');
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    const latencyText = document.getElementById('latencyText');
+    const probWarning = document.getElementById('probWarning');
+
+    const probBars = {
+      calm: { bar: document.getElementById('barProbCalm'), val: document.getElementById('valProbCalm') },
+      fast: { bar: document.getElementById('barProbFast'), val: document.getElementById('valProbFast') },
+      unattached: { bar: document.getElementById('barProbUnattached'), val: document.getElementById('valProbUnattached') },
+      shaking: { bar: document.getElementById('barProbShaking'), val: document.getElementById('valProbShaking') }
+    };
+
+    const canvas = document.getElementById('signalCanvas');
+    const ctx = canvas.getContext('2d');
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    async function fetchStatus() {
+      const startTime = performance.now();
+      if (isMockMode) {
+        handleMockResponse();
+        return;
+      }
+      try {
+        const response = await fetch('/api/status', {
+          cache: 'no-store',
+          headers: { 'Accept': 'application/json' }
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        const latency = Math.round(performance.now() - startTime);
+        statusDot.className = 'dot active';
+        statusText.innerText = 'Connected';
+        latencyText.innerText = `(${latency}ms)`;
+        updateUI(data);
+      } catch (err) {
+        statusDot.className = 'dot';
+        statusText.innerText = 'AP /api/status unreachable';
+        latencyText.innerText = '';
+      }
+    }
+
+    function updateUI(data) {
+      const stateId = Number(data.state_id);
+      const stateName = data.state || (STATE_CONFIG[stateId] ? STATE_CONFIG[stateId].name : 'Unknown');
+      const cfg = STATE_CONFIG[stateId] || { name: stateName, key: 'unknown', color: '#94a3b8' };
+
+      heroCard.className = `hero-card ${cfg.key}`;
+      stateTitle.innerText = cfg.name;
+      stateTitle.style.color = cfg.color;
+      stateIdText.innerText = stateId;
+
+      if (data.breaths_per_min !== null && data.breaths_per_min !== undefined) {
+        bpmValue.className = '';
+        bpmValue.innerText = Math.round(data.breaths_per_min);
+        bpmUnit.style.display = 'inline';
+      } else {
+        bpmValue.className = 'null-indicator';
+        bpmValue.innerText = 'N/A';
+        bpmUnit.style.display = 'none';
+      }
+
+      if (data.confidence !== null && data.confidence !== undefined) {
+        const pct = Math.round(data.confidence > 1 ? data.confidence : data.confidence * 100);
+        confValue.className = '';
+        confValue.innerText = pct;
+        confUnit.style.display = 'inline';
+        heroConfidenceText.innerText = `${pct}%`;
+      } else {
+        confValue.className = 'null-indicator';
+        confValue.innerText = 'N/A';
+        confUnit.style.display = 'none';
+        heroConfidenceText.innerText = 'N/A';
+      }
+
+      renderProbabilities(data.probabilities);
+
+      const now = Date.now();
+      historyPoints.push({ time: now, stateId: stateId, color: cfg.color });
+      historyPoints = historyPoints.filter(p => p.time > (now - 30000));
+      drawCanvasHistory();
+    }
+
+    function renderProbabilities(probs) {
+      if (!probs) {
+        probWarning.style.display = 'block';
+        ['calm', 'fast', 'unattached', 'shaking'].forEach(k => {
+          probBars[k].bar.style.width = '0%';
+          probBars[k].val.innerText = '-';
+        });
+        return;
+      }
+      probWarning.style.display = 'none';
+      let pCalm = 0, pFast = 0, pUnattached = 0, pShaking = 0;
+      if (Array.isArray(probs)) {
+        pCalm = probs[0] || 0; pFast = probs[1] || 0; pUnattached = probs[2] || 0; pShaking = probs[3] || 0;
+      } else if (typeof probs === 'object') {
+        pCalm = probs.calm || probs[0] || 0;
+        pFast = probs.fast || probs[1] || 0;
+        pUnattached = probs.unattached || probs[2] || 0;
+        pShaking = probs.shaking || probs[3] || 0;
+      }
+      const formatP = (v) => `${Math.round(v > 1 ? v : v * 100)}%`;
+      const formatW = (v) => `${Math.min(100, Math.round(v > 1 ? v : v * 100))}%`;
+      probBars.calm.bar.style.width = formatW(pCalm);
+      probBars.calm.val.innerText = formatP(pCalm);
+      probBars.fast.bar.style.width = formatW(pFast);
+      probBars.fast.val.innerText = formatP(pFast);
+      probBars.unattached.bar.style.width = formatW(pUnattached);
+      probBars.unattached.val.innerText = formatP(pUnattached);
+      probBars.shaking.bar.style.width = formatW(pShaking);
+      probBars.shaking.val.innerText = formatP(pShaking);
+    }
+
+    function drawCanvasHistory() {
+      if (!ctx || canvas.width === 0) return;
+      const w = canvas.width;
+      const h = canvas.height;
+      const now = Date.now();
+      const windowMs = 30000;
+      ctx.clearRect(0, 0, w, h);
+      if (historyPoints.length === 0) return;
+      const barWidth = Math.max(3, w / 40);
+      for (let i = 0; i < historyPoints.length; i++) {
+        const pt = historyPoints[i];
+        const age = now - pt.time;
+        const x = w - (age / windowMs) * w;
+        if (x < -10) continue;
+        ctx.fillStyle = pt.color;
+        const barH = (h - 10) / 4;
+        const y = h - (pt.stateId + 1) * barH - 4;
+        ctx.fillRect(x, y, barWidth, barH - 2);
+      }
+    }
+
+    let mockStateIdx = 0;
+    function handleMockResponse() {
+      const mockStates = [
+        { state: "calm", state_id: 0, breaths_per_min: 14.5, confidence: 0.94, probabilities: [0.94, 0.03, 0.02, 0.01] },
+        { state: "fast", state_id: 1, breaths_per_min: 32.0, confidence: 0.88, probabilities: [0.05, 0.88, 0.05, 0.02] },
+        { state: "unattached", state_id: 2, breaths_per_min: null, confidence: 0.97, probabilities: [0.01, 0.01, 0.97, 0.01] },
+        { state: "shaking", state_id: 3, breaths_per_min: null, confidence: 0.99, probabilities: [0.00, 0.00, 0.01, 0.99] }
+      ];
+      if (Math.random() < 0.25) mockStateIdx = (mockStateIdx + 1) % mockStates.length;
+      const sample = mockStates[mockStateIdx];
+      statusDot.className = 'dot active';
+      statusText.innerText = 'Mock AP Stream';
+      latencyText.innerText = '(Local)';
+      updateUI(sample);
+    }
+
+    document.getElementById('btnRefreshNow').addEventListener('click', fetchStatus);
+    document.getElementById('btnMockToggle').addEventListener('click', () => {
+      isMockMode = !isMockMode;
+      document.getElementById('btnMockToggle').innerText = isMockMode ? 'Disable Mock' : 'Toggle Preview / Mock';
+      fetchStatus();
+    });
+
+    pollInterval = setInterval(fetchStatus, 500);
+    fetchStatus();
+  </script>
+</body>
+</html>
+)rawliteral";

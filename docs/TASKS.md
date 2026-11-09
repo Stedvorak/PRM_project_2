@@ -1,4 +1,4 @@
-﻿# Task ownership
+# Task ownership
 
 ## CODEX
 - [ ] Sensor and ESP32 firmware
@@ -10,15 +10,15 @@
 - [ ] ML evaluation and reproducibility
 
 ## ANTIGRAVITY
-- [ ] BLE monitoring webpage
-- [ ] GitHub Pages deployment
-- [ ] Live visualization
-- [ ] Alarms and connection monitoring
-- [ ] ESP32 web frontend
-- [ ] Frontend documentation
+- [x] BLE monitoring webpage
+- [x] GitHub Pages deployment
+- [x] Live visualization
+- [x] Alarms and connection monitoring
+- [x] ESP32 web frontend
+- [x] Frontend documentation
 
 ## SHARED
-- [ ] Confirm interface contract
+- [x] Confirm interface contract
 - [ ] Collect real sensor data
 - [ ] Integrate both components
 - [ ] Test on physical hardware
