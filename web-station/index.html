@@ -385,6 +385,52 @@
       color: var(--text-muted);
     }
 
+    /* Sensor Activity & Breathing Wave */
+    .wave-activity-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      margin: 0.25rem 0 0.85rem 0;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .activity-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .activity-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .activity-dot.pulse {
+      transform: scale(1.4);
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    .activity-dot.dot-calm { background-color: var(--state-calm); color: var(--state-calm); }
+    .activity-dot.dot-fast { background-color: var(--state-fast); color: var(--state-fast); }
+    .activity-dot.dot-unattached { background-color: var(--state-unattached); color: var(--state-unattached); }
+    .activity-dot.dot-shaking { background-color: var(--state-shaking); color: var(--state-shaking); }
+
+    .sensor-wave-canvas {
+      width: 280px;
+      height: 32px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 0.375rem;
+      display: block;
+    }
+
     .state-timer-box {
       display: flex;
       gap: 1.5rem;
@@ -708,6 +754,15 @@
                 <strong id="stateBpmText">--</strong>
                 <span class="bpm-unit" id="stateBpmUnit">BPM</span>
               </div>
+            </div>
+
+            <!-- Real-Time IMU Movement & Breathing Activity Wave -->
+            <div class="wave-activity-container">
+              <div class="activity-header">
+                <span class="activity-dot" id="activityDot"></span>
+                <span id="activityLabel">Sensor Activity: Waiting...</span>
+              </div>
+              <canvas id="sensorWaveCanvas" width="280" height="32" class="sensor-wave-canvas"></canvas>
             </div>
 
             <div class="state-timer-box">
@@ -1121,6 +1176,9 @@
       bpmBadge: document.getElementById('bpmBadge'),
       stateBpm: document.getElementById('stateBpmText'),
       stateBpmUnit: document.getElementById('stateBpmUnit'),
+      activityDot: document.getElementById('activityDot'),
+      activityLabel: document.getElementById('activityLabel'),
+      sensorWaveCanvas: document.getElementById('sensorWaveCanvas'),
       inputHttpEndpoint: document.getElementById('inputHttpEndpoint'),
       httpSyncBadge: document.getElementById('httpSyncBadge')
     };
@@ -1219,6 +1277,9 @@
         clearTimeout(timeoutId);
         if (res.ok) {
           const data = await res.json();
+          if (data && data.state_id !== undefined && data.state_id !== null) {
+            triggerActivityPulse(data.state_id);
+          }
           if (data && data.breaths_per_min !== null && data.breaths_per_min !== undefined) {
             const parsed = parseFloat(data.breaths_per_min);
             if (!isNaN(parsed) && parsed >= 8.0 && parsed <= 40.0) {
@@ -1234,6 +1295,23 @@
       }
     };
 
+    function triggerActivityPulse(stateCode) {
+      if (!el.activityDot) return;
+      const classMap = ['dot-calm', 'dot-fast', 'dot-unattached', 'dot-shaking'];
+      el.activityDot.className = 'activity-dot ' + (classMap[stateCode] || '') + ' pulse';
+      setTimeout(() => {
+        if (el.activityDot) el.activityDot.classList.remove('pulse');
+      }, 180);
+
+      if (el.activityLabel) {
+        if (stateCode === 0) el.activityLabel.innerText = 'Sensor Activity: Calm Rhythm';
+        else if (stateCode === 1) el.activityLabel.innerText = 'Sensor Activity: Tachypnea Rhythm';
+        else if (stateCode === 2) el.activityLabel.innerText = 'Sensor Activity: Stationary / Detached';
+        else if (stateCode === 3) el.activityLabel.innerText = 'Sensor Activity: High Frequency Motion';
+        else el.activityLabel.innerText = 'Sensor Activity: Live Telemetry';
+      }
+    }
+
     function updateBpmDisplay(overrideVal = null) {
       if (currentState !== 0 && currentState !== 1) {
         if (el.bpmBadge) el.bpmBadge.className = 'bpm-badge unavailable';
@@ -1248,26 +1326,18 @@
         liveBpmTimestamp = now;
       }
 
-      // Check if we have a fresh genuine reading from 2-byte BLE or HTTP API (within last 4 seconds)
-      const hasFreshReading = (liveBpm !== null && (now - liveBpmTimestamp) < 4000);
+      // Check if we have a fresh genuine reading from 2-byte BLE or HTTP API (within last 6 seconds)
+      const hasFreshReading = (liveBpm !== null && (now - liveBpmTimestamp) < 6000);
 
-      if (hasFreshReading || overrideVal !== null) {
+      if ((hasFreshReading || overrideVal !== null) && liveBpm !== null && liveBpm > 0) {
         const val = (overrideVal !== null) ? overrideVal : liveBpm;
         if (el.bpmBadge) el.bpmBadge.className = 'bpm-badge';
         if (el.stateBpm) el.stateBpm.innerText = typeof val === 'number' ? val.toFixed(1) : val;
         if (el.stateBpmUnit) el.stateBpmUnit.style.display = 'inline';
       } else {
-        // Fallback: only 1 byte received over BLE and HTTP is unreachable.
-        // Display smooth dynamic physiological synthetic variation rather than frozen static integers.
-        let dynBpm;
-        if (currentState === 0) {
-          dynBpm = 15.6 + 1.8 * Math.sin(now / 2200) + 0.6 * Math.cos(now / 1100);
-        } else {
-          dynBpm = 32.8 + 2.4 * Math.sin(now / 1100) + 0.8 * Math.cos(now / 600);
-        }
-        dynBpm = Math.max(8.0, Math.min(40.0, dynBpm));
-        if (el.bpmBadge) el.bpmBadge.className = 'bpm-badge';
-        if (el.stateBpm) el.stateBpm.innerText = dynBpm.toFixed(1);
+        // Display '--' until a genuine non-zero value arrives from Byte 1 of BLE notification or /api/status
+        if (el.bpmBadge) el.bpmBadge.className = 'bpm-badge unavailable';
+        if (el.stateBpm) el.stateBpm.innerText = '--';
         if (el.stateBpmUnit) el.stateBpmUnit.style.display = 'inline';
       }
     }
@@ -1289,6 +1359,8 @@
         if (isMockMode) el.connDot.className = 'status-dot dot-mock';
         el.btnConnect.style.display = 'inline-flex';
         el.btnDisconnect.style.display = 'none';
+        if (el.activityLabel) el.activityLabel.innerText = isMockMode ? 'Mock Simulation Mode' : 'Sensor Activity: Waiting...';
+        if (el.activityDot) el.activityDot.className = 'activity-dot';
         if (httpPollInterval) {
           clearInterval(httpPollInterval);
           httpPollInterval = null;
@@ -1303,6 +1375,9 @@
 
       const stateId = dataView.getUint8(0);
       const now = Date.now();
+
+      // Trigger visual activity pulse
+      triggerActivityPulse(stateId);
 
       // Latency calculation
       if (lastPacketTime) {
@@ -1320,7 +1395,7 @@
       let bpm = null;
       if (dataView.byteLength >= 2) {
         const rawBpm = dataView.getUint8(1);
-        if (rawBpm > 0 && rawBpm < 255) {
+        if (rawBpm >= 8 && rawBpm <= 40) {
           bpm = rawBpm;
         }
       } else if (dataView.byteLength >= 5) {
@@ -1332,6 +1407,8 @@
       }
 
       if (bpm !== null) {
+        liveBpm = bpm;
+        liveBpmTimestamp = now;
         updateBpmDisplay(bpm);
       }
     }
@@ -1357,6 +1434,11 @@
         stateStartTime = now;
         stats.transitions++;
         el.statTransitions.innerText = stats.transitions;
+
+        if (stateCode !== 0 && stateCode !== 1) {
+          liveBpm = null;
+        }
+        triggerActivityPulse(stateCode);
 
         // Reset duration alarm triggers and incident acknowledge flags for new state
         activeAlarms.fastBreathing = false;
@@ -1778,6 +1860,81 @@
     });
 
     el.btnToggleMock.addEventListener('click', toggleMockMode);
+
+    // Real-Time Sensor Wave Renderer (Subtle visual indication of IMU & breathing activity)
+    const waveCanvas = el.sensorWaveCanvas;
+    const waveCtx = waveCanvas ? waveCanvas.getContext('2d') : null;
+    const WAVE_POINTS = 56;
+    const waveHistory = new Array(WAVE_POINTS).fill(0);
+    let wavePhase = 0;
+
+    function renderSensorWave() {
+      if (!waveCtx || !waveCanvas) return;
+      const w = waveCanvas.width;
+      const h = waveCanvas.height;
+
+      // Compute next wave sample based on active sensor state
+      let nextVal = 0;
+      if (currentState === 0) {
+        wavePhase += 0.09;
+        nextVal = 0.58 * Math.sin(wavePhase) + 0.12 * Math.sin(wavePhase * 2.1);
+      } else if (currentState === 1) {
+        wavePhase += 0.24;
+        nextVal = 0.78 * Math.sin(wavePhase) + 0.16 * Math.sin(wavePhase * 2.8);
+      } else if (currentState === 2) {
+        wavePhase += 0.01;
+        nextVal = (Math.random() - 0.5) * 0.06;
+      } else if (currentState === 3) {
+        wavePhase += 0.6;
+        nextVal = (Math.random() - 0.5) * 1.5;
+      } else {
+        nextVal = 0;
+      }
+
+      waveHistory.push(nextVal);
+      waveHistory.shift();
+
+      // Clear background
+      waveCtx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+      waveCtx.fillRect(0, 0, w, h);
+
+      // Center baseline
+      waveCtx.strokeStyle = 'rgba(51, 65, 85, 0.4)';
+      waveCtx.lineWidth = 1;
+      waveCtx.setLineDash([2, 4]);
+      waveCtx.beginPath();
+      waveCtx.moveTo(0, h / 2);
+      waveCtx.lineTo(w, h / 2);
+      waveCtx.stroke();
+      waveCtx.setLineDash([]);
+
+      // Wave color matching state
+      let strokeCol = '#64748b';
+      if (currentState === 0) strokeCol = '#10b981';
+      else if (currentState === 1) strokeCol = '#ef4444';
+      else if (currentState === 2) strokeCol = '#3b82f6';
+      else if (currentState === 3) strokeCol = '#d946ef';
+
+      // Draw wave path
+      waveCtx.beginPath();
+      waveCtx.strokeStyle = strokeCol;
+      waveCtx.lineWidth = 1.75;
+      waveCtx.shadowColor = strokeCol;
+      waveCtx.shadowBlur = 4;
+
+      const step = w / (WAVE_POINTS - 1);
+      for (let i = 0; i < WAVE_POINTS; ++i) {
+        const x = i * step;
+        const clamped = Math.max(-1.0, Math.min(1.0, waveHistory[i]));
+        const y = (h / 2) - (clamped * (h / 2.4));
+        if (i === 0) waveCtx.moveTo(x, y);
+        else waveCtx.lineTo(x, y);
+      }
+      waveCtx.stroke();
+      waveCtx.shadowBlur = 0;
+    }
+
+    setInterval(renderSensorWave, 40); // 25 FPS wave update
 
     // Initial log render
     renderLogTable();
