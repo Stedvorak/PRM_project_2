@@ -1,0 +1,25 @@
+{
+  "source": "software_build_provenance",
+  "hardware_sensor_measurements": false,
+  "teammate_commit": "2064cf89be4e8724d09fb92b444be87c03e5a893",
+  "teammate_remote_branch": "antigravity",
+  "interface_commit": "91667e00e0bfef30a313fe35c800e566fdda7835",
+  "model_selected": false,
+  "source_sha256": {
+    "platformio.ini": "0f625f13b4a11ccf892a1a52663b31582b5c5b530a7047060bd3b989e9f0c72a",
+    "boards/prm-esp32s3-n16r8.json": "6288d2bc5c7bf4f798b04941f2757b4f8ed9c169ee07a3be51170c0c4b307d7b",
+    "firmware/src/main.cpp": "3c9bdebaf7681db96bc401dc87635f2276e4cc7101b3dc92ba0e6082681b92fe",
+    "firmware/include/prm_config.h": "238ac9bb4f76e3f6edaf7aeaef1175084cb3ced392d6f1a8f397c6a9ce428a03",
+    "firmware/include/prm_runtime.h": "0f6837a9757e4c5564c2538de09c52e345cffed1d2ad5aa43870331fe0bf48dd",
+    "firmware/include/prm_features.h": "2df2a7dd7e55631118529d5b62f196bf5bd6583ab51fe5a4305e832fc39895f7",
+    "firmware/include/prm_model.h": "429a21fb1f2f1aa4194d349fcab96007a35e03d5a7e2d85f80ca1e272a7126ea",
+    "firmware/include/web_page.h": "cf4e01b28b7a6d53479a5b6530471ce5a2a522b6a87f0473f6354f7f2d8d96b1",
+    "web-station/index.html": "428c97d31b1f66391f537b7a0da66b41c6c7c9c881f578c7acb439725d5ca3f1",
+    "docs/INTERFACES.md": "922ef86deb926805e4e7a9eb27a0a6486624fd23e111c1a4070282889597ce44"
+  },
+  "local_demo_artifact_sha256": {
+    ".pio/build/esp32-s3/firmware.bin": "0def6ecb8bcc606837bee8833a0444748126bb4362bee9617244fe7e3dd7c31b",
+    ".pio/build/esp32-s3/bootloader.bin": "2a71d69b471e20c2bac7fb469f3c6a807b3ebee780e348e5889db0da849ca363",
+    ".pio/build/esp32-s3/partitions.bin": "bd0f7954aca2ef7d925ee21aaa1f3dc8822d1d6ce5cbbd26a135e5886bfff6ce"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "comparison_id": "C02_invariant",
+  "version": "1",
+  "validation_strategy": "leave_one_whole_collection_group_out",
+  "results": [
+    {
+      "method_id": "M05",
+      "version": "1",
+      "name": "invariant_decision_tree_depth5",
+      "mean_fold_balanced_accuracy": 0.6087962962962963,
+      "fold_balanced_accuracy_std": 0.10879629629629628,
+      "accuracy": 0.6450617283950617,
+      "balanced_accuracy": 0.6450617283950617,
+      "macro_f1": 0.6538841301817682,
+      "confusion_matrix": [
+        [
+          54,
+          0,
+          27,
+          0
+        ],
+        [
+          10,
+          44,
+          27,
+          0
+        ],
+        [
+          27,
+          10,
+          44,
+          0
+        ],
+        [
+          0,
+          14,
+          0,
+          67
+        ]
+      ],
+      "recall_by_class": {
+        "calm": 0.6666666666666666,
+        "fast": 0.5432098765432098,
+        "unattached": 0.5432098765432098,
+        "shaking": 0.8271604938271605
+      },
+      "header_bytes": 3288,
+      "result_directory": "outputs/results/M05_v1"
+    },
+    {
+      "method_id": "M06",
+      "version": "1",
+      "name": "invariant_random_forest_8_depth4",
+      "mean_fold_balanced_accuracy": 0.7152777777777778,
+      "fold_balanced_accuracy_std": 0.05787037037037035,
+      "accuracy": 0.7345679012345679,
+      "balanced_accuracy": 0.7345679012345678,
+      "macro_f1": 0.7458099281976047,
+      "confusion_matrix": [
+        [
+          70,
+          0,
+          11,
+          0
+        ],
+        [
+          0,
+          54,
+          27,
+          0
+        ],
+        [
+          1,
+          35,
+          45,
+          0
+        ],
+        [
+          0,
+          12,
+          0,
+          69
+        ]
+      ],
+      "recall_by_class": {
+        "calm": 0.8641975308641975,
+        "fast": 0.6666666666666666,
+        "unattached": 0.5555555555555556,
+        "shaking": 0.8518518518518519
+      },
+      "header_bytes": 18046,
+      "result_directory": "outputs/results/M06_v1"
+    }
+  ],
+  "hardware_verified": false,
+  "selection_status": "not automatically selected/installed"
+}

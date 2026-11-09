@@ -1,0 +1,13 @@
+{
+  "source": "actual_ble_discovery_and_gatt",
+  "device_name": "PRM-Project-2",
+  "service_uuid": "7c2f1000-73ad-4a0d-9ec4-10cc7ea46a10",
+  "characteristic_uuid": "7c2f1001-73ad-4a0d-9ec4-10cc7ea46a10",
+  "started_at_utc": "2026-11-09T14:31:40.246038+00:00",
+  "requested_duration_s": 10.0,
+  "connection_established": false,
+  "checks_passed": false,
+  "error": "OSError: [WinError -2147020577] Za\u0159\u00edzen\u00ed nen\u00ed p\u0159ipraveno k pou\u017eit\u00ed",
+  "rejected_notifications": [],
+  "raw_valid_notification_count": 0
+}

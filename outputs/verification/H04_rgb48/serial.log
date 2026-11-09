@@ -1,0 +1,31 @@
+# RGB_TEST pin=48 color=red
+# INFERENCE {"t_ms":216933,"state_id":2,"feature_us":2313,"predict_us":9,"total_us":2341,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":212950,"window_last_ms":216909,"sample_gap_ms":41}
+# INFERENCE {"t_ms":217433,"state_id":2,"feature_us":2310,"predict_us":9,"total_us":2337,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":213390,"window_last_ms":217390,"sample_gap_ms":80}
+# INFERENCE {"t_ms":217933,"state_id":2,"feature_us":2311,"predict_us":9,"total_us":2339,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":213870,"window_last_ms":217910,"sample_gap_ms":80}
+# INFERENCE {"t_ms":218433,"state_id":2,"feature_us":2309,"predict_us":9,"total_us":2337,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":214389,"window_last_ms":218430,"sample_gap_ms":80}
+# INFERENCE {"t_ms":218933,"state_id":2,"feature_us":2308,"predict_us":9,"total_us":2336,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":214870,"window_last_ms":218909,"sample_gap_ms":80}
+# RGB_TEST pin=48 color=green
+# INFERENCE {"t_ms":219433,"state_id":2,"feature_us":2312,"predict_us":9,"total_us":2341,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":215389,"window_last_ms":219429,"sample_gap_ms":80}
+# INFERENCE {"t_ms":219933,"state_id":2,"feature_us":2308,"predict_us":9,"total_us":2336,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":215870,"window_last_ms":219909,"sample_gap_ms":80}
+# INFERENCE {"t_ms":220433,"state_id":2,"feature_us":2309,"predict_us":9,"total_us":2337,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":216390,"window_last_ms":220429,"sample_gap_ms":80}
+# INFERENCE {"t_ms":220933,"state_id":2,"feature_us":2307,"predict_us":9,"total_us":2336,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":216869,"window_last_ms":220909,"sample_gap_ms":80}
+# INFERENCE {"t_ms":221433,"state_id":2,"feature_us":2310,"predict_us":9,"total_us":2337,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":217470,"window_last_ms":221429,"sample_gap_ms":41}
+# RGB_TEST pin=48 color=blue
+# INFERENCE {"t_ms":221933,"state_id":2,"feature_us":2376,"predict_us":10,"total_us":2405,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":217950,"window_last_ms":221910,"sample_gap_ms":41}
+# INFERENCE {"t_ms":222433,"state_id":2,"feature_us":2313,"predict_us":9,"total_us":2340,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":218470,"window_last_ms":222430,"sample_gap_ms":41}
+# INFERENCE {"t_ms":222933,"state_id":2,"feature_us":2313,"predict_us":10,"total_us":2341,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":218950,"window_last_ms":222909,"sample_gap_ms":41}
+# INFERENCE {"t_ms":223433,"state_id":2,"feature_us":2313,"predict_us":9,"total_us":2341,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":219470,"window_last_ms":223429,"sample_gap_ms":41}
+# INFERENCE {"t_ms":223933,"state_id":2,"feature_us":2314,"predict_us":9,"total_us":2341,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":219950,"window_last_ms":223909,"sample_gap_ms":41}
+# RGB_TEST pin=48 color=magenta
+# INFERENCE {"t_ms":224433,"state_id":2,"feature_us":2315,"predict_us":9,"total_us":2343,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":220470,"window_last_ms":224429,"sample_gap_ms":41}
+# INFERENCE {"t_ms":224933,"state_id":2,"feature_us":2312,"predict_us":10,"total_us":2341,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":220950,"window_last_ms":224909,"sample_gap_ms":41}
+# INFERENCE {"t_ms":225433,"state_id":2,"feature_us":2313,"predict_us":10,"total_us":2341,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":221470,"window_last_ms":225429,"sample_gap_ms":41}
+# INFERENCE {"t_ms":225933,"state_id":2,"feature_us":2313,"predict_us":9,"total_us":2341,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":221950,"window_last_ms":225910,"sample_gap_ms":41}
+# INFERENCE {"t_ms":226433,"state_id":2,"feature_us":2312,"predict_us":9,"total_us":2339,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":222470,"window_last_ms":226430,"sample_gap_ms":41}
+# RGB_TEST pin=48 complete; visual confirmation required
+# INFERENCE {"t_ms":226933,"state_id":2,"feature_us":2325,"predict_us":9,"total_us":2352,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":222950,"window_last_ms":226910,"sample_gap_ms":41}
+# INFERENCE {"t_ms":227433,"state_id":2,"feature_us":2377,"predict_us":9,"total_us":2404,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":223470,"window_last_ms":227430,"sample_gap_ms":41}
+# INFERENCE {"t_ms":227933,"state_id":2,"feature_us":2368,"predict_us":9,"total_us":2398,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":223950,"window_last_ms":227909,"sample_gap_ms":41}
+# INFERENCE {"t_ms":228433,"state_id":2,"feature_us":2360,"predict_us":9,"total_us":2387,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":224470,"window_last_ms":228430,"sample_gap_ms":41}
+# INFERENCE {"t_ms":228933,"state_id":2,"feature_us":2358,"predict_us":9,"total_us":2387,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":224950,"window_last_ms":228909,"sample_gap_ms":41}
+# INFERENCE {"t_ms":229433,"state_id":2,"feature_us":2355,"predict_us":9,"total_us":2383,"probabilities":[0.000000000,0.000000000,1.000000000,0.000000000],"window_first_ms":225470,"window_last_ms":229430,"sample_gap_ms":41}

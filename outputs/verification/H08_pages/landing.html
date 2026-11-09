@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Real-Time AI Bedside Monitor (MPA-PRM) | PRM_project_2</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Real-Time AI Bedside Monitor (MPA-PRM)" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="https://stedvorak.github.io/PRM_project_2/" />
+<meta property="og:url" content="https://stedvorak.github.io/PRM_project_2/" />
+<meta property="og:site_name" content="PRM_project_2" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Real-Time AI Bedside Monitor (MPA-PRM)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","headline":"Real-Time AI Bedside Monitor (MPA-PRM)","name":"PRM_project_2","url":"https://stedvorak.github.io/PRM_project_2/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/PRM_project_2/assets/css/style.css?v=8f5a9bb30574d2b08049db0c219e09612b29c168">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/PRM_project_2/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://stedvorak.github.io/PRM_project_2/">PRM_project_2</a></h1>
+      
+
+      <h1 id="real-time-ai-bedside-monitor-mpa-prm">Real-Time AI Bedside Monitor (MPA-PRM)</h1>
+
+<p>Real-time embedded monitoring system using an <strong>ESP32-S3 N16R8</strong> development board and an <strong>MPU-6050</strong> (GY-521) 6-DOF IMU sensor. The device classifies breathing and motion states directly on-chip and streams telemetry via Bluetooth Low Energy (BLE) and a local Wi-Fi access point.</p>
+
+<h2 id="team-members">Team Members</h2>
+<ul>
+  <li>David Bártek</li>
+  <li>Štěpán Dvořák</li>
+</ul>
+
+<h2 id="live-monitoring-station">Live Monitoring Station</h2>
+<ul>
+  <li><strong>BLE Bedside Monitor (GitHub Pages):</strong> <a href="https://Stedvorak.github.io/PRM_project_2/">https://Stedvorak.github.io/PRM_project_2/</a></li>
+  <li>Compatible with Chrome/Edge on desktop/Android supporting the Web Bluetooth API.</li>
+</ul>
+
+<h2 id="hardware-wiring">Hardware Wiring</h2>
+<p>The sensor communicates with the ESP32-S3 via I2C at 3.3V:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">MPU-6050 Pin</th>
+      <th style="text-align: left">ESP32-S3 Pin</th>
+      <th style="text-align: left">Function</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>VCC</strong></td>
+      <td style="text-align: left"><strong>3V3</strong></td>
+      <td style="text-align: left">Power supply (3.3V)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>GND</strong></td>
+      <td style="text-align: left"><strong>GND</strong></td>
+      <td style="text-align: left">Ground</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>SCL</strong></td>
+      <td style="text-align: left"><strong>GPIO 9</strong></td>
+      <td style="text-align: left">I2C Clock</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>SDA</strong></td>
+      <td style="text-align: left"><strong>GPIO 8</strong></td>
+      <td style="text-align: left">I2C Data</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>AD0</strong></td>
+      <td style="text-align: left"><strong>GND</strong></td>
+      <td style="text-align: left">I2C Address <code class="language-plaintext highlighter-rouge">0x68</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em>(Wiring diagram and photo available in <code class="language-plaintext highlighter-rouge">docs/wiring.jpg</code>)</em></p>
+
+<h2 id="state-definitions--rgb-led-indication">State Definitions &amp; RGB LED Indication</h2>
+<p>The classifier runs on the microcontroller with no computer tether (USB only supplies power):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">State Code</th>
+      <th style="text-align: left">State Name</th>
+      <th style="text-align: center">RGB LED Color</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">0</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">calm</code></td>
+      <td style="text-align: center"><strong>Green</strong></td>
+      <td style="text-align: left">Calm regular breathing (sensor against chest)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">1</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">fast</code></td>
+      <td style="text-align: center"><strong>Red</strong></td>
+      <td style="text-align: left">Fast/shallow breathing (sensor against chest)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">2</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">unattached</code></td>
+      <td style="text-align: center"><strong>Blue</strong></td>
+      <td style="text-align: left">Device held still in hand or placed on table</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">3</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">shaking</code></td>
+      <td style="text-align: center"><strong>Magenta</strong></td>
+      <td style="text-align: left">Active shaking or vigorous motion</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="machine-learning-pipeline">Machine Learning Pipeline</h2>
+<ol>
+  <li><strong>Data Acquisition:</strong> 6-axis acceleration and angular velocity recorded at 50 Hz.</li>
+  <li><strong>Feature Extraction:</strong> Sliding window of 2.0 s (100 samples) with 0.5 s step. Computed features include standard deviation, range, axis variance, magnitude energy, and log-transformed variance.</li>
+  <li><strong>On-Chip Inference:</strong> Compact decision tree / random forest compiled directly to native C++ functions (<code class="language-plaintext highlighter-rouge">firmware/include/model.h</code>) for sub-millisecond execution without external neural network runtime overhead.</li>
+</ol>
+
+<h2 id="interfaces--connectivity">Interfaces &amp; Connectivity</h2>
+<ul>
+  <li><strong>BLE GATT Service:</strong> <code class="language-plaintext highlighter-rouge">7c2f1000-73ad-4a0d-9ec4-10cc7ea46a10</code>
+    <ul>
+      <li><strong>State Characteristic:</strong> <code class="language-plaintext highlighter-rouge">7c2f1001-73ad-4a0d-9ec4-10cc7ea46a10</code> (Notification with 1-byte state code <code class="language-plaintext highlighter-rouge">0</code>–<code class="language-plaintext highlighter-rouge">3</code>).</li>
+      <li>Alarm triggers on Web Station: Fast breathing &gt; 15 s, Unattached &gt; 10 s, or connection loss.</li>
+    </ul>
+  </li>
+  <li><strong>ESP32 Wi-Fi AP:</strong> Serves real-time telemetry and state probabilities over <code class="language-plaintext highlighter-rouge">GET /api/status</code>.</li>
+</ul>
+
+<h2 id="ai-tools-usage">AI Tools Usage</h2>
+<p>In accordance with BUT AI guidelines, artificial intelligence tools were used as follows:</p>
+<ul>
+  <li><strong>Codex / Antigravity / Gemini:</strong> Architecture contract specification (<code class="language-plaintext highlighter-rouge">docs/INTERFACES.md</code>), Web Bluetooth interface scaffolding (<code class="language-plaintext highlighter-rouge">web-station/index.html</code>), and C++ inference conversion routines. All generated code was verified and adapted by team members.</li>
+</ul>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

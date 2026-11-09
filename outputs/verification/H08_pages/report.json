@@ -1,0 +1,16 @@
+[
+  {
+    "url": "https://stedvorak.github.io/PRM_project_2/",
+    "status": 200,
+    "bytes": 8397,
+    "has_ble_uuid": true,
+    "has_web_bluetooth": false
+  },
+  {
+    "url": "https://stedvorak.github.io/PRM_project_2/web-station/",
+    "status": 200,
+    "bytes": 52189,
+    "has_ble_uuid": true,
+    "has_web_bluetooth": true
+  }
+]

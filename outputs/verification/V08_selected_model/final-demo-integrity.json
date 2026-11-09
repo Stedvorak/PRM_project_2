@@ -1,0 +1,18 @@
+{
+  "method_id": "M01",
+  "version": "1",
+  "mode": "final silent esp32-s3 monitoring firmware, diagnostics disabled",
+  "model_sha256": "abe113bc81318bea4ee2d595bb72880d89c53ddba053a46d189cb0a61bcb7a27",
+  "binary_sha256": "8704aca69d3c72dc552a405ce8ae53ca8ab6b75f43cf30af60f11663f8b0ffd8",
+  "source_sha256": {
+    "firmware/src/main.cpp": "18bf1ec17aa2e84a77fc525ae36d822c0aaea0c8f3c5c2de7761346557879546",
+    "firmware/include/prm_config.h": "03fb61a29200e3c1d443f68264b415b7656802d24522bedeced9099dca028d28",
+    "firmware/include/prm_model.h": "abe113bc81318bea4ee2d595bb72880d89c53ddba053a46d189cb0a61bcb7a27",
+    "firmware/include/web_page.h": "cf4e01b28b7a6d53479a5b6530471ce5a2a522b6a87f0473f6354f7f2d8d96b1",
+    "platformio.ini": "982b8df667e582df50ba32982e09c9863e66d854eec488613bbec5d9db8e1cfb"
+  },
+  "rgb_pin": 48,
+  "ap_ssid": "PRM-Project-2",
+  "ap_ip": "192.168.4.1",
+  "browser_evidence": "outputs/verification/H09_browser_board/report.json"
+}

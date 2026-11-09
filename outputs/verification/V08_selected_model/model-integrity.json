@@ -1,0 +1,17 @@
+{
+  "selected_method": "M01",
+  "version": "1",
+  "model_sha256": "abe113bc81318bea4ee2d595bb72880d89c53ddba053a46d189cb0a61bcb7a27",
+  "source_sha256": {
+    "firmware/include/prm_model.h": "abe113bc81318bea4ee2d595bb72880d89c53ddba053a46d189cb0a61bcb7a27",
+    "firmware/include/prm_features.h": "2df2a7dd7e55631118529d5b62f196bf5bd6583ab51fe5a4305e832fc39895f7",
+    "firmware/src/main.cpp": "d0be56273d79cc439690290ba5f7616a2bf79f3ecb8913a57c62a200051bb343",
+    "firmware/include/prm_diagnostics.h": "26251880153faf38da739e4222fe8db366e08b42f27b907e0be62ec69467b3de",
+    "platformio.ini": "982b8df667e582df50ba32982e09c9863e66d854eec488613bbec5d9db8e1cfb",
+    "tools/compare_models.py": "2ace06611abe124f80493528d3db1afcd36fd1d0a111450f4429fab276bea107",
+    "data/validated/manifest.json": "244eb411084e22515337d8cfb6b594ab62f0be49c97e3435777668fceb7bf1a4"
+  },
+  "flashed_monitor_binary_sha256": "2e5e64094e7207f6ec8934bd149de28abf7b74f1ccb58dd6034d92c69df0d1c1",
+  "offline_result": "outputs/results/M01_v1/metrics.json",
+  "hardware_timing": "outputs/verification/H01_onboard_inference/report.json"
+}

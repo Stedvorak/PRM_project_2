@@ -1,0 +1,62 @@
+{
+  "source": "real_on_board_serial_telemetry",
+  "valid_events": 22,
+  "execution_budget_us": 500000,
+  "max_allowed_sample_gap_ms": 80,
+  "max_allowed_event_gap_ms": 1000,
+  "feature_us": {
+    "min": 2350,
+    "median": 2359.5,
+    "p95": 2376,
+    "max": 2429,
+    "mean": 2363.318181818182
+  },
+  "predict_us": {
+    "min": 9,
+    "median": 9.0,
+    "p95": 10,
+    "max": 10,
+    "mean": 9.136363636363637
+  },
+  "total_us": {
+    "min": 2377,
+    "median": 2388.0,
+    "p95": 2403,
+    "max": 2458,
+    "mean": 2390.909090909091
+  },
+  "inference_event_interval_ms": {
+    "min": 500,
+    "median": 500,
+    "p95": 500,
+    "max": 500,
+    "mean": 500
+  },
+  "observed_event_rate_hz": 2.0,
+  "sample_gap_ms": {
+    "min": 41,
+    "median": 41.0,
+    "p95": 41,
+    "max": 80,
+    "mean": 42.77272727272727
+  },
+  "state_event_counts": {
+    "calm": 0,
+    "fast": 0,
+    "unattached": 22,
+    "shaking": 0
+  },
+  "operator_state_check": null,
+  "violations": [],
+  "real_time_checks_passed": true,
+  "limitations": [
+    "Telemetry checks computation time and data continuity, not physical class correctness.",
+    "USB telemetry is testing-only; final demonstration firmware must disable it.",
+    "Serial transmission time is outside feature/prediction timing; event cadence is checked separately."
+  ],
+  "started_at_utc": "2026-11-09T14:31:39.657433+00:00",
+  "requested_duration_s": 15,
+  "host_elapsed_s": 15.219000000040978,
+  "interrupted": false,
+  "rejected_diagnostics": []
+}

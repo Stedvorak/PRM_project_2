@@ -1,0 +1,12 @@
+{
+  "source_sha256": {
+    "acquisition/platformio.ini": "ac603ef134af8509983cb352a071f31bbdf2db57d028a9369b87da0ef7c60963",
+    "acquisition/src/main.cpp": "b7b42633b8c47cc0f6bcf3fef7c3de19e080b33f7be9a798d8b80999536c2e9c",
+    "tools/record_session.py": "677503cf24d11db3fd57f8b6aca485ab2a1242fe9f44a6569010c0f31335805a",
+    "web-station/index.html": "27609776f07f5cb8c98286f7a24d26b0ec900b73e382c2dc712bd8e410ade049",
+    "firmware/include/prm_model.h": "429a21fb1f2f1aa4194d349fcab96007a35e03d5a7e2d85f80ca1e272a7126ea"
+  },
+  "acquisition_binary_sha256": "d6f942db41eb6cf298d7768b2b0a4c5e1c7bb56bc4126fd61a15fb6ff560a3a0",
+  "sensor_detected": false,
+  "model_selected": false
+}

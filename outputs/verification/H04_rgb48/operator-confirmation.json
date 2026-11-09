@@ -1,0 +1,20 @@
+{
+  "recorded_at_utc": "2026-11-09T14:36:32.332402+00:00",
+  "source": "explicit operator visual confirmation in conversation",
+  "pin": 48,
+  "type": "WS2812/NeoPixel-compatible, GRB configuration",
+  "observed_colors": [
+    "red",
+    "green",
+    "blue",
+    "magenta"
+  ],
+  "visual_test_passed": true,
+  "runtime_mapping": {
+    "calm": "green",
+    "fast": "red",
+    "unattached": "blue",
+    "shaking": "magenta"
+  },
+  "diagnostic_cycling": "disabled unless explicit testing macro enabled"
+}
