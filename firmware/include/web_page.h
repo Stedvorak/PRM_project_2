@@ -90,6 +90,8 @@ static const char INDEX_HTML[] PROGMEM = R"rawliteral(<!DOCTYPE html>
         <span>State ID: <strong id="stateIdText">-</strong></span>
         <span>•</span>
         <span>Confidence: <strong id="heroConfidenceText">N/A</strong></span>
+        <span>•</span>
+        <span>Breathing: <strong id="heroBpmText">N/A</strong> <span id="heroBpmUnit" style="display: none;">BPM</span></span>
       </div>
     </div>
 
@@ -176,6 +178,8 @@ static const char INDEX_HTML[] PROGMEM = R"rawliteral(<!DOCTYPE html>
     const heroConfidenceText = document.getElementById('heroConfidenceText');
     const bpmValue = document.getElementById('bpmValue');
     const bpmUnit = document.getElementById('bpmUnit');
+    const heroBpmText = document.getElementById('heroBpmText');
+    const heroBpmUnit = document.getElementById('heroBpmUnit');
     const confValue = document.getElementById('confValue');
     const confUnit = document.getElementById('confUnit');
     const statusDot = document.getElementById('statusDot');
@@ -238,10 +242,18 @@ static const char INDEX_HTML[] PROGMEM = R"rawliteral(<!DOCTYPE html>
         bpmValue.className = '';
         bpmValue.innerText = Math.round(data.breaths_per_min);
         bpmUnit.style.display = 'inline';
+        if (heroBpmText) {
+          heroBpmText.innerText = Math.round(data.breaths_per_min);
+          if (heroBpmUnit) heroBpmUnit.style.display = 'inline';
+        }
       } else {
         bpmValue.className = 'null-indicator';
         bpmValue.innerText = 'N/A';
         bpmUnit.style.display = 'none';
+        if (heroBpmText) {
+          heroBpmText.innerText = 'N/A';
+          if (heroBpmUnit) heroBpmUnit.style.display = 'none';
+        }
       }
 
       if (data.confidence !== null && data.confidence !== undefined) {

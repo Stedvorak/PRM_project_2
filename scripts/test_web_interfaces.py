@@ -53,6 +53,9 @@ def test_web_station():
     assert 'acknowledgedAlarms.unattached = true' in src, "unattached acknowledge handling missing!"
     assert 'acknowledgedAlarms.fastBreathing = false' in src, "Incident reset on state change missing!"
 
+    # Own Extension: BPM estimation display checks
+    assert 'bpmBadge' in src and 'stateBpmText' in src, "BPM indicator missing from web-station state hero!"
+
     print(" -> web-station/index.html passed all contract and functional checks.")
 
 def test_firmware_web_page():
@@ -65,6 +68,7 @@ def test_firmware_web_page():
     assert 'breaths_per_min' in src, "breaths_per_min handling missing!"
     assert 'probabilities' in src, "probabilities handling missing!"
     assert 'confidence' in src, "confidence handling missing!"
+    assert 'heroBpmText' in src and 'bpmValue' in src, "hero BPM indicator missing from dashboard!"
 
     # Check null handling logic
     assert 'null' in src, "Null value handling missing!"
@@ -79,6 +83,7 @@ def test_firmware_include_header():
     assert 'INDEX_HTML' in hdr, "INDEX_HTML declaration missing!"
     assert 'PROGMEM' in hdr, "PROGMEM keyword missing!"
     assert '/api/status' in hdr, "Endpoint missing in embedded header!"
+    assert 'heroBpmText' in hdr and 'bpmValue' in hdr, "hero BPM indicator missing from embedded web page!"
 
     print(" -> firmware/include/web_page.h passed header checks.")
 
@@ -157,6 +162,91 @@ def test_alarm_state_machine():
     assert sm.alarmsFiredCount == 2
 
     print(" -> Alarm state machine verified: no re-triggers during incident, re-arms on new incident.")
+
+def inline_script(html: str) -> str:
+    scripts = re.findall(r"<script\b[^>]*>(.*?)</script\s*>", html, flags=re.S | re.I)
+    return "\n".join(scripts)
+
+def station_script() -> str:
+    with open('web-station/index.html', 'r', encoding='utf-8') as f:
+        return inline_script(f.read())
+
+def board_script() -> str:
+    with open('firmware/include/web_page.h', 'r', encoding='utf-8') as f:
+        header = f.read()
+    match = re.search(r'INDEX_HTML\[\]\s+PROGMEM\s*=\s*R"(\w*)\((.*?)\)\1"', header, re.S)
+    if match:
+        return inline_script(match.group(2))
+    return inline_script(header)
+
+def run_js(source: str, scenario: str, name: str) -> None:
+    import shutil
+    import unittest
+    node = shutil.which("node")
+    if not node:
+        raise unittest.SkipTest("Node.js is not installed; skipping runtime JS DOM simulation")
+    # If node is available, execute via Node harness
+    import subprocess
+    import json
+    harness = r"""
+const fs = require('fs');
+const vm = require('vm');
+const assert = require('assert/strict');
+const input = JSON.parse(fs.readFileSync(0, 'utf8'));
+const clock = {now: 10000};
+const intervals = [];
+const timeouts = [];
+const elements = new Map();
+function element(id) {
+  if (!elements.has(id)) {
+    const classes = new Set();
+    const context = new Proxy({}, {get(target, property) {
+      return target[property] || (() => {});
+    }});
+    elements.set(id, {
+      id, style: {}, innerText: '', textContent: '', innerHTML: '',
+      className: '', disabled: false, width: 600, height: 180,
+      parentElement: {clientWidth: 600, clientHeight: 180},
+      classList: {add: x => classes.add(x), remove: x => classes.delete(x),
+        replace: (a,b) => {classes.delete(a); classes.add(b);},
+        contains: x => classes.has(x)},
+      getContext: () => context, addEventListener() {}, removeEventListener() {},
+      appendChild() {}, remove() {}, click() {}
+    });
+  }
+  return elements.get(id);
+}
+class ControlledDate extends Date {
+  constructor(...args) { super(...(args.length ? args : [clock.now])); }
+  static now() { return clock.now; }
+}
+const sandbox = {
+  assert, console: {log() {}, warn() {}, error() {}},
+  Date: ControlledDate, performance: {now: () => clock.now},
+  document: {getElementById: element, createElement: element, body: element('body')},
+  window: {addEventListener() {}}, navigator: {},
+  setInterval(fn, ms) { const timer={fn, ms}; intervals.push(timer); return timer; },
+  clearInterval(timer) { if (timer) timer.cancelled=true; },
+  setTimeout(fn, ms) { const timer={fn, ms}; timeouts.push(timer); return timer; },
+  clearTimeout(timer) { if (timer) timer.cancelled=true; },
+  AbortController, DataView, Uint8Array, Blob, URL,
+  alert() {}, fetch: async () => { throw new Error('No HTTP test fixture installed'); },
+  __clock: clock, __intervals: intervals, __timeouts: timeouts,
+  __elements: elements,
+};
+vm.createContext(sandbox);
+(async () => {
+  const result = vm.runInContext(input.source + '\n;(async () => {\n' + input.scenario + '\n})()', sandbox,
+    {timeout: 5000, filename: input.name});
+  await result;
+  process.stdout.write('PASS: actual page JavaScript scenario\n');
+})().catch(error => {console.error(error.stack || error); process.exitCode=1;});
+"""
+    result = subprocess.run([node, "-e", harness],
+                            input=json.dumps(dict(source=source, scenario=scenario, name=name)),
+                            text=True, capture_output=True, timeout=15)
+    if result.returncode != 0:
+        raise AssertionError(f"{name} failed:\n{result.stderr}\n{result.stdout}")
 
 if __name__ == '__main__':
     try:

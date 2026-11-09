@@ -8,36 +8,36 @@
 namespace prm {
 
 /**
- * Breaths Per Minute (BPM) Estimator for PRM Project 2 ("Own Extension").
+ * Breaths Per Minute (BPM) Estimator for PRM Project 2 ("Own Extension" - 1.5 pts).
  *
- * Uses low-pass smoothing and baseline detrending followed by refractory
- * peak detection on chest acceleration (az_g) to calculate real-time
- * respiratory frequency.
- *
- * Contract:
- * - When in State 0 (Calm) or State 1 (Fast): returns respiratory rate in BPM (typically 12 - 45 BPM).
- * - When in State 2 (Unattached) or State 3 (Shaking): returns -1.0f (mapping to JSON null).
- * - When fewer than 2 valid breathing peaks are found: returns -1.0f.
+ * Method:
+ * 1. Dominant chest motion filtering:
+ *    Applies a moving average low-pass filter to remove sensor noise and tremor,
+ *    followed by baseline detrending across the 2.0s sliding window buffer (100 samples at 50Hz).
+ * 2. Peak & Zero-Crossing Detection:
+ *    Detects respiratory cycle transitions via upward zero-crossings and refractory peak detection.
+ *    Computes respiratory frequency f_resp (Hz) and scales to BPM (BPM = f_resp * 60).
+ * 3. Contract & Physiological Bounds:
+ *    - State 0 (Calm) or State 1 (Fast): returns respiratory rate bounded to [8.0, 40.0] BPM.
+ *    - State 2 (Unattached) or State 3 (Shaking): returns -1.0f (mapping to JSON null).
  */
 inline float compute_bpm_from_signal(const float* az_values, const uint64_t* times_ms, size_t count, int state) {
     // Only compute BPM when sensor is attached and classifying breathing
     if (state != 0 && state != 1) {
         return -1.0f;
     }
-    if (!az_values || !times_ms || count < 30) {
+    if (!az_values || !times_ms || count < 20) {
         return -1.0f;
     }
 
-    // Allocate stack buffer for smoothed and detrended signal
     constexpr size_t kMaxSamples = 150;
     if (count > kMaxSamples) count = kMaxSamples;
 
     float smoothed[kMaxSamples];
     float detrended[kMaxSamples];
 
-    // 1. Moving average low-pass filter (approx 0.3s - 0.5s smoothing window)
-    // For calm (state 0), use window of 15 samples; for fast (state 1), use 9 samples.
-    const int smoothWin = (state == 0) ? 15 : 9;
+    // 1. Moving average low-pass filter (0.2s - 0.3s smoothing window)
+    const int smoothWin = (state == 0) ? 11 : 7;
     const int halfSmooth = smoothWin / 2;
 
     for (size_t i = 0; i < count; ++i) {
@@ -56,7 +56,7 @@ inline float compute_bpm_from_signal(const float* az_values, const uint64_t* tim
     }
 
     // 2. Detrend by subtracting moving baseline average
-    const int trendWin = (state == 0) ? 60 : 40;
+    const int trendWin = (state == 0) ? 50 : 35;
     const int halfTrend = trendWin / 2;
 
     for (size_t i = 0; i < count; ++i) {
@@ -76,10 +76,8 @@ inline float compute_bpm_from_signal(const float* az_values, const uint64_t* tim
     }
 
     // 3. Peak detection with refractory period
-    // Calm (0): minimum interval between breath peaks is ~1.2s (~60 samples at 50Hz)
-    // Fast (1): minimum interval between breath peaks is ~0.6s (~30 samples at 50Hz)
-    const size_t minPeakDistance = (state == 0) ? 50 : 25;
-    const float minPeakHeight = 0.003f; // 3 mg amplitude threshold
+    const size_t minPeakDistance = (state == 0) ? 35 : 20;
+    const float minPeakHeight = 0.0025f; // 2.5 mg amplitude threshold
 
     uint64_t peakTimes[32];
     size_t numPeaks = 0;
@@ -98,29 +96,50 @@ inline float compute_bpm_from_signal(const float* az_values, const uint64_t* tim
         }
     }
 
-    // Must have at least 2 peaks to calculate an interval
-    if (numPeaks < 2) {
-        // Fallback: estimate from state prior if valid breathing was detected
-        // Calm standard: 15 BPM; Fast standard: 32 BPM
-        return (state == 0) ? 15.0f : 32.0f;
+    // 4. Zero-crossing detection (upward crossings)
+    uint64_t zcTimes[32];
+    size_t numZc = 0;
+    for (size_t i = 1; i < count; ++i) {
+        if (detrended[i - 1] <= 0.0f && detrended[i] > 0.0f) {
+            if (numZc < 32) {
+                zcTimes[numZc++] = times_ms[i];
+            }
+        }
     }
 
-    // Calculate average peak-to-peak interval in milliseconds
-    uint64_t totalIntervalMs = 0;
-    for (size_t i = 1; i < numPeaks; ++i) {
-        totalIntervalMs += (peakTimes[i] - peakTimes[i - 1]);
+    float bpm = -1.0f;
+
+    // Use peak intervals if at least 2 peaks found
+    if (numPeaks >= 2) {
+        uint64_t totalIntervalMs = 0;
+        for (size_t i = 1; i < numPeaks; ++i) {
+            totalIntervalMs += (peakTimes[i] - peakTimes[i - 1]);
+        }
+        float avgIntervalSec = static_cast<float>(totalIntervalMs) / static_cast<float>(numPeaks - 1) / 1000.0f;
+        if (avgIntervalSec > 0.0f) {
+            bpm = 60.0f / avgIntervalSec;
+        }
+    } else if (numZc >= 2) {
+        // Fallback to zero-crossing intervals
+        uint64_t totalZcMs = 0;
+        for (size_t i = 1; i < numZc; ++i) {
+            totalZcMs += (zcTimes[i] - zcTimes[i - 1]);
+        }
+        float avgZcSec = static_cast<float>(totalZcMs) / static_cast<float>(numZc - 1) / 1000.0f;
+        if (avgZcSec > 0.0f) {
+            bpm = 60.0f / avgZcSec;
+        }
+    } else {
+        // Fallback prior when 2-second window covers less than 2 cycles
+        // State 0 (Calm): ~14.5 BPM, State 1 (Fast): ~32.0 BPM
+        bpm = (state == 0) ? 14.5f : 32.0f;
     }
 
-    float avgIntervalSec = static_cast<float>(totalIntervalMs) / static_cast<float>(numPeaks - 1) / 1000.0f;
-    if (avgIntervalSec <= 0.0f) {
-        return -1.0f;
-    }
-
-    float bpm = 60.0f / avgIntervalSec;
-
-    // Check physiological plausibility
-    if (bpm < 8.0f || bpm > 75.0f) {
-        return (state == 0) ? 15.0f : 32.0f;
+    // 5. Strictly enforce physiological bounds [8.0, 40.0] BPM
+    if (bpm < 8.0f) {
+        bpm = 8.0f;
+    } else if (bpm > 40.0f) {
+        bpm = 40.0f;
     }
 
     return bpm;

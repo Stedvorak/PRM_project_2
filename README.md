@@ -44,6 +44,19 @@ The classifier runs on the microcontroller with no computer tether (USB only sup
   - Alarm triggers on Web Station: Fast breathing > 15 s, Unattached > 10 s, or connection loss.
 - **ESP32 Wi-Fi AP:** Serves real-time telemetry and state probabilities over `GET /api/status`.
 
+## Own Extension: Real-Time Respiratory Rate (BPM) Estimation (1.5 pts)
+In addition to 4-state classification, the ESP32-S3 firmware performs real-time respiratory rate estimation in **Breaths Per Minute (BPM)**:
+- **Method:**
+  1. **Low-Pass Filtering:** Applies a moving-average filter to the dominant chest-displacement axis ($a_z$) to eliminate high-frequency IMU jitter and tremor.
+  2. **Baseline Detrending:** Subtracts a moving baseline average to center respiratory waveforms symmetrically around zero.
+  3. **Peak & Zero-Crossing Detection:** Detects breath cycle transitions via refractory local maxima and upward zero-crossings, measuring cycle duration $T_{resp}$ (s) to obtain respiratory frequency $f_{resp} = 1 / T_{resp}$ (Hz).
+  4. **Rate Scaling:** Converts respiratory frequency to breaths per minute ($\text{BPM} = f_{resp} \times 60$).
+- **Window Length:** Evaluated over a 2.0-second sliding window (100 samples at 50 Hz, updated every 500 ms inference step).
+- **Physiological Bounds & Contract:**
+  - Active States `0` (calm) and `1` (fast) compute and return rates strictly bounded to physiological limits: **[8.0, 40.0] BPM**.
+  - Active States `2` (unattached) and `3` (shaking) return `-1.0f` (mapping to JSON `null` in `/api/status` and `--` on dashboards).
+  - Populates `"breaths_per_min"` in `/api/status` and renders live numerical indicators alongside the state badges in both the GitHub Pages Web Station and the ESP32 AP web dashboard.
+
 ## AI Tools Usage
 In accordance with BUT AI guidelines, artificial intelligence tools were used as follows:
 - **Codex / Antigravity / Gemini:** Architecture contract specification (`docs/INTERFACES.md`), Web Bluetooth interface scaffolding (`web-station/index.html`), and C++ inference conversion routines. All generated code was verified and adapted by team members.

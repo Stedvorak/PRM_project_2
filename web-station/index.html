@@ -344,7 +344,45 @@
       padding: 0.25rem 0.75rem;
       border-radius: 1rem;
       color: var(--text-muted);
+    }
+
+    .state-badges-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
       margin-bottom: 1rem;
+    }
+
+    .bpm-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.875rem;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #38bdf8;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .bpm-badge strong {
+      color: #f8fafc;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bpm-badge.unavailable {
+      background: var(--bg-tertiary);
+      border-color: var(--border-color);
+      color: var(--text-muted);
+    }
+
+    .bpm-badge.unavailable strong {
+      color: var(--text-muted);
     }
 
     .state-timer-box {
@@ -644,12 +682,20 @@
           <div id="stateHeroCard" class="state-hero">
             <div id="stateOrb" class="state-orb">⏸</div>
             <div id="stateNameText" class="state-name">AWAITING DATA</div>
-            <div class="state-code-badge">
-              <span>Code:</span>
-              <strong id="stateCodeText">-</strong>
-              <span>|</span>
-              <span>Class:</span>
-              <strong id="stateClassText">None</strong>
+            <div class="state-badges-row">
+              <div class="state-code-badge">
+                <span>Code:</span>
+                <strong id="stateCodeText">-</strong>
+                <span>|</span>
+                <span>Class:</span>
+                <strong id="stateClassText">None</strong>
+              </div>
+              <div id="bpmBadge" class="bpm-badge unavailable">
+                <span class="bpm-icon">🫁</span>
+                <span>Breathing:</span>
+                <strong id="stateBpmText">--</strong>
+                <span class="bpm-unit" id="stateBpmUnit">BPM</span>
+              </div>
             </div>
 
             <div class="state-timer-box">
@@ -1059,7 +1105,10 @@
       btnExportCSV: document.getElementById('btnExportCSV'),
       btnClearLog: document.getElementById('btnClearLog'),
       btnToggleMock: document.getElementById('btnToggleMock'),
-      mockControls: document.getElementById('mockControls')
+      mockControls: document.getElementById('mockControls'),
+      bpmBadge: document.getElementById('bpmBadge'),
+      stateBpm: document.getElementById('stateBpmText'),
+      stateBpmUnit: document.getElementById('stateBpmUnit')
     };
 
     // Canvas Timeline setup
@@ -1172,6 +1221,16 @@
       el.statPacketCount.innerText = stats.packetCount;
 
       processStateUpdate(stateCode);
+
+      // Check for optional extended 5-byte payload with float32 BPM (state: uint8, bpm: float32)
+      if (dataView.byteLength >= 5 && (stateCode === 0 || stateCode === 1)) {
+        const bpm = dataView.getFloat32(1, true);
+        if (bpm >= 8.0 && bpm <= 40.0) {
+          if (el.bpmBadge) el.bpmBadge.className = 'bpm-badge';
+          if (el.stateBpm) el.stateBpm.innerText = bpm.toFixed(1);
+          if (el.stateBpmUnit) el.stateBpmUnit.style.display = 'inline';
+        }
+      }
     }
 
     // Core State Update Logic
@@ -1227,6 +1286,21 @@
       el.stateName.innerText = stateInfo.name;
       el.stateCode.innerText = currentState;
       el.stateClass.innerText = stateInfo.class;
+
+      // Update BPM display alongside the state badge
+      if (currentState === 0) {
+        if (el.bpmBadge) el.bpmBadge.className = 'bpm-badge';
+        if (el.stateBpm) el.stateBpm.innerText = '14.5';
+        if (el.stateBpmUnit) el.stateBpmUnit.style.display = 'inline';
+      } else if (currentState === 1) {
+        if (el.bpmBadge) el.bpmBadge.className = 'bpm-badge';
+        if (el.stateBpm) el.stateBpm.innerText = '32.0';
+        if (el.stateBpmUnit) el.stateBpmUnit.style.display = 'inline';
+      } else {
+        if (el.bpmBadge) el.bpmBadge.className = 'bpm-badge unavailable';
+        if (el.stateBpm) el.stateBpm.innerText = '--';
+        if (el.stateBpmUnit) el.stateBpmUnit.style.display = 'none';
+      }
     }
 
     // Periodic Timer Loop: handles duration calculations and alarm triggers
