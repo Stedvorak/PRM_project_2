@@ -5,15 +5,20 @@ interfaces. [Assignment](https://tomasvicar.github.io/AUI-public/labs/real-time-
 
 ## Current status
 
-Firmware and a real-recording training pipeline are implemented for testing.
-There is no trained model or genuine classifier evaluation yet. The checked-in
-model deliberately returns unavailable; no mock prediction is exposed as real.
-The separate50Hz acquisition image was flashed to COM3 with verified hashes.
-After wiring was checked, the existing firmware verified address0x68,
-WHO_AM_I0x68 and50Hz configuration on GPIO8/9. The first real30-second
-unattached/table session contains1499 valid samples at49.943Hz; its unchanged
-CSV and metadata are in data/raw/. LED and BLE/AP demonstrations remain to be
-verified. This repository is not yet a complete lab submission.
+Trained M01 v1 monitoring firmware is now flashed to COM3. It detected the
+MPU-6050 at0x68 and produced22 real on-device predictions at2Hz. Measured
+feature+prediction computation was2.377–2.458ms against a500ms update budget.
+This is timing evidence, not a physically labeled accuracy demonstration.
+
+All12 real recordings (17993 samples, four classes) are preserved under data/raw/.
+Six candidates were evaluated with two whole collection-round folds. Selected
+M01 pooled held-out accuracy83.64%, mean-fold balanced accuracy86.11%, macroF1
+0.8351. Placement dependence and unattached recall53.09% limit generalization.
+See docs/RESULTS.md and docs/FINAL_METHOD.md for exact evidence and versions.
+
+The trained monitoring image includes BLE, AP, HTTP and the embedded webpage.
+PC BLE verification currently fails because Windows reports its adapter not
+ready. HTTP/AP and LED visual/state demonstrations are still pending.
 
 - [Shared BLE/HTTP interface v0.2](docs/INTERFACES.md)
 - [Build, wiring assumptions and hardware acceptance checks](docs/FIRMWARE.md)
@@ -31,7 +36,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m platformio run -e esp32-s3
 ```
 
-See FIRMWARE.md before uploading. Pins are provisional, RGB defaults disabled,
+See FIRMWARE.md before uploading. Sensor pins are SDA8/SCL9; RGB defaults disabled,
 and the capture build is training-only. Default demo firmware does not transmit
 USB serial data. The board performs acquisition/features/inference independently.
 
@@ -52,8 +57,9 @@ The separate acquisition project records all six real axes at50Hz over CH343
 COM3, with identity/configuration tests and a Python recorder. Its raw files must
 be explicitly downsampled before using M01's25Hz training pipeline. Acquisition
 does not change the agreed25Hz live signal API or install a classifier.
-The board currently runs this acquisition-only image, so the demo AP/BLE/page
-is not active on hardware. Reflash the main demo build after data collection.
+The board now runs trained monitoring firmware, replacing acquisition firmware.
+The inference-check build emits testing-only USB diagnostics; the esp32-s3
+build disables this stream for the required power-only USB demonstration.
 
 The proposed own extension is explicit sensor-fault/unavailable detection and
 recovery. It must be demonstrated on hardware before claiming completion.

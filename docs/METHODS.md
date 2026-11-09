@@ -1,15 +1,18 @@
-﻿# Method Registry
+# Method Registry
 
-| ID | Version | Method | Source | Parameters | Metrics | Result files | Status |
+| ID | Version | Method | Source | Parameters | Actual grouped validation | Result files | Status |
 |---|---|---|---|---|---|---|---|
-| M01 | 1 | recording-group-held-out decision tree on 12 inertial features | tools/train_model.py; firmware/include/prm_features.h; generated candidate prm_model.h | 25 Hz; 100 samples/window; stride25; depth5; minimum leaf2; balanced weights; seed42; per-class whole-recording holdout25%; DLPF5/10Hz | NOT EVALUATED: no genuine recordings available | Planned outputs/results/M01_v1/metrics.json, heldout_predictions.csv, feature_windows.npz, manifest.json, prm_model.h; none exist yet | experimental |
+| M01 | 1 | decision_tree_depth5 | tools/compare_models.py; outputs/results/M01_v1/prm_model.h | {"class_weight": "balanced", "kind": "tree", "max_depth": 5, "min_samples_leaf": 2, "name": "decision_tree_depth5", "random_state": 42} | mean-fold balanced 86.11%; pooled accuracy 83.64%; macro F1 0.8351 | outputs/results/M01_v1/metrics.json; heldout_predictions.csv; feature_windows.npz; prm_model.h | selected |
+| M02 | 1 | decision_tree_depth3 | tools/compare_models.py; outputs/results/M02_v1/prm_model.h | {"class_weight": "balanced", "kind": "tree", "max_depth": 3, "min_samples_leaf": 2, "name": "decision_tree_depth3", "random_state": 42} | mean-fold balanced 86.11%; pooled accuracy 83.64%; macro F1 0.8351 | outputs/results/M02_v1/metrics.json; heldout_predictions.csv; feature_windows.npz; prm_model.h | rejected |
+| M03 | 1 | random_forest_8_depth4 | tools/compare_models.py; outputs/results/M03_v1/prm_model.h | {"class_weight": "balanced", "kind": "forest", "max_depth": 4, "min_samples_leaf": 2, "n_estimators": 8, "name": "random_forest_8_depth4", "random_state": 42} | mean-fold balanced 74.31%; pooled accuracy 74.07%; macro F1 0.7451 | outputs/results/M03_v1/metrics.json; heldout_predictions.csv; feature_windows.npz; prm_model.h | rejected |
+| M04 | 1 | standardized_logistic_regression | tools/compare_models.py; outputs/results/M04_v1/prm_model.h | {"C": 1.0, "class_weight": "balanced", "kind": "logistic", "max_iter": 2000, "name": "standardized_logistic_regression", "random_state": 42} | mean-fold balanced 75.00%; pooled accuracy 75.00%; macro F1 0.7429 | outputs/results/M04_v1/metrics.json; heldout_predictions.csv; feature_windows.npz; prm_model.h | rejected |
+| M05 | 1 | invariant_decision_tree_depth5 | tools/compare_invariant.py; outputs/results/M05_v1/prm_model.h | {"class_weight": "balanced", "kind": "tree", "max_depth": 5, "min_samples_leaf": 2, "name": "invariant_decision_tree_depth5", "random_state": 42, "training_masked_columns": [0, 1, 2, 3, 4, 5], "used_feature_columns": [6, 7, 8, 9, 10, 11]} | mean-fold balanced 60.88%; pooled accuracy 64.51%; macro F1 0.6539 | outputs/results/M05_v1/metrics.json; heldout_predictions.csv; feature_windows.npz; prm_model.h | rejected |
+| M06 | 1 | invariant_random_forest_8_depth4 | tools/compare_invariant.py; outputs/results/M06_v1/prm_model.h | {"class_weight": "balanced", "kind": "forest", "max_depth": 4, "min_samples_leaf": 2, "n_estimators": 8, "name": "invariant_random_forest_8_depth4", "random_state": 42, "training_masked_columns": [0, 1, 2, 3, 4, 5], "used_feature_columns": [6, 7, 8, 9, 10, 11]} | mean-fold balanced 71.53%; pooled accuracy 73.46%; macro F1 0.7458 | outputs/results/M06_v1/metrics.json; heldout_predictions.csv; feature_windows.npz; prm_model.h | rejected |
 
-Only one method may be selected. No final method is selected yet.
-The deployed firmware/include/prm_model.h deliberately reports model unavailable;
-this is not a classifier and must never produce invented four-class probabilities.
+Exactly one selected method: M01 v1. M02 ties and yields the same seven-node tree; retain M01 as the established baseline. M03?M06 perform worse on the same groups. No more experiments in delivery mode.
 
-The method description, parameters and class order are documented in ML.md.
-Register each newly evaluated method/version separately. Never overwrite another
-experiment directory. Test fixtures establish software behavior only; they are
-not real model evaluation. Before selection record real metrics, files, exact
-implementation and verified remote commit in FINAL_METHOD.md.
+All use 25Hz, 100-sample windows, stride25 and the twelve documented inertial features. Raw50Hz recordings are explicitly decimated by2 after sensor10Hz filtering; originals are unchanged. M05/M06 mask axis means/std and retain magnitude/difference features.
+
+The previously planned M01 evaluation used a per-class recording holdout; before its first real evaluation this was strengthened to two whole collection-round folds because adjacent follow-up takes are not independent. Groups are assigned before windowing; no overlapping windows cross folds. Twelve files are not twelve independent experimental sessions: three recordings and two separated bouts per class, one device/boot/operator. Candidate selection used this CV; no untouched final test exists.
+
+M01 is placement dependent (first split mean_ay); pooled unattached recall53.09%, weaker-fold29.63%. Selection prioritizes the best measured grouped score and smallest feasible deployment, not an unsupported accuracy claim. Actual results/figures: RESULTS.md; MODEL_COMPARISON.md. Hardware verification is separate from immutable offline metrics.

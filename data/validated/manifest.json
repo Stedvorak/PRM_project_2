@@ -1,0 +1,105 @@
+{
+  "source": "real_sensor",
+  "sample_rate_hz": 25,
+  "raw_sample_rate_hz": 50,
+  "preprocessing": "DLPF5=10Hz in sensor; deterministic keep-every-second sample; original timestamps/values retained; originals unchanged",
+  "group_policy": "Two inferred whole collection rounds: first take/class versus all later takes/class. Adjacent follow-up takes share a group. One device/boot; independent people or physical experimental sessions are not established.",
+  "recordings": [
+    {
+      "recording_id": "20261109T135811_347025Z_unattached_07ff5cfb",
+      "state": "unattached",
+      "group_id": "R1_initial",
+      "path": "20261109T135811_347025Z_unattached_07ff5cfb_25hz.csv",
+      "raw_path": "data/raw/20261109T135811_347025Z_unattached_07ff5cfb.csv",
+      "raw_sha256": "23fd1f627008834ad111d6a0e3ea8ac8bfb99bdd8747786e435f86f6c73450bc"
+    },
+    {
+      "recording_id": "20261109T140500_398309Z_calm_0e3b3568",
+      "state": "calm",
+      "group_id": "R1_initial",
+      "path": "20261109T140500_398309Z_calm_0e3b3568_25hz.csv",
+      "raw_path": "data/raw/20261109T140500_398309Z_calm_0e3b3568.csv",
+      "raw_sha256": "c3403cf7f596049521714c0230cdfcfebdbe68d189cdb6821bd37cbe478d5fe2"
+    },
+    {
+      "recording_id": "20261109T140624_371525Z_fast_d9fa2ee5",
+      "state": "fast",
+      "group_id": "R1_initial",
+      "path": "20261109T140624_371525Z_fast_d9fa2ee5_25hz.csv",
+      "raw_path": "data/raw/20261109T140624_371525Z_fast_d9fa2ee5.csv",
+      "raw_sha256": "7126487d4bf96a38876a470a55be9a1532aa825d2d9c09427359c5a7ecf1a2a4"
+    },
+    {
+      "recording_id": "20261109T140724_011140Z_shaking_e31f5888",
+      "state": "shaking",
+      "group_id": "R1_initial",
+      "path": "20261109T140724_011140Z_shaking_e31f5888_25hz.csv",
+      "raw_path": "data/raw/20261109T140724_011140Z_shaking_e31f5888.csv",
+      "raw_sha256": "4085d28686f5240e4092b48ec669a15d2a0f3fa0482df9b22dd7d942a8ed4b63"
+    },
+    {
+      "recording_id": "20261109T140923_061957Z_calm_a7055369",
+      "state": "calm",
+      "group_id": "R2_followup",
+      "path": "20261109T140923_061957Z_calm_a7055369_25hz.csv",
+      "raw_path": "data/raw/20261109T140923_061957Z_calm_a7055369.csv",
+      "raw_sha256": "e60422fc1d6087ae11c52f4fc2769eeb251cb20f65e0e9c0a04c9d437d56bec9"
+    },
+    {
+      "recording_id": "20261109T140953_300366Z_calm_f7984b0a",
+      "state": "calm",
+      "group_id": "R2_followup",
+      "path": "20261109T140953_300366Z_calm_f7984b0a_25hz.csv",
+      "raw_path": "data/raw/20261109T140953_300366Z_calm_f7984b0a.csv",
+      "raw_sha256": "dbe80fc1ba77b0df888840b0e90924d47aeb5961a8c2fb64f93153b7a87d2e86"
+    },
+    {
+      "recording_id": "20261109T141044_429790Z_fast_42fad384",
+      "state": "fast",
+      "group_id": "R2_followup",
+      "path": "20261109T141044_429790Z_fast_42fad384_25hz.csv",
+      "raw_path": "data/raw/20261109T141044_429790Z_fast_42fad384.csv",
+      "raw_sha256": "fdf2e9edff95d7f6023536fa3a48dc94c96f52018e37595cf15e596f3c1e26ed"
+    },
+    {
+      "recording_id": "20261109T141114_659618Z_fast_90296304",
+      "state": "fast",
+      "group_id": "R2_followup",
+      "path": "20261109T141114_659618Z_fast_90296304_25hz.csv",
+      "raw_path": "data/raw/20261109T141114_659618Z_fast_90296304.csv",
+      "raw_sha256": "6aa44054df6d30654d021921a50ca24d2ff19504f4ce1ac2d9a9192416ef4c1c"
+    },
+    {
+      "recording_id": "20261109T141156_197609Z_shaking_68cebcd8",
+      "state": "shaking",
+      "group_id": "R2_followup",
+      "path": "20261109T141156_197609Z_shaking_68cebcd8_25hz.csv",
+      "raw_path": "data/raw/20261109T141156_197609Z_shaking_68cebcd8.csv",
+      "raw_sha256": "b7c61fc619c97896d42fdf77698e7558ef65c95e789db08a50d76fe4b1090270"
+    },
+    {
+      "recording_id": "20261109T141226_451706Z_shaking_ebac4253",
+      "state": "shaking",
+      "group_id": "R2_followup",
+      "path": "20261109T141226_451706Z_shaking_ebac4253_25hz.csv",
+      "raw_path": "data/raw/20261109T141226_451706Z_shaking_ebac4253.csv",
+      "raw_sha256": "dee9fb729178bb2b71dae292cc9a5a2dbcb1efdcbb140adcc5dfdc56df11f484"
+    },
+    {
+      "recording_id": "20261109T141317_220570Z_unattached_85b0b3ce",
+      "state": "unattached",
+      "group_id": "R2_followup",
+      "path": "20261109T141317_220570Z_unattached_85b0b3ce_25hz.csv",
+      "raw_path": "data/raw/20261109T141317_220570Z_unattached_85b0b3ce.csv",
+      "raw_sha256": "7e7961894d90c6eeec8075991b2cbd65a1fe28d6e5d781ea91331f546c729da5"
+    },
+    {
+      "recording_id": "20261109T141347_492912Z_unattached_ef7d8966",
+      "state": "unattached",
+      "group_id": "R2_followup",
+      "path": "20261109T141347_492912Z_unattached_ef7d8966_25hz.csv",
+      "raw_path": "data/raw/20261109T141347_492912Z_unattached_ef7d8966.csv",
+      "raw_sha256": "9b810021f74f057c567c6361cc24b2297d4c51317bf55a089baaf2b377f17ebe"
+    }
+  ]
+}

@@ -13,6 +13,7 @@
 #include "prm_features.h"
 #include "prm_model.h"
 #include "prm_runtime.h"
+#include "prm_diagnostics.h"
 #include "web_page.h"
 
 namespace {
@@ -177,13 +178,13 @@ bool detectSensor() {
     const bool identified = acknowledged && readRegistersAt(address, 0x75, &identity, 1);
     if (identified && identity == 0x68) {
       activeMpuAddress = address;
-#if PRM_CAPTURE_SERIAL
+#if PRM_CAPTURE_SERIAL || PRM_INFERENCE_DIAGNOSTICS
       Serial.printf("# I2C detection: MPU-6050 verified at 0x%02X\n", address);
 #endif
       return true;
     }
   }
-#if PRM_CAPTURE_SERIAL
+#if PRM_CAPTURE_SERIAL || PRM_INFERENCE_DIAGNOSTICS
   Serial.println("# I2C detection: no verified MPU-6050; measurements unavailable");
 #endif
   return false;
@@ -275,18 +276,36 @@ void infer(uint64_t now) {
   portEXIT_CRITICAL(&stateMux);
   float features[prm::kFeatureCount];
   Prediction next;
-  if (healthy && prm::sampleWindowContinuous(window, count) &&
-      prm::extractFeatures(window, count, features) &&
-      prm::predictProbabilities(features, next.probabilities) &&
-      prm::validateProbabilities(next.probabilities, next.state, next.confidence)) {
-    next.valid = true;
-    next.inferredAt = nowMs();
+  uint32_t featureUs = 0, predictUs = 0, totalUs = 0;
+  const uint64_t computationStart = esp_timer_get_time();
+  if (healthy && prm::sampleWindowContinuous(window, count)) {
+    const uint64_t featureStart = esp_timer_get_time();
+    const bool featuresValid = prm::extractFeatures(window, count, features);
+    featureUs = static_cast<uint32_t>(esp_timer_get_time() - featureStart);
+    const uint64_t predictStart = esp_timer_get_time();
+    const bool predictionValid = featuresValid &&
+        prm::predictProbabilities(features, next.probabilities) &&
+        prm::validateProbabilities(next.probabilities, next.state, next.confidence);
+    predictUs = static_cast<uint32_t>(esp_timer_get_time() - predictStart);
+    if (predictionValid) {
+      next.valid = true;
+      next.inferredAt = nowMs();
+    }
   }
+  totalUs = static_cast<uint32_t>(esp_timer_get_time() - computationStart);
   lockPublicationState();
   portENTER_CRITICAL(&stateMux);
   prediction = next;
   portEXIT_CRITICAL(&stateMux);
   unlockPublicationState();
+  if (next.valid) {
+    uint64_t maxGap = 0;
+    for (size_t i = 1; i < count; ++i)
+      if (window[i].t_ms - window[i-1].t_ms > maxGap)
+        maxGap = window[i].t_ms - window[i-1].t_ms;
+    prm::emitInferenceDiagnostic(next.inferredAt, next.state, next.probabilities,
+        featureUs, predictUs, totalUs, window[0].t_ms, window[count-1].t_ms, maxGap);
+  }
 }
 
 String timestampString(uint64_t value) {
@@ -453,11 +472,46 @@ void acquisitionTask(void*) {
     vTaskDelay(pdMS_TO_TICKS(1));
   }
 }
+
+#if PRM_INFERENCE_DIAGNOSTICS
+// Testing-only command; unavailable in the silent final demonstration build.
+// Only the two user-approved candidate pins can be driven.
+void rgbDiagnostic(uint8_t pin) {
+  if (pin != 48 && pin != 38) return;
+  Adafruit_NeoPixel testLed(1, pin, NEO_GRB + NEO_KHZ800);
+  testLed.begin();
+  const uint32_t colors[] = {testLed.Color(24,0,0), testLed.Color(0,24,0),
+      testLed.Color(0,0,24), testLed.Color(24,0,24)};
+  const char* names[] = {"red", "green", "blue", "magenta"};
+  for (size_t i = 0; i < 4; ++i) {
+    Serial.printf("# RGB_TEST pin=%u color=%s\n", pin, names[i]);
+    testLed.setPixelColor(0, colors[i]); testLed.show(); delay(2500);
+  }
+  testLed.clear(); testLed.show();
+  Serial.printf("# RGB_TEST pin=%u complete; visual confirmation required\n", pin);
+}
+
+void pollDiagnosticCommand() {
+  static String command;
+  while (Serial.available()) {
+    const char c = static_cast<char>(Serial.read());
+    if (c == '\n') {
+      command.trim();
+      if (command == "RGB_TEST 48") rgbDiagnostic(48);
+      else if (command == "RGB_TEST 38") rgbDiagnostic(38);
+      command = "";
+    } else if (command.length() < 32) command += c;
+    else command = "";
+  }
+}
+#endif
 }  // namespace
 
 void setup() {
-#if PRM_CAPTURE_SERIAL
+#if PRM_CAPTURE_SERIAL || PRM_INFERENCE_DIAGNOSTICS
   Serial.begin(115200);
+#endif
+#if PRM_CAPTURE_SERIAL
   Serial.println("t_ms,ax_g,ay_g,az_g,gx_dps,gy_dps,gz_dps");
 #endif
 #if PRM_RGB_PIN >= 0
@@ -482,6 +536,9 @@ void setup() {
 }
 
 void loop() {
+#if PRM_INFERENCE_DIAGNOSTICS
+  pollDiagnosticCommand();
+#endif
   http.handleClient();
   delay(1);
 }

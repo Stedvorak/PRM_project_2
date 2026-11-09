@@ -1,0 +1,192 @@
+{
+  "comparison_id": "C01",
+  "version": "1",
+  "validation_strategy": "leave_one_whole_collection_group_out",
+  "results": [
+    {
+      "method_id": "M01",
+      "version": "1",
+      "name": "decision_tree_depth5",
+      "mean_fold_balanced_accuracy": 0.861111111111111,
+      "fold_balanced_accuracy_std": 0.07407407407407407,
+      "accuracy": 0.8364197530864198,
+      "balanced_accuracy": 0.8364197530864198,
+      "macro_f1": 0.8351368818145612,
+      "confusion_matrix": [
+        [
+          73,
+          7,
+          1,
+          0
+        ],
+        [
+          0,
+          81,
+          0,
+          0
+        ],
+        [
+          3,
+          35,
+          43,
+          0
+        ],
+        [
+          0,
+          7,
+          0,
+          74
+        ]
+      ],
+      "recall_by_class": {
+        "calm": 0.9012345679012346,
+        "fast": 1.0,
+        "unattached": 0.5308641975308642,
+        "shaking": 0.9135802469135802
+      },
+      "header_bytes": 1416,
+      "result_directory": "outputs/results/M01_v1"
+    },
+    {
+      "method_id": "M02",
+      "version": "1",
+      "name": "decision_tree_depth3",
+      "mean_fold_balanced_accuracy": 0.861111111111111,
+      "fold_balanced_accuracy_std": 0.07407407407407407,
+      "accuracy": 0.8364197530864198,
+      "balanced_accuracy": 0.8364197530864198,
+      "macro_f1": 0.8351368818145612,
+      "confusion_matrix": [
+        [
+          73,
+          7,
+          1,
+          0
+        ],
+        [
+          0,
+          81,
+          0,
+          0
+        ],
+        [
+          3,
+          35,
+          43,
+          0
+        ],
+        [
+          0,
+          7,
+          0,
+          74
+        ]
+      ],
+      "recall_by_class": {
+        "calm": 0.9012345679012346,
+        "fast": 1.0,
+        "unattached": 0.5308641975308642,
+        "shaking": 0.9135802469135802
+      },
+      "header_bytes": 1416,
+      "result_directory": "outputs/results/M02_v1"
+    },
+    {
+      "method_id": "M03",
+      "version": "1",
+      "name": "random_forest_8_depth4",
+      "mean_fold_balanced_accuracy": 0.7430555555555556,
+      "fold_balanced_accuracy_std": 0.006944444444444475,
+      "accuracy": 0.7407407407407407,
+      "balanced_accuracy": 0.7407407407407407,
+      "macro_f1": 0.7451102486528371,
+      "confusion_matrix": [
+        [
+          64,
+          17,
+          0,
+          0
+        ],
+        [
+          27,
+          54,
+          0,
+          0
+        ],
+        [
+          29,
+          9,
+          43,
+          0
+        ],
+        [
+          0,
+          2,
+          0,
+          79
+        ]
+      ],
+      "recall_by_class": {
+        "calm": 0.7901234567901234,
+        "fast": 0.6666666666666666,
+        "unattached": 0.5308641975308642,
+        "shaking": 0.9753086419753086
+      },
+      "header_bytes": 11450,
+      "result_directory": "outputs/results/M03_v1"
+    },
+    {
+      "method_id": "M04",
+      "version": "1",
+      "name": "standardized_logistic_regression",
+      "mean_fold_balanced_accuracy": 0.75,
+      "fold_balanced_accuracy_std": 0.0,
+      "accuracy": 0.75,
+      "balanced_accuracy": 0.75,
+      "macro_f1": 0.7428571428571429,
+      "confusion_matrix": [
+        [
+          27,
+          54,
+          0,
+          0
+        ],
+        [
+          27,
+          54,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          81,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          81
+        ]
+      ],
+      "recall_by_class": {
+        "calm": 0.3333333333333333,
+        "fast": 0.6666666666666666,
+        "unattached": 1.0,
+        "shaking": 1.0
+      },
+      "header_bytes": 3764,
+      "result_directory": "outputs/results/M04_v1"
+    }
+  ],
+  "ranking": [
+    "M01",
+    "M02",
+    "M04",
+    "M03"
+  ],
+  "recommended_candidate": "M01",
+  "selection_status": "recommendation only; parent must inspect class recalls, feasibility and install explicitly",
+  "hardware_verified": false
+}

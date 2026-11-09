@@ -1,0 +1,282 @@
+{
+  "method_id": "M06",
+  "version": "1",
+  "name": "invariant_random_forest_8_depth4",
+  "source": "real_sensor",
+  "evaluated_at_utc": "2026-11-09T14:22:10.228698+00:00",
+  "code_commit": "fa89ca242ae11dccdc65ededd9f67d704043e643",
+  "manifest_sha256": "244eb411084e22515337d8cfb6b594ab62f0be49c97e3435777668fceb7bf1a4",
+  "parameters": {
+    "name": "invariant_random_forest_8_depth4",
+    "kind": "forest",
+    "n_estimators": 8,
+    "max_depth": 4,
+    "min_samples_leaf": 2,
+    "class_weight": "balanced",
+    "random_state": 42,
+    "training_masked_columns": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "used_feature_columns": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  "sample_rate_hz": 25,
+  "window_samples": 100,
+  "stride_samples": 25,
+  "feature_names": [
+    "mean_ax_g",
+    "mean_ay_g",
+    "mean_az_g",
+    "std_ax_g",
+    "std_ay_g",
+    "std_az_g",
+    "mean_accel_magnitude_g",
+    "std_accel_magnitude_g",
+    "mean_gyro_magnitude_dps",
+    "std_gyro_magnitude_dps",
+    "accel_difference_rms_g",
+    "accel_magnitude_range_g"
+  ],
+  "states": [
+    "calm",
+    "fast",
+    "unattached",
+    "shaking"
+  ],
+  "validation_strategy": "leave_one_whole_collection_group_out",
+  "folds": [
+    {
+      "fold": 0,
+      "train_groups": [
+        "R2_followup"
+      ],
+      "test_groups": [
+        "R1_initial"
+      ],
+      "train_windows": 216,
+      "test_windows": 108,
+      "accuracy": 0.6574074074074074,
+      "balanced_accuracy": 0.6574074074074074,
+      "macro_f1": 0.5915334665334665,
+      "confusion_matrix": [
+        [
+          17,
+          0,
+          10,
+          0
+        ],
+        [
+          0,
+          0,
+          27,
+          0
+        ],
+        [
+          0,
+          0,
+          27,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          27
+        ]
+      ],
+      "recall_by_class": {
+        "calm": 0.6296296296296297,
+        "fast": 0.0,
+        "unattached": 1.0,
+        "shaking": 1.0
+      }
+    },
+    {
+      "fold": 1,
+      "train_groups": [
+        "R1_initial"
+      ],
+      "test_groups": [
+        "R2_followup"
+      ],
+      "train_windows": 108,
+      "test_windows": 216,
+      "accuracy": 0.7731481481481481,
+      "balanced_accuracy": 0.7731481481481481,
+      "macro_f1": 0.7616015899903439,
+      "confusion_matrix": [
+        [
+          53,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          54,
+          0,
+          0
+        ],
+        [
+          1,
+          35,
+          18,
+          0
+        ],
+        [
+          0,
+          12,
+          0,
+          42
+        ]
+      ],
+      "recall_by_class": {
+        "calm": 0.9814814814814815,
+        "fast": 1.0,
+        "unattached": 0.3333333333333333,
+        "shaking": 0.7777777777777778
+      }
+    }
+  ],
+  "pooled_grouped_heldout": {
+    "accuracy": 0.7345679012345679,
+    "balanced_accuracy": 0.7345679012345678,
+    "macro_f1": 0.7458099281976047,
+    "confusion_matrix": [
+      [
+        70,
+        0,
+        11,
+        0
+      ],
+      [
+        0,
+        54,
+        27,
+        0
+      ],
+      [
+        1,
+        35,
+        45,
+        0
+      ],
+      [
+        0,
+        12,
+        0,
+        69
+      ]
+    ],
+    "recall_by_class": {
+      "calm": 0.8641975308641975,
+      "fast": 0.6666666666666666,
+      "unattached": 0.5555555555555556,
+      "shaking": 0.8518518518518519
+    }
+  },
+  "mean_fold_balanced_accuracy": 0.7152777777777778,
+  "fold_balanced_accuracy_std": 0.05787037037037035,
+  "windows": 324,
+  "recordings": 12,
+  "groups": 2,
+  "recording_groups": [
+    {
+      "recording_id": "20261109T135811_347025Z_unattached_07ff5cfb",
+      "group_id": "R1_initial",
+      "state": "unattached",
+      "sha256": "108565b22c3a94108dda3aea8e4e4cb63248998e059471af823f3b6290b78f8a"
+    },
+    {
+      "recording_id": "20261109T140500_398309Z_calm_0e3b3568",
+      "group_id": "R1_initial",
+      "state": "calm",
+      "sha256": "7424f04e4d6cda7430125c07ac2bcf52e941306a044e9ba5e3d5f669e9c5cae3"
+    },
+    {
+      "recording_id": "20261109T140624_371525Z_fast_d9fa2ee5",
+      "group_id": "R1_initial",
+      "state": "fast",
+      "sha256": "641f62a8cf2c7a67b162078a27fd8725591fb8451523f8800994039649957100"
+    },
+    {
+      "recording_id": "20261109T140724_011140Z_shaking_e31f5888",
+      "group_id": "R1_initial",
+      "state": "shaking",
+      "sha256": "1e10a2bdfc30b1ca06150a77538c6f221231fd42336dcc9aeb72e208afe29753"
+    },
+    {
+      "recording_id": "20261109T140923_061957Z_calm_a7055369",
+      "group_id": "R2_followup",
+      "state": "calm",
+      "sha256": "a767df353c95b2072010cff530b2fe61e425c4adabbf82de5de4a23688393647"
+    },
+    {
+      "recording_id": "20261109T140953_300366Z_calm_f7984b0a",
+      "group_id": "R2_followup",
+      "state": "calm",
+      "sha256": "fe9ab136cff2f4a5ccf938d50f57e86bd8ea5ae77b5dd7e04620c8dc61846c74"
+    },
+    {
+      "recording_id": "20261109T141044_429790Z_fast_42fad384",
+      "group_id": "R2_followup",
+      "state": "fast",
+      "sha256": "a0f929254a3d64576f4bfd12c5c3834b07286bac799bd71b58df3b37311a809e"
+    },
+    {
+      "recording_id": "20261109T141114_659618Z_fast_90296304",
+      "group_id": "R2_followup",
+      "state": "fast",
+      "sha256": "f1720689853bbeadbf9ee8edf69bb828dda0d65d0b3f7633d1fd228afb53553f"
+    },
+    {
+      "recording_id": "20261109T141156_197609Z_shaking_68cebcd8",
+      "group_id": "R2_followup",
+      "state": "shaking",
+      "sha256": "8df2111369013d5bfde25ede0a4b873ae1cee54a955ce7041cacc0ca40bec162"
+    },
+    {
+      "recording_id": "20261109T141226_451706Z_shaking_ebac4253",
+      "group_id": "R2_followup",
+      "state": "shaking",
+      "sha256": "e3dbf9c7208832a6350f3512925206ea1fc2257a96a77f7060ad629638e8f6c0"
+    },
+    {
+      "recording_id": "20261109T141317_220570Z_unattached_85b0b3ce",
+      "group_id": "R2_followup",
+      "state": "unattached",
+      "sha256": "73be4d07fd5e08e421fa9da605f9e72ad031fe54cdc31cc7cb1cea8f2900089e"
+    },
+    {
+      "recording_id": "20261109T141347_492912Z_unattached_ef7d8966",
+      "group_id": "R2_followup",
+      "state": "unattached",
+      "sha256": "c49d7020cf33086899f7aa885a29fa10673fe05697da578f9fc4e41a7bbafe6b"
+    }
+  ],
+  "export_header_bytes": 18046,
+  "final_model": {
+    "trees": 8,
+    "nodes": 114,
+    "depth": 4
+  },
+  "hardware_verified": false,
+  "deployment_training": "all approved recordings after grouped validation",
+  "limitations": [
+    "Only two same-person/device temporal collection rounds.",
+    "Overlapping held-out windows remain correlated; no cross-person independence established.",
+    "Feature subset is tested on the same CV groups used for previous candidates; selection is adaptive, not an untouched test.",
+    "Offline results and header bytes do not measure on-board live accuracy, latency or memory."
+  ]
+}

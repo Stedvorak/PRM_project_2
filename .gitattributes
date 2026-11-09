@@ -1,3 +1,10 @@
 # Preserve the original bytes of explicitly tracked raw sensor sessions.
 data/raw/*.csv -text whitespace=cr-at-eol
 data/raw/*.json -text whitespace=cr-at-eol
+# Exact provenance for derived datasets and the explicitly selected export.
+data/validated/*.csv -text whitespace=cr-at-eol
+data/validated/*.json -text whitespace=cr-at-eol
+firmware/include/prm_model.h -text whitespace=cr-at-eol
+outputs/results/*/prm_model.h -text whitespace=cr-at-eol
+# Matplotlib SVG path formatting legitimately contains trailing separators.
+outputs/figures/**/*.svg -text -whitespace

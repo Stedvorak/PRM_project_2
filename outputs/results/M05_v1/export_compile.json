@@ -1,0 +1,7 @@
+{
+  "kind": "ESP32 target C++ syntax verification; not execution or hardware",
+  "compiler": "C:\\dev\\PRM_project_2\\.pio-core\\packages\\toolchain-xtensa-esp32s3\\bin\\xtensa-esp32s3-elf-g++.exe",
+  "passed": true,
+  "stdout": "",
+  "stderr": ""
+}

@@ -1,27 +1,38 @@
-﻿# Final Selected Method
+# Final Selected Method
 
-Selected method: NONE — four-class recordings and classifier evaluation remain incomplete.
-
-Experimental candidate: M01 v1 (not evaluated, not selected).
-Default implementation: firmware/include/prm_model.h (unavailable-model guard).
+Selected method: M01 v1, decision tree on12 inertial window features.
+Exact deployed implementation: firmware/include/prm_model.h.
+Candidate artifact: outputs/results/M01_v1/prm_model.h.
+Selected header SHA-256: abe113bc81318bea4ee2d595bb72880d89c53ddba053a46d189cb0a61bcb7a27.
 Feature implementation: firmware/include/prm_features.h.
-Training implementation and parameters: docs/ML.md; docs/METHODS.md.
-Classifier evaluation results: unavailable; no genuine accuracy, breathing rate,
-inference latency or runtime on-board memory measurements have been recorded.
-Real acquisition evidence: first unattached/table session,1499 valid samples at
-49.94332199773288Hz; data/raw/20261109T135811_347025Z_unattached_07ff5cfb.csv
-and matching.json. Validation: outputs/verification/V06_unattached_session/validation.json.
-This is sensor acquisition evidence, not classifier evaluation or model selection.
-Software tests use temporary synthetic fixtures.
-Firmware/feature integration commit: cf6004e4513bf6466b194e81a4dc2a78dca6c19e.
-Verified remote firmware commit at integration checkpoint:
-cf6004e4513bf6466b194e81a4dc2a78dca6c19e (origin/codex/firmware, fetched and compared).
-This identifies the unavailable-model implementation, not a selected classifier.
-Later acquisition/monitor/documentation commits do not replace its model header.
-Shared protocol v0.2 commit: 91667e00e0bfef30a313fe35c800e566fdda7835 (verified on main and codex/firmware at protocol publication).
-Verification status: NOT VERIFIED ON HARDWARE; NO FINAL ALGORITHM SELECTED.
+Training/evaluation source: tools/compare_models.py.
+Dataset: data/validated/manifest.json; all12 approved recordings,17993 raw samples.
+Parameters:25Hz;100-sample window;stride25;depth limit5;minimum leaf2;
+balanced class weights;random_state42. Final fitted tree:7nodes,depth2.
+Validation: two whole collection rounds held out in opposite directions;
+324 windows. Mean-fold balanced accuracy86.1111%; pooled accuracy/balanced
+accuracy83.64198%; macro F1 0.8351369. Pooled unattached recall53.0864%.
+Candidate selection used these CV folds; not an untouched final test.
 
-Before delivery: select exactly one genuinely evaluated candidate, install its
-exact generated header explicitly, run firmware/contract/hardware checks, record
-metrics and report paths, verify implementation/report belong to the delivered
-commit, push/fetch and compare the remote hash. Do not silently replace a model.
+Result files: outputs/results/M01_v1/metrics.json, heldout_predictions.csv,
+feature_windows.npz and prm_model.h; outputs/comparison/C01_v1/summary.json;
+outputs/comparison/C02_invariant_v1/summary.json; outputs/figures/delivery_v2/.
+Export verification:324 actual feature vectors match final training predictions
+with zero probability error; target C++ compilation passes. This is software
+parity evidence, not a hardware accuracy test.
+
+Implementation/model commit: pending immediate trained-model integration commit.
+Verified raw dataset remote commit: fa89ca242ae11dccdc65ededd9f67d704043e643
+on origin/codex/firmware (all24 originals/metadata tracked).
+Hardware verification: trained monitoring inference-check image uploaded toCOM3,
+written flash hashes verified. H01_onboard_inference contains22 genuine events
+at2Hz; total feature+prediction2.377–2.458ms, model prediction9–10us, no deadline
+violations. Sensor0x68 boot detection passed. Physical state was not labeled;
+these results verify real-time execution, not live class correctness.
+PC BLE tests H02/H03 failed with Windows adapter-not-ready error. HTTP/AP and
+RGB visual verification remain pending. RGB state pin remains disabled.
+USB diagnostic telemetry is testing-only; final silent esp32-s3 build required.
+
+Limitations: same-device/operator data, only two inferred rounds, correlated
+windows, placement dependence and weak unseen unattached orientations. Do not
+silently replace this selected model; record a new ID/version/results and rationale.

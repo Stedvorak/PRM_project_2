@@ -1,8 +1,11 @@
 # M01: real-recording decision-tree pipeline
 
-Status: first real unattached/table recording is available at50Hz under data/raw/.
-Four-class recordings, a trained model and genuine classifier evaluation remain
-pending. Preserve raw50Hz data and explicitly convert before this25Hz pipeline.
+Status: all12 real recordings/four classes validated and preserved at50Hz.
+M01 v1 is selected, exported and installed. The actual grouped comparison uses
+tools/compare_models.py and data/validated/manifest.json, prepared with
+tools/prepare_dataset.py. RESULTS.md records genuine results and limitations.
+The older single-holdout CLI below remains available; it is not the selected
+evaluation protocol. Do not rerun it and silently replace the selected model.
 `firmware/include/prm_model.h` intentionally returns unavailable until a model is
 explicitly trained, reviewed and installed. A live signal can exist before a
 prediction is available; do not invent probabilities.
