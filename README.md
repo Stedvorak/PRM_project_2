@@ -53,9 +53,15 @@ board-hosted frontend. Integrate through separate branches and PRs. No frontend
 assets are replaced by the firmware work. `/data/` holds ignored original
 recordings; `firmware/data/` is reserved for tracked LittleFS frontend assets.
 
+## Actual wiring
+
+![Actual ESP32-S3 and MPU-6050 breadboard wiring](docs/wiring.jpg)
+
+Operator-supplied photograph of the demonstrated device. MPU-6050 wiring:
+VCC to 3.3 V, common GND, SDA to GPIO8 and SCL to GPIO9.
+
 ## Required submission details still pending
 
-- A photo of the actual wiring and confirmed pin mapping.
 - Live BLE connection, timeline and alarm demonstration on a supported device.
 - David's sections4/5 demonstration and final teacher/submission confirmation.
 

@@ -19,7 +19,7 @@
 - [x] GitHub Pages HTTPS monitor/web-station URL returnsHTTP200.
 - [x] Real grouped evaluation results and required scientific figures saved.
 - [x] Group member names, monitoring link, wiring table, build/train instructions and AI-tool disclosure documented.
-- [ ] Actual wiring photograph included; docs/wiring.jpg currently absent.
+- [x] Actual operator-supplied wiring photograph included as docs/wiring.jpg and displayed in README.
 - [x] At least3 meaningful intermediate pushes verified as work proceeded; see SUBMISSION.md.
 - [x] Teacher tomasvicar access reverified via GitHub API:write permission.
 - [x] Final silent monitor upload verified; actual Edge page and both live APIs checked over board AP.
