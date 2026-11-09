@@ -1,18 +1,29 @@
 # Firmware setup and verification
 
-Target: ESP32-S3 N16R8 with MPU-6050 (GY-521). Protocol is
+Target: ESP32-S3 N16R8 with optional/pending MPU-6050 (GY-521). Protocol is
 [INTERFACES.md](INTERFACES.md) v0.2. Firmware and AI belong to Codex;
 browser assets and deployment belong to Antigravity.
 
 ## Hardware assumptions: verify before powering or flashing
 
-- Power the sensor from 3.3 V, connect common ground, SDA GPIO 8 and SCL GPIO 9
-  unless the actual wiring requires different configurable pins.
-- Default I2C address is 0x68 (AD0 low); use 0x69 if AD0 is high.
+- User-confirmed wiring configuration: sensor VCC to 3.3 V, common GND,
+  SDA GPIO8 and SCL GPIO9. GPIO macros remain configurable.
+- Before acquisition, an explicit I2C detection test requires an address ACK and
+  MPU-6050 WHO_AM_I=0x68. Prefer configured address0x68 (AD0 low); if absent,
+  automatically test0x69 (AD0 high). The fallback is configurable. An unrelated
+  acknowledging I2C device is not sufficient evidence of the correct sensor.
+- Detection failure keeps status unavailable and the signal buffer empty;
+  recovery retries detection before sensor configuration/acquisition. Physical
+  sensor connection is not assumed. Capture builds report detection diagnostics
+  before measurements; demo builds keep application USB serial silent.
 - RGB LED is disabled until its GPIO and type are confirmed. The implementation
   supports a WS2812/NeoPixel RGB LED; do not guess a pin or assume a discrete LED
   has the same driver. Set the configured LED pin only after checking the board.
-- No connected serial port was detected during initial software preparation.
+- COM3 was verified as ESP32-S3 revision 0.2 using esptool; flash_id detected
+  16MB quad flash. The user verified 8MB PSRAM, dual-core 240MHz and CH343.
+  The carrier's GPIO wiring/LED remains unconfirmed. The capture environment uses UART0
+  (`ARDUINO_USB_CDC_ON_BOOT=0`) for this kind of adapter. For the board's native
+  USB connector instead, explicitly set that macro to 1 and choose its port.
 - Do not claim sensor, LED, BLE, AP, throughput or inference measurements from a
   compile or host test. All require the physical board.
 
@@ -25,9 +36,14 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider
 ```
 
-PlatformIO pins the Espressif32 platform and BLE/LED libraries. The board profile
-uses 16 MB flash and octal PSRAM. Verify that this matches the supplied N16R8
-board. Local build caches are ignored. No build command uploads automatically.
+PlatformIO pins the Espressif32 platform, Arduino framework and BLE/LED libraries.
+The explicit boards/prm-esp32s3-n16r8.json profile uses ESP32-S3 at 240MHz,
+16MB quad flash at80MHz, 8MB octal PSRAM (qio_opi), and the default_16MB
+partition table. Its final partition ends exactly at16MB. This matches verified
+chip/flash and user-reported PSRAM; it does not identify a carrier pinout.
+Local build caches are ignored. Run builds serially, especially after changing
+platformio.ini, because PlatformIO can invalidate the shared build cache.
+No build command uploads automatically.
 Use the explicit verified serial port with `platformio run -e esp32-s3 -t upload
 --upload-port COMx` only after checking wiring and configuration.
 
@@ -38,11 +54,15 @@ and rebuild before expecting `ready: true`.
 
 ## Frontend handoff
 
-Antigravity supplies static files under `firmware/data/` with an `index.html`.
-Build/upload these using `platformio run -e esp32-s3 -t uploadfs --upload-port
-COMx`. The firmware serves LittleFS assets without implementing another UI.
-An absent filesystem/index gives an explicit unavailable response rather than a
-fake dashboard. API endpoints do not depend on uploaded browser assets.
+Antigravity's embedded page is integrated from commit
+`2064cf89be4e8724d09fb92b444be87c03e5a893` and adapted to v0.2 in
+`firmware/include/web_page.h`. Arduino WebServer 2.0.0 provides the exact
+`send_P(int, PGM_P, PGM_P)` overload; `/` and `/index.html` serve its `INDEX_HTML`
+PROGMEM constant. No separate filesystem upload is needed for this page.
+LittleFS remains available for additional assets, mounted without automatic
+formatting. If Antigravity supplies such files under `firmware/data/`, upload
+using `platformio run -e esp32-s3 -t uploadfs --upload-port COMx`. The embedded
+header is the authoritative page; do not deploy an obsolete alternate copy.
 
 Join the configured board AP and use its address (normally 192.168.4.1).
 Credentials and GPIO macros are listed in firmware/include/prm_config.h.

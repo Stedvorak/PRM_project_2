@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-09",
+  "port": "COM3",
+  "adapter": "CH343 USB-UART",
+  "queried_with": "project-pinned esptool 4.5.1 chip_id and flash_id",
+  "observed_chip": "ESP32-S3 revision v0.2",
+  "observed_flash_size_bytes": 16777216,
+  "observed_flash_type": "quad (4 data lines)",
+  "user_verified_psram_bytes": 8388608,
+  "user_verified_cpu": "dual-core 240 MHz",
+  "sensor_connection_verified": false,
+  "carrier_gpio_mapping_verified": false,
+  "rgb_gpio_verified": false,
+  "classifier_evaluated_on_real_data": false,
+  "note": "Chip/flash identification is genuine hardware information; PSRAM/CPU are user-provided verification. No sensor measurements or model accuracy are implied."
+}

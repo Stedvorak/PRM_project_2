@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRM-Project-2 | BLE Real-Time AI Monitor</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+
+      /* Required State Colors */
+      --state-calm: #10b981;      /* 0: Green */
+      --state-fast: #ef4444;      /* 1: Red */
+      --state-unattached: #3b82f6;/* 2: Blue */
+      --state-shaking: #d946ef;   /* 3: Magenta */
+
+      --alarm-bg: rgba(239, 68, 68, 0.2);
+      --alarm-border: #ef4444;
+      --warning-bg: rgba(245, 158, 11, 0.2);
+      --warning-border: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 2rem;
+    }
+
+    /* Top Navigation / Header */
+    header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-icon {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, #3b82f6, #d946ef);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .brand-text h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid transparent;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background-color: #2563eb;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #1d4ed8;
+    }
+
+    .btn-danger {
+      background-color: #dc2626;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #b91c1c;
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-tertiary);
+      color: var(--text-main);
+      border-color: var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: #475569;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+    }
+
+    .btn-outline:hover {
+      color: var(--text-main);
+      border-color: var(--text-muted);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Alarm Banner */
+    .alarm-banner {
+      display: none;
+      padding: 1rem 1.25rem;
+      border-radius: 0.75rem;
+      background: var(--alarm-bg);
+      border: 2px solid var(--alarm-border);
+      animation: pulse-alarm 1.2s infinite ease-in-out;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .alarm-banner.active {
+      display: flex;
+    }
+
+    .alarm-banner.warning {
+      background: var(--warning-bg);
+      border-color: var(--warning-border);
+    }
+
+    .alarm-banner-content {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .alarm-icon {
+      font-size: 1.75rem;
+      animation: shake 0.6s infinite ease-in-out;
+    }
+
+    .alarm-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #f87171;
+    }
+
+    .alarm-desc {
+      font-size: 0.875rem;
+      color: var(--text-main);
+      margin-top: 0.2rem;
+    }
+
+    /* Main Grid */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 840px) {
+      .grid-2 {
+        grid-template-columns: 1.2fr 0.8fr;
+      }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Live State Hero */
+    .state-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1rem;
+      border-radius: 0.75rem;
+      background: rgba(15, 23, 42, 0.6);
+      border: 2px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .state-hero.state-0 {
+      border-color: var(--state-calm);
+      box-shadow: 0 0 35px rgba(16, 185, 129, 0.25);
+    }
+    .state-hero.state-1 {
+      border-color: var(--state-fast);
+      box-shadow: 0 0 35px rgba(239, 68, 68, 0.3);
+      animation: pulse-danger 1s infinite alternate;
+    }
+    .state-hero.state-2 {
+      border-color: var(--state-unattached);
+      box-shadow: 0 0 35px rgba(59, 130, 246, 0.25);
+    }
+    .state-hero.state-3 {
+      border-color: var(--state-shaking);
+      box-shadow: 0 0 35px rgba(217, 70, 239, 0.3);
+      animation: shake 0.4s infinite ease-in-out;
+    }
+
+    .state-orb {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      transition: all 0.3s ease;
+      position: relative;
+      margin-bottom: 1.25rem;
+    }
+
+    .state-orb::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid currentColor;
+      animation: ripple 2s infinite ease-out;
+      opacity: 0.7;
+    }
+
+    .state-0 .state-orb {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--state-calm);
+    }
+    .state-1 .state-orb {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--state-fast);
+    }
+    .state-2 .state-orb {
+      background: rgba(59, 130, 246, 0.2);
+      color: var(--state-unattached);
+    }
+    .state-3 .state-orb {
+      background: rgba(217, 70, 239, 0.2);
+      color: var(--state-shaking);
+    }
+
+    .state-name {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 0.25rem;
+    }
+
+    .state-code-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      background: var(--bg-tertiary);
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .state-timer-box {
+      display: flex;
+      gap: 1.5rem;
+      text-align: center;
+      background: var(--bg-secondary);
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .timer-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .timer-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .timer-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Diagnostics & Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    .stat-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+    }
+
+    .stat-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Threshold Progress Indicators */
+    .threshold-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 10px;
+      background: var(--bg-tertiary);
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+      border-radius: 5px;
+    }
+
+    .fill-fast { background-color: var(--state-fast); }
+    .fill-unattached { background-color: var(--state-unattached); }
+
+    /* Timeline Canvas */
+    .timeline-container {
+      position: relative;
+      width: 100%;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      height: 120px;
+    }
+
+    canvas#timelineCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .timeline-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    /* Event Table */
+    .table-container {
+      max-height: 250px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+
+    th {
+      background: var(--bg-tertiary);
+      padding: 0.6rem 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+
+    td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+      font-variant-numeric: tabular-nums;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .state-pill {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .pill-0 { background: rgba(16, 185, 129, 0.2); color: var(--state-calm); }
+    .pill-1 { background: rgba(239, 68, 68, 0.2); color: var(--state-fast); }
+    .pill-2 { background: rgba(59, 130, 246, 0.2); color: var(--state-unattached); }
+    .pill-3 { background: rgba(217, 70, 239, 0.2); color: var(--state-shaking); }
+
+    /* Mock / Simulation Controls */
+    .mock-panel {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px dashed #64748b;
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+    }
+
+    .mock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .mock-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    /* Animations */
+    @keyframes pulse-alarm {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(0.995); }
+    }
+
+    @keyframes pulse-danger {
+      0% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); }
+      100% { box-shadow: 0 0 45px rgba(239, 68, 68, 0.6); }
+    }
+
+    @keyframes ripple {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-4px); }
+      40%, 80% { transform: translateX(4px); }
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot-disconnected { background-color: #ef4444; }
+    .dot-connected { background-color: #10b981; }
+    .dot-mock { background-color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+  <!-- Header Navigation -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">AI</div>
+      <div class="brand-text">
+        <h1>PRM-Project-2 Monitor</h1>
+        <p>Real-Time Movement & Breathing BLE Bedside Station</p>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <div id="connStatusBadge" class="badge-status" style="background: var(--bg-tertiary);">
+        <span id="connStatusDot" class="status-dot dot-disconnected"></span>
+        <span id="connStatusText">Disconnected</span>
+      </div>
+
+      <button id="btnAudioToggle" class="btn btn-secondary" title="Mute or Unmute Alarms">
+        <span id="audioIcon">🔊</span> <span id="audioLabel">Audio ON</span>
+      </button>
+
+      <button id="btnConnect" class="btn btn-primary">
+        <span>⚡ Connect BLE</span>
+      </button>
+
+      <button id="btnDisconnect" class="btn btn-danger" style="display: none;">
+        <span>Disconnect</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <div class="container">
+
+    <!-- Active Alarm Banner -->
+    <div id="alarmBanner" class="alarm-banner">
+      <div class="alarm-banner-content">
+        <div class="alarm-icon">🚨</div>
+        <div>
+          <div id="alarmTitle" class="alarm-title">ALARM ACTIVE</div>
+          <div id="alarmDesc" class="alarm-desc">Condition triggered</div>
+        </div>
+      </div>
+      <button id="btnAcknowledgeAlarm" class="btn btn-secondary">
+        Acknowledge / Silence
+      </button>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid-2">
+
+      <!-- Left Column: Live State Hero & Timeline -->
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        
+        <!-- Live State Hero Display -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Live Sensor State</span>
+            <span id="bleDeviceTag" style="font-size: 0.75rem; color: var(--text-muted);">UUID: 7c2f1001-73ad-4a0d-9ec4-10cc7ea46a10</span>
+          </div>
+
+          <div id="stateHeroCard" class="state-hero">
+            <div id="stateOrb" class="state-orb">⏸</div>
+            <div id="stateNameText" class="state-name">AWAITING DATA</div>
+            <div class="state-code-badge">
+              <span>Code:</span>
+              <strong id="stateCodeText">-</strong>
+              <span>|</span>
+              <span>Class:</span>
+              <strong id="stateClassText">None</strong>
+            </div>
+
+            <div class="state-timer-box">
+              <div class="timer-item">
+                <span class="timer-label">Duration in State</span>
+                <span id="stateDurationText" class="timer-value">00:00</span>
+              </div>
+              <div class="timer-item">
+                <span class="timer-label">Session Elapsed</span>
+                <span id="sessionDurationText" class="timer-value">00:00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time Scrolling Timeline -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Continuous State Timeline (Past 60 Seconds)</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Real-time stream</span>
+          </div>
+
+          <div class="timeline-container">
+            <canvas id="timelineCanvas"></canvas>
+          </div>
+
+          <div class="timeline-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background: var(--state-calm);"></div>
+              <span>0: Calm</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: var(--state-fast);"></div>
+              <span>1: Fast (>15s alarm)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: var(--state-unattached);"></div>
+              <span>2: Unattached (>10s alarm)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: var(--state-shaking);"></div>
+              <span>3: Shaking</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Alarms, Thresholds & Metrics -->
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+        <!-- Alarm Monitors & Threshold Progress -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Duration Alarm Monitors</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Threshold Rules</span>
+          </div>
+
+          <!-- Fast Breathing Threshold (15s) -->
+          <div class="threshold-card">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+              <span><strong>Fast Breathing Alarm</strong> (Limit: 15s)</span>
+              <span id="fastTimerLabel">0.0s / 15.0s</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="fastProgressBar" class="progress-bar-fill fill-fast"></div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+              <span id="fastStatusLabel">Safe</span>
+              <span>Triggers Audio & Visual Alert</span>
+            </div>
+          </div>
+
+          <!-- Unattached Threshold (10s) -->
+          <div class="threshold-card">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+              <span><strong>Not Attached Alarm</strong> (Limit: 10s)</span>
+              <span id="unattachedTimerLabel">0.0s / 10.0s</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="unattachedProgressBar" class="progress-bar-fill fill-unattached"></div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+              <span id="unattachedStatusLabel">Safe</span>
+              <span>Triggers Bedside Monitor Alert</span>
+            </div>
+          </div>
+
+          <!-- Disconnect Alarm Info -->
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 0.75rem; font-size: 0.8rem; color: var(--text-muted);">
+            ⚡ <strong>Connection Drop Alarm:</strong> Automatically fires if BLE GATT server unexpectedly disconnects.
+          </div>
+        </div>
+
+        <!-- Telemetry & Diagnostic Statistics -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Telemetry & Diagnostics</span>
+            <button id="btnResetStats" class="btn btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.7rem;">Reset</button>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-title">BLE Packets Received</div>
+              <div id="statPacketCount" class="stat-value">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-title">Active Alarms Fired</div>
+              <div id="statAlarmCount" class="stat-value">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-title">Last Valid Packet Interval</div>
+              <div id="statLatency" class="stat-value">N/A</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-title">State Transitions</div>
+              <div id="statTransitions" class="stat-value">0</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- State Event History Log -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">State Transition Log</span>
+        <div style="display: flex; gap: 0.5rem;">
+          <button id="btnExportCSV" class="btn btn-outline" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;">Export CSV</button>
+          <button id="btnClearLog" class="btn btn-outline" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;">Clear Log</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>State</th>
+              <th>Code</th>
+              <th>Duration</th>
+              <th>Alarms Raised</th>
+            </tr>
+          </thead>
+          <tbody id="logTableBody">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+                No state transitions recorded yet. Connect BLE or enable Mock Mode.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Mock Simulation & Testing Suite -->
+    <div class="mock-panel">
+      <div class="mock-header">
+        <div>
+          <strong style="color: #fbbf24;">🛠 Mock Testing & Demonstration Suite</strong>
+          <p style="font-size: 0.75rem; color: var(--text-muted);">
+            Simulate sensor states, verify duration alarms (15s fast, 10s unattached), and test connection drops without physical hardware.
+          </p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="font-size: 0.8rem; font-weight: 600;">Mock Mode:</span>
+          <button id="btnToggleMock" class="btn btn-secondary">Enable Mock Mode</button>
+        </div>
+      </div>
+
+      <div id="mockControls" style="display: none; flex-direction: column; gap: 0.75rem; margin-top: 0.75rem;">
+        <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Set Current State Manually:</div>
+        <div class="mock-actions">
+          <button class="btn btn-secondary" onclick="window.mockSetState(0)" style="border-left: 4px solid var(--state-calm);">
+            0: Calm (Green)
+          </button>
+          <button class="btn btn-secondary" onclick="window.mockSetState(1)" style="border-left: 4px solid var(--state-fast);">
+            1: Fast (Red)
+          </button>
+          <button class="btn btn-secondary" onclick="window.mockSetState(2)" style="border-left: 4px solid var(--state-unattached);">
+            2: Not Attached (Blue)
+          </button>
+          <button class="btn btn-secondary" onclick="window.mockSetState(3)" style="border-left: 4px solid var(--state-shaking);">
+            3: Shaking (Magenta)
+          </button>
+        </div>
+
+        <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-top: 0.5rem;">Automated Alarm Demonstration Scenarios:</div>
+        <div class="mock-actions">
+          <button class="btn btn-outline" onclick="window.mockScenarioFastAlarm()">
+            ⏱ Demo Fast Breathing Alarm (15s countdown)
+          </button>
+          <button class="btn btn-outline" onclick="window.mockScenarioUnattachedAlarm()">
+            ⏱ Demo Unattached Alarm (10s countdown)
+          </button>
+          <button class="btn btn-outline" onclick="window.mockScenarioDisconnect()">
+            🔌 Demo BLE Connection Drop Alarm
+          </button>
+          <button class="btn btn-outline" onclick="window.mockScenarioCycling()">
+            🔄 Auto-Cycle States (5s each)
+          </button>
+          <button class="btn btn-outline" onclick="window.mockStopScenario()" style="color: #ef4444;">
+            ⏹ Stop Scenario
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /**
+     * PRM Project 2 - BLE Real-Time AI Monitor
+     * Strict Interface Contract Implementation:
+     * - Service UUID: 7c2f1000-73ad-4a0d-9ec4-10cc7ea46a10
+     * - State Char UUID: 7c2f1001-73ad-4a0d-9ec4-10cc7ea46a10
+     * - Device Name: PRM-Project-2
+     * - State Codes: 0=calm, 1=fast, 2=unattached, 3=shaking
+     */
+    const BLE_CONFIG = {
+      deviceName: 'PRM-Project-2',
+      serviceUuid: '7c2f1000-73ad-4a0d-9ec4-10cc7ea46a10',
+      characteristicUuid: '7c2f1001-73ad-4a0d-9ec4-10cc7ea46a10'
+    };
+
+    const STATES = {
+      0: { name: 'Calm Breathing', class: 'calm', color: '#10b981', icon: '🫁' },
+      1: { name: 'Fast Breathing', class: 'fast', color: '#ef4444', icon: '⚡' },
+      2: { name: 'Not Attached', class: 'unattached', color: '#3b82f6', icon: '🖐️' },
+      3: { name: 'Shaking', class: 'shaking', color: '#d946ef', icon: '📳' }
+    };
+
+    // Chosen duration thresholds; firmware v0.2 repeats valid states at least 1Hz.
+    const ALARM_LIMITS = {
+      FAST_BREATHING_SEC: 15, // State 1 > 15s
+      UNATTACHED_SEC: 10      // State 2 > 10s
+    };
+    const BLE_STALE_MS = 3000;
+
+    // System State Variables
+    let bleDevice = null;
+    let bleCharacteristic = null;
+    let isConnected = false;
+    let isMockMode = false;
+    let mockScenarioInterval = null;
+
+    let currentState = null;
+    let stateStartTime = null;
+    let sessionStartTime = null;
+    let lastPacketTime = null;
+    let connectionStartedAt = null;
+    let notificationSequence = 0;
+    let intentionalDisconnect = false;
+
+    // Active Alarms Tracking
+    const activeAlarms = {
+      fastBreathing: false,
+      unattached: false,
+      disconnect: false,
+      stale: false
+    };
+
+    // Statistics
+    const stats = {
+      packetCount: 0,
+      alarmCount: 0,
+      transitions: 0
+    };
+
+    // Timeline samples buffer (past 60s)
+    const timelineData = []; // Array of { time: timestamp, state: code }
+
+    // State Transition Log
+    const stateLog = []; // Array of { timestamp, stateCode, duration, alarmFired }
+
+    // Audio Synthesizer via Web Audio API
+    class AlarmAudio {
+      constructor() {
+        this.ctx = null;
+        this.isMuted = false;
+        this.oscillator = null;
+        this.gainNode = null;
+        this.alarmInterval = null;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        if (this.isMuted) {
+          this.stopSound();
+        }
+        return this.isMuted;
+      }
+
+      playTone(freq, durationMs = 300, type = 'sine') {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+          gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + (durationMs / 1000));
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start();
+          osc.stop(this.ctx.currentTime + (durationMs / 1000));
+        } catch (e) {
+          console.warn('Audio playback error:', e);
+        }
+      }
+
+      startAlarmPattern(type) {
+        if (this.isMuted) return;
+        this.init();
+        if (this.alarmInterval) return; // already sounding
+
+        if (type === 'fast') {
+          // Rapid warning double beep (High priority)
+          this.alarmInterval = setInterval(() => {
+            if (this.isMuted) return;
+            this.playTone(880, 150, 'square');
+            setTimeout(() => { if (!this.isMuted) this.playTone(880, 150, 'square'); }, 200);
+          }, 1000);
+        } else if (type === 'unattached') {
+          // Warning chime
+          this.alarmInterval = setInterval(() => {
+            if (this.isMuted) return;
+            this.playTone(660, 300, 'sine');
+            setTimeout(() => { if (!this.isMuted) this.playTone(550, 400, 'sine'); }, 350);
+          }, 1500);
+        } else if (type === 'disconnect') {
+          // Descending alert buzz
+          this.alarmInterval = setInterval(() => {
+            if (this.isMuted) return;
+            this.playTone(400, 250, 'sawtooth');
+            setTimeout(() => { if (!this.isMuted) this.playTone(300, 350, 'sawtooth'); }, 280);
+          }, 1200);
+        }
+      }
+
+      stopSound() {
+        if (this.alarmInterval) {
+          clearInterval(this.alarmInterval);
+          this.alarmInterval = null;
+        }
+      }
+    }
+
+    const alarmAudio = new AlarmAudio();
+
+    // DOM Elements Cache
+    const el = {
+      connBadge: document.getElementById('connStatusBadge'),
+      connDot: document.getElementById('connStatusDot'),
+      connText: document.getElementById('connStatusText'),
+      btnConnect: document.getElementById('btnConnect'),
+      btnDisconnect: document.getElementById('btnDisconnect'),
+      btnAudioToggle: document.getElementById('btnAudioToggle'),
+      audioIcon: document.getElementById('audioIcon'),
+      audioLabel: document.getElementById('audioLabel'),
+      alarmBanner: document.getElementById('alarmBanner'),
+      alarmTitle: document.getElementById('alarmTitle'),
+      alarmDesc: document.getElementById('alarmDesc'),
+      btnAcknowledge: document.getElementById('btnAcknowledgeAlarm'),
+      stateHero: document.getElementById('stateHeroCard'),
+      stateOrb: document.getElementById('stateOrb'),
+      stateName: document.getElementById('stateNameText'),
+      stateCode: document.getElementById('stateCodeText'),
+      stateClass: document.getElementById('stateClassText'),
+      stateDuration: document.getElementById('stateDurationText'),
+      sessionDuration: document.getElementById('sessionDurationText'),
+      timelineCanvas: document.getElementById('timelineCanvas'),
+      fastProgressBar: document.getElementById('fastProgressBar'),
+      fastTimerLabel: document.getElementById('fastTimerLabel'),
+      fastStatusLabel: document.getElementById('fastStatusLabel'),
+      unattachedProgressBar: document.getElementById('unattachedProgressBar'),
+      unattachedTimerLabel: document.getElementById('unattachedTimerLabel'),
+      unattachedStatusLabel: document.getElementById('unattachedStatusLabel'),
+      statPacketCount: document.getElementById('statPacketCount'),
+      statAlarmCount: document.getElementById('statAlarmCount'),
+      statLatency: document.getElementById('statLatency'),
+      statTransitions: document.getElementById('statTransitions'),
+      btnResetStats: document.getElementById('btnResetStats'),
+      logTableBody: document.getElementById('logTableBody'),
+      btnExportCSV: document.getElementById('btnExportCSV'),
+      btnClearLog: document.getElementById('btnClearLog'),
+      btnToggleMock: document.getElementById('btnToggleMock'),
+      mockControls: document.getElementById('mockControls')
+    };
+
+    // Canvas Timeline setup
+    const canvas = el.timelineCanvas;
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Web Bluetooth Connection Handler
+    async function connectBLE() {
+      alarmAudio.init(); // Unlock Web Audio context
+      if (isConnected) return;
+      if (isMockMode) toggleMockMode();
+      resetTelemetry();
+      intentionalDisconnect = false;
+      el.btnConnect.disabled = true;
+      if (bleDevice) bleDevice.removeEventListener('gattserverdisconnected', onGattDisconnected);
+
+      try {
+        if (!navigator.bluetooth) {
+          alert('Web Bluetooth API is not supported in this browser.\n\nPlease use Google Chrome or Microsoft Edge on desktop/Android over HTTPS or localhost, or use the Mock Testing Suite.');
+          return;
+        }
+
+        el.connText.innerText = 'Requesting...';
+        
+        // Connect adhering strictly to INTERFACES.md
+        bleDevice = await navigator.bluetooth.requestDevice({
+          filters: [{ name: BLE_CONFIG.deviceName }],
+          optionalServices: [BLE_CONFIG.serviceUuid]
+        });
+
+        bleDevice.addEventListener('gattserverdisconnected', onGattDisconnected);
+
+        el.connText.innerText = 'Connecting GATT...';
+        const server = await bleDevice.gatt.connect();
+
+        el.connText.innerText = 'Discovering Service...';
+        const service = await server.getPrimaryService(BLE_CONFIG.serviceUuid);
+
+        el.connText.innerText = 'Getting Characteristic...';
+        bleCharacteristic = await service.getCharacteristic(BLE_CONFIG.characteristicUuid);
+        if (!bleCharacteristic.properties.read || !bleCharacteristic.properties.notify) {
+          throw new Error('The v0.2 state characteristic must support READ and NOTIFY.');
+        }
+        connectionStartedAt = Date.now();
+        // Register first so the first notification cannot be missed.
+        bleCharacteristic.addEventListener('characteristicvaluechanged', handleCharacteristicValueChanged);
+        await bleCharacteristic.startNotifications();
+
+        // Connection successful
+        setConnectedUI(true, bleDevice.name || BLE_CONFIG.deviceName);
+        sessionStartTime = Date.now();
+        activeAlarms.disconnect = false;
+        activeAlarms.stale = false;
+        checkAlarmState();
+        // A concurrent notification is newer than the requested initial read.
+        const beforeRead = notificationSequence;
+        const initialValue = await bleCharacteristic.readValue();
+        if (isConnected && notificationSequence === beforeRead) {
+          consumeStateValue(initialValue, false);
+        }
+
+      } catch (err) {
+        console.error('BLE connection error:', err);
+        intentionalDisconnect = true;
+        if (bleCharacteristic) {
+          bleCharacteristic.removeEventListener('characteristicvaluechanged', handleCharacteristicValueChanged);
+        }
+        if (bleDevice && bleDevice.gatt.connected) bleDevice.gatt.disconnect();
+        markUnavailable('BLE connection unavailable');
+        setConnectedUI(false);
+        if (err.name !== 'NotFoundError') { // User didn't just cancel picker
+          alert('Failed to connect to BLE device:\n' + err.message);
+        }
+      } finally {
+        el.btnConnect.disabled = false;
+      }
+    }
+
+    async function disconnectBLE() {
+      intentionalDisconnect = true;
+      if (bleCharacteristic) {
+        bleCharacteristic.removeEventListener('characteristicvaluechanged', handleCharacteristicValueChanged);
+      }
+      if (bleDevice && bleDevice.gatt && bleDevice.gatt.connected) {
+        bleDevice.gatt.disconnect();
+      }
+      markUnavailable('Disconnected');
+      activeAlarms.stale = false;
+      activeAlarms.disconnect = false;
+      checkAlarmState();
+      setConnectedUI(false);
+    }
+
+    function onGattDisconnected(event) {
+      if (isMockMode) return;
+      if (event && event.target && event.target !== bleDevice) return;
+      console.warn('BLE GATT server disconnected!');
+      markUnavailable('BLE connection lost');
+      activeAlarms.stale = false;
+      setConnectedUI(false);
+      // Trigger connection lost alarm as required by assignment
+      if (!intentionalDisconnect) {
+        triggerAlarm('disconnect', 'BLE Connection Lost', 'Disconnected from PRM-Project-2. Bedside telemetry offline!');
+      }
+    }
+
+    function setConnectedUI(connected, deviceName = '') {
+      isConnected = connected;
+      if (connected) {
+        el.connDot.className = 'status-dot dot-connected';
+        el.connText.innerText = `Connected (${deviceName})`;
+        el.btnConnect.style.display = 'none';
+        el.btnDisconnect.style.display = 'inline-flex';
+        document.getElementById('bleDeviceTag').innerText = `Device: ${deviceName}`;
+      } else {
+        el.connDot.className = 'status-dot dot-disconnected';
+        el.connText.innerText = isMockMode ? 'Mock Simulation Mode' : 'Disconnected';
+        if (isMockMode) el.connDot.className = 'status-dot dot-mock';
+        el.btnConnect.style.display = 'inline-flex';
+        el.btnDisconnect.style.display = 'none';
+      }
+    }
+
+    // BLE Notification Payload Handler
+    function handleCharacteristicValueChanged(event) {
+      if (isMockMode || event.target !== bleCharacteristic) return;
+      notificationSequence++;
+      consumeStateValue(event.target.value, true);
+    }
+
+    function consumeStateValue(dataView, notification) {
+      if (!dataView || dataView.byteLength === 0) {
+        markUnavailable('Prediction unavailable');
+        return false;
+      }
+      if (dataView.byteLength !== 1 || dataView.getUint8(0) > 3) {
+        markUnavailable('Invalid BLE state payload');
+        return false;
+      }
+      const stateCode = dataView.getUint8(0);
+      const now = Date.now();
+
+      // Latency calculation
+      if (notification && lastPacketTime !== null) {
+        const delta = now - lastPacketTime;
+        el.statLatency.innerText = `${delta}ms`;
+      }
+      if (notification) {
+        lastPacketTime = now;
+        stats.packetCount++;
+        el.statPacketCount.innerText = stats.packetCount;
+      }
+      activeAlarms.stale = false;
+      activeAlarms.disconnect = false;
+      if (isConnected) setConnectedUI(true, bleDevice ? bleDevice.name || BLE_CONFIG.deviceName : BLE_CONFIG.deviceName);
+      processStateUpdate(stateCode);
+      checkAlarmState();
+      return true;
+    }
+
+    function markUnavailable(reason) {
+      const now = Date.now();
+      if (currentState !== null && stateStartTime !== null) {
+        logStateTransition(currentState, ((now - stateStartTime) / 1000).toFixed(1));
+        timelineData.push({ time: now, state: null });
+      }
+      currentState = null;
+      stateStartTime = null;
+      activeAlarms.fastBreathing = false;
+      activeAlarms.unattached = false;
+      el.stateHero.className = 'state-hero';
+      el.stateName.innerText = reason;
+      el.stateOrb.innerText = '?';
+      el.stateCode.innerText = '-';
+      el.stateClass.innerText = 'Unavailable';
+      el.stateDuration.innerText = '00:00';
+      el.fastProgressBar.style.width = '0%';
+      el.unattachedProgressBar.style.width = '0%';
+      el.fastTimerLabel.innerText = '0.0s / 15s';
+      el.unattachedTimerLabel.innerText = '0.0s / 10s';
+      el.fastStatusLabel.innerText = 'Unavailable';
+      el.unattachedStatusLabel.innerText = 'Unavailable';
+      checkAlarmState();
+    }
+
+    function checkBleFreshness(now = Date.now()) {
+      if (!isConnected || isMockMode) return;
+      const reference = lastPacketTime === null ? connectionStartedAt : lastPacketTime;
+      if (reference !== null && now - reference > BLE_STALE_MS) {
+        markUnavailable('BLE data stale / unavailable');
+        el.connText.innerText = 'Connected; state data stale';
+        if (!activeAlarms.stale) {
+          triggerAlarm('stale', 'BLE Data Stale', 'No valid state notification for over 3 seconds. Sensor or prediction may be unavailable; GATT is still connected.');
+        }
+      }
+    }
+
+    function resetTelemetry() {
+      markUnavailable('Awaiting valid data');
+      timelineData.length = 0;
+      stateLog.length = 0;
+      renderLogTable();
+      lastPacketTime = null;
+      connectionStartedAt = null;
+      notificationSequence = 0;
+      sessionStartTime = null;
+      Object.keys(activeAlarms).forEach(key => { activeAlarms[key] = false; });
+      Object.keys(stats).forEach(key => { stats[key] = 0; });
+      el.statPacketCount.innerText = '0';
+      el.statAlarmCount.innerText = '0';
+      el.statTransitions.innerText = '0';
+      el.statLatency.innerText = 'N/A';
+      checkAlarmState();
+    }
+
+    // Core State Update Logic
+    function processStateUpdate(stateCode) {
+      if (!Number.isInteger(stateCode) || stateCode < 0 || stateCode > 3) {
+        console.warn('Received invalid state code:', stateCode);
+        return;
+      }
+
+      const now = Date.now();
+
+      // Check if state changed
+      if (currentState === null || currentState !== stateCode) {
+        // Record previous state duration if existed
+        if (currentState !== null && stateStartTime !== null) {
+          const durationSec = ((now - stateStartTime) / 1000).toFixed(1);
+          logStateTransition(currentState, durationSec);
+        }
+
+        currentState = stateCode;
+        stateStartTime = now;
+        stats.transitions++;
+        el.statTransitions.innerText = stats.transitions;
+
+        // Reset duration alarm triggers for new state
+        activeAlarms.fastBreathing = false;
+        activeAlarms.unattached = false;
+        checkAlarmState();
+
+        renderCurrentStateHero();
+      }
+
+      // Add to timeline sample buffer
+      timelineData.push({ time: now, state: stateCode });
+      // Keep only last 120 seconds of samples
+      const cutoff = now - 120000;
+      while (timelineData.length > 0 && timelineData[0].time < cutoff) {
+        timelineData.shift();
+      }
+    }
+
+    // Render Hero Card
+    function renderCurrentStateHero() {
+      const stateInfo = STATES[currentState] || { name: 'Unknown', class: 'unknown', color: '#94a3b8', icon: '❓' };
+
+      // Update Card classes
+      el.stateHero.className = `state-hero state-${currentState}`;
+      el.stateOrb.innerText = stateInfo.icon;
+      el.stateName.innerText = (isMockMode ? 'MOCK: ' : '') + stateInfo.name;
+      el.stateCode.innerText = currentState;
+      el.stateClass.innerText = stateInfo.class;
+    }
+
+    // Periodic Timer Loop: handles duration calculations and alarm triggers
+    setInterval(() => {
+      const now = Date.now();
+      checkBleFreshness(now);
+
+      // Update session duration
+      if (sessionStartTime) {
+        const totalSec = Math.floor((now - sessionStartTime) / 1000);
+        const m = String(Math.floor(totalSec / 60)).padStart(2, '0');
+        const s = String(totalSec % 60).padStart(2, '0');
+        el.sessionDuration.innerText = `${m}:${s}`;
+      }
+
+      // If active state exists, update duration & check duration alarms
+      if (currentState !== null && stateStartTime !== null) {
+        const stateSec = (now - stateStartTime) / 1000;
+        const m = String(Math.floor(stateSec / 60)).padStart(2, '0');
+        const s = String(Math.floor(stateSec % 60)).padStart(2, '0');
+        el.stateDuration.innerText = `${m}:${s}`;
+
+        // Check Alarm 1: Fast breathing (State 1) > 15 seconds
+        if (currentState === 1) {
+          const progress = Math.min(100, (stateSec / ALARM_LIMITS.FAST_BREATHING_SEC) * 100);
+          el.fastProgressBar.style.width = `${progress}%`;
+          el.fastTimerLabel.innerText = `${stateSec.toFixed(1)}s / ${ALARM_LIMITS.FAST_BREATHING_SEC}s`;
+
+          if (stateSec >= ALARM_LIMITS.FAST_BREATHING_SEC) {
+            el.fastStatusLabel.innerText = 'ALARM ACTIVE!';
+            el.fastStatusLabel.style.color = '#ef4444';
+            if (!activeAlarms.fastBreathing) {
+              triggerAlarm('fast', 'Fast Breathing Alert (>15s)', 'Rapid breathing detected persistently for more than 15 seconds!');
+            }
+          } else {
+            el.fastStatusLabel.innerText = 'Monitoring...';
+            el.fastStatusLabel.style.color = '#fbbf24';
+          }
+        } else {
+          el.fastProgressBar.style.width = '0%';
+          el.fastTimerLabel.innerText = `0.0s / ${ALARM_LIMITS.FAST_BREATHING_SEC}s`;
+          el.fastStatusLabel.innerText = 'Safe';
+          el.fastStatusLabel.style.color = 'var(--text-muted)';
+        }
+
+        // Check Alarm 2: Unattached (State 2) > 10 seconds
+        if (currentState === 2) {
+          const progress = Math.min(100, (stateSec / ALARM_LIMITS.UNATTACHED_SEC) * 100);
+          el.unattachedProgressBar.style.width = `${progress}%`;
+          el.unattachedTimerLabel.innerText = `${stateSec.toFixed(1)}s / ${ALARM_LIMITS.UNATTACHED_SEC}s`;
+
+          if (stateSec >= ALARM_LIMITS.UNATTACHED_SEC) {
+            el.unattachedStatusLabel.innerText = 'ALARM ACTIVE!';
+            el.unattachedStatusLabel.style.color = '#ef4444';
+            if (!activeAlarms.unattached) {
+              triggerAlarm('unattached', 'Device Not Attached (>10s)', 'Sensor removed or not attached for more than 10 seconds!');
+            }
+          } else {
+            el.unattachedStatusLabel.innerText = 'Monitoring...';
+            el.unattachedStatusLabel.style.color = '#fbbf24';
+          }
+        } else {
+          el.unattachedProgressBar.style.width = '0%';
+          el.unattachedTimerLabel.innerText = `0.0s / ${ALARM_LIMITS.UNATTACHED_SEC}s`;
+          el.unattachedStatusLabel.innerText = 'Safe';
+          el.unattachedStatusLabel.style.color = 'var(--text-muted)';
+        }
+      }
+
+      // Render timeline frame
+      drawTimeline();
+
+    }, 100); // 10Hz update for smooth timers & timeline
+
+    // Trigger Alarm Helper
+    function triggerAlarm(type, title, desc) {
+      if (type === 'fast') activeAlarms.fastBreathing = true;
+      if (type === 'unattached') activeAlarms.unattached = true;
+      if (type === 'disconnect') activeAlarms.disconnect = true;
+      if (type === 'stale') activeAlarms.stale = true;
+
+      stats.alarmCount++;
+      el.statAlarmCount.innerText = stats.alarmCount;
+
+      checkAlarmState(title, desc, type);
+    }
+
+    function checkAlarmState(customTitle, customDesc, soundType) {
+      const isAnyActive = activeAlarms.fastBreathing || activeAlarms.unattached || activeAlarms.disconnect || activeAlarms.stale;
+
+      if (isAnyActive) {
+        el.alarmBanner.classList.add('active');
+        if (activeAlarms.disconnect) {
+          el.alarmBanner.classList.remove('warning');
+          el.alarmTitle.innerText = customTitle || 'BLE CONNECTION LOST';
+          el.alarmDesc.innerText = customDesc || 'Device disconnected from Bluetooth monitoring!';
+          alarmAudio.startAlarmPattern(soundType || 'disconnect');
+        } else if (activeAlarms.stale) {
+          el.alarmBanner.classList.add('warning');
+          el.alarmTitle.innerText = 'BLE DATA STALE / UNAVAILABLE';
+          el.alarmDesc.innerText = 'GATT is connected, but no valid state notification arrived for over 3 seconds.';
+          alarmAudio.startAlarmPattern('disconnect');
+        } else if (activeAlarms.fastBreathing) {
+          el.alarmBanner.classList.remove('warning');
+          el.alarmTitle.innerText = customTitle || 'CRITICAL: FAST BREATHING (>15s)';
+          el.alarmDesc.innerText = customDesc || 'Patient breathing rate abnormally rapid!';
+          alarmAudio.startAlarmPattern(soundType || 'fast');
+        } else if (activeAlarms.unattached) {
+          el.alarmBanner.classList.add('warning');
+          el.alarmTitle.innerText = customTitle || 'WARNING: SENSOR NOT ATTACHED (>10s)';
+          el.alarmDesc.innerText = customDesc || 'Sensor is off the patient or still on table.';
+          alarmAudio.startAlarmPattern(soundType || 'unattached');
+        }
+      } else {
+        el.alarmBanner.classList.remove('active');
+        alarmAudio.stopSound();
+      }
+    }
+
+    function silenceAlarms() {
+      // Silence audio and acknowledge visible banner
+      alarmAudio.stopSound();
+      el.alarmBanner.classList.remove('active');
+      activeAlarms.fastBreathing = false;
+      activeAlarms.unattached = false;
+      activeAlarms.disconnect = false;
+      activeAlarms.stale = false;
+    }
+
+    // Timeline Rendering onto Canvas
+    function drawTimeline() {
+      if (!ctx || canvas.width === 0 || canvas.height === 0) return;
+
+      const w = canvas.width;
+      const h = canvas.height;
+      const now = Date.now();
+      const windowMs = 60000; // 60 seconds rolling window
+      const tMin = now - windowMs;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Background grid lines (every 10 seconds)
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      ctx.fillStyle = '#64748b';
+      ctx.font = '10px monospace';
+
+      for (let s = 0; s <= 60; s += 10) {
+        const x = w - (s * 1000 / windowMs) * w;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h - 16);
+        ctx.stroke();
+        ctx.fillText(`-${s}s`, x + 3, h - 4);
+      }
+
+      // Draw timeline segments
+      if (timelineData.length > 0) {
+        for (let i = 0; i < timelineData.length; i++) {
+          const pt = timelineData[i];
+          if (pt.state === null) continue; // A gap is unavailable, never calm.
+          const nextPt = timelineData[i + 1] || { time: now, state: pt.state };
+
+          const startX = Math.max(0, ((pt.time - tMin) / windowMs) * w);
+          const segmentEnd = isMockMode ? nextPt.time : Math.min(nextPt.time, pt.time + BLE_STALE_MS);
+          const endX = Math.min(w, ((segmentEnd - tMin) / windowMs) * w);
+          if (segmentEnd < tMin || endX < startX) continue;
+          const segW = Math.max(2, endX - startX);
+
+          const stateDef = STATES[pt.state] || { color: '#94a3b8' };
+          ctx.fillStyle = stateDef.color;
+
+          // Vertical position mapped to state code (0=bottom, 3=top) or fill full height
+          const barH = (h - 22) / 4;
+          const y = (h - 22) - (pt.state + 1) * barH;
+
+          ctx.fillRect(startX, y, segW, barH);
+        }
+      }
+    }
+
+    // State Transition Event Logger
+    function logStateTransition(code, durationSec) {
+      const stateInfo = STATES[code] || { name: 'Unknown', class: 'unknown' };
+      const timeStr = new Date().toLocaleTimeString();
+      let alarmsRaised = [];
+      if (code === 1 && durationSec >= ALARM_LIMITS.FAST_BREATHING_SEC) alarmsRaised.push('Fast Breathing (>15s)');
+      if (code === 2 && durationSec >= ALARM_LIMITS.UNATTACHED_SEC) alarmsRaised.push('Unattached (>10s)');
+
+      const entry = {
+        time: timeStr,
+        name: stateInfo.name,
+        code: code,
+        duration: `${durationSec}s`,
+        alarms: alarmsRaised.length > 0 ? alarmsRaised.join(', ') : 'None'
+      };
+
+      stateLog.unshift(entry);
+      if (stateLog.length > 100) stateLog.pop(); // Keep 100 entries
+
+      renderLogTable();
+    }
+
+    function renderLogTable() {
+      if (stateLog.length === 0) {
+        el.logTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No state transitions recorded yet.</td></tr>`;
+        return;
+      }
+
+      let html = '';
+      stateLog.forEach(row => {
+        html += `
+          <tr>
+            <td>${row.time}</td>
+            <td><span class="state-pill pill-${row.code}">${row.name}</span></td>
+            <td><strong>${row.code}</strong></td>
+            <td>${row.duration}</td>
+            <td style="${row.alarms !== 'None' ? 'color: #ef4444; font-weight: bold;' : 'color: var(--text-muted);'}">
+              ${row.alarms}
+            </td>
+          </tr>
+        `;
+      });
+      el.logTableBody.innerHTML = html;
+    }
+
+    // Export CSV Helper
+    function exportLogCSV() {
+      if (stateLog.length === 0) {
+        alert('Log is currently empty.');
+        return;
+      }
+      let csv = 'Timestamp,StateName,StateCode,Duration,Alarms\n';
+      stateLog.forEach(r => {
+        csv += `"${r.time}","${r.name}",${r.code},"${r.duration}","${r.alarms}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `prm-ble-monitor-log-${Date.now()}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Mock Mode & Testing Suite Functions
+    function toggleMockMode() {
+      if (!isMockMode) disconnectBLE();
+      isMockMode = !isMockMode;
+      window.mockStopScenario();
+      resetTelemetry();
+      if (isMockMode) {
+        el.btnToggleMock.innerText = 'Disable Mock Mode';
+        el.btnToggleMock.classList.replace('btn-secondary', 'btn-danger');
+        el.mockControls.style.display = 'flex';
+        sessionStartTime = Date.now();
+        setConnectedUI(false);
+        // Start in Calm State (0)
+        window.mockSetState(0);
+      } else {
+        el.btnToggleMock.innerText = 'Enable Mock Mode';
+        el.btnToggleMock.classList.replace('btn-danger', 'btn-secondary');
+        el.mockControls.style.display = 'none';
+        window.mockStopScenario();
+        setConnectedUI(false);
+        markUnavailable('Mock ended; connect a real BLE device');
+      }
+    }
+
+    window.mockSetState = function(code) {
+      if (!isMockMode) {
+        toggleMockMode();
+      }
+      alarmAudio.init();
+      stats.packetCount++;
+      el.statPacketCount.innerText = stats.packetCount;
+      el.statLatency.innerText = '<1ms (mock)';
+      processStateUpdate(code);
+    };
+
+    window.mockScenarioFastAlarm = function() {
+      window.mockStopScenario();
+      alert('Starting Fast Breathing Scenario:\nSetting State 1 (fast). Fast breathing alarm will trigger in 15 seconds.');
+      window.mockSetState(1);
+    };
+
+    window.mockScenarioUnattachedAlarm = function() {
+      window.mockStopScenario();
+      alert('Starting Unattached Scenario:\nSetting State 2 (unattached). Unattached alarm will trigger in 10 seconds.');
+      window.mockSetState(2);
+    };
+
+    window.mockScenarioDisconnect = function() {
+      window.mockStopScenario();
+      if (!isMockMode) toggleMockMode();
+      markUnavailable('MOCK: simulated connection loss');
+      triggerAlarm('disconnect', 'MOCK: BLE Connection Lost', 'Simulated disconnection; no hardware measurement.');
+    };
+
+    window.mockScenarioCycling = function() {
+      window.mockStopScenario();
+      let cycle = [0, 1, 2, 3];
+      let idx = 0;
+      window.mockSetState(cycle[idx]);
+      mockScenarioInterval = setInterval(() => {
+        idx = (idx + 1) % cycle.length;
+        window.mockSetState(cycle[idx]);
+      }, 5000); // 5 seconds per state
+    };
+
+    window.mockStopScenario = function() {
+      if (mockScenarioInterval) {
+        clearInterval(mockScenarioInterval);
+        mockScenarioInterval = null;
+      }
+    };
+
+    // UI Event Listeners
+    el.btnConnect.addEventListener('click', connectBLE);
+    el.btnDisconnect.addEventListener('click', disconnectBLE);
+
+    el.btnAudioToggle.addEventListener('click', () => {
+      const isMuted = alarmAudio.toggleMute();
+      el.audioIcon.innerText = isMuted ? '🔇' : '🔊';
+      el.audioLabel.innerText = isMuted ? 'Muted' : 'Audio ON';
+    });
+
+    el.btnAcknowledge.addEventListener('click', silenceAlarms);
+
+    el.btnResetStats.addEventListener('click', () => {
+      stats.packetCount = 0;
+      stats.alarmCount = 0;
+      stats.transitions = 0;
+      el.statPacketCount.innerText = 0;
+      el.statAlarmCount.innerText = 0;
+      el.statTransitions.innerText = 0;
+      el.statLatency.innerText = 'N/A';
+    });
+
+    el.btnExportCSV.addEventListener('click', exportLogCSV);
+    el.btnClearLog.addEventListener('click', () => {
+      stateLog.length = 0;
+      renderLogTable();
+    });
+
+    el.btnToggleMock.addEventListener('click', toggleMockMode);
+
+    // Initial log render
+    renderLogTable();
+  </script>
+</body>
+</html>
