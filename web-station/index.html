@@ -266,6 +266,11 @@
       box-shadow: 0 0 35px rgba(239, 68, 68, 0.3);
       animation: pulse-danger 1s infinite alternate;
     }
+    .state-hero.state-1.acknowledged,
+    .state-hero.state-2.acknowledged {
+      animation: none;
+      box-shadow: none;
+    }
     .state-hero.state-2 {
       border-color: var(--state-unattached);
       box-shadow: 0 0 35px rgba(59, 130, 246, 0.25);
@@ -625,7 +630,7 @@
 
       <!-- Left Column: Live State Hero & Timeline -->
       <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-        
+
         <!-- Live State Hero Display -->
         <div class="card">
           <div class="card-header">
@@ -905,6 +910,14 @@
       disconnect: false,
       stale: false
     };
+    // Incident-scoped acknowledgment: a persistent condition must not re-fire
+    // on every timer tick after the user silences it. Re-arm only on recovery.
+    const acknowledgedAlarms = {
+      fastBreathing: false,
+      unattached: false,
+      disconnect: false,
+      stale: false
+    };
 
     // Statistics
     const stats = {
@@ -1080,7 +1093,7 @@
         }
 
         el.connText.innerText = 'Requesting...';
-        
+
         // Connect adhering strictly to INTERFACES.md
         bleDevice = await navigator.bluetooth.requestDevice({
           filters: [{ name: BLE_CONFIG.deviceName }],
@@ -1153,12 +1166,14 @@
     function onGattDisconnected(event) {
       if (isMockMode) return;
       if (event && event.target && event.target !== bleDevice) return;
+      const wasConnected = isConnected;
       console.warn('BLE GATT server disconnected!');
       markUnavailable('BLE connection lost');
       activeAlarms.stale = false;
       setConnectedUI(false);
       // Trigger connection lost alarm as required by assignment
-      if (!intentionalDisconnect) {
+      if (!intentionalDisconnect && wasConnected) {
+        acknowledgedAlarms.disconnect = false;
         triggerAlarm('disconnect', 'BLE Connection Lost', 'Disconnected from PRM-Project-2. Bedside telemetry offline!');
       }
     }
@@ -1182,7 +1197,8 @@
 
     // BLE Notification Payload Handler
     function handleCharacteristicValueChanged(event) {
-      if (isMockMode || event.target !== bleCharacteristic) return;
+      if (isMockMode || event.target !== bleCharacteristic ||
+          !bleDevice || !bleDevice.gatt.connected) return;
       notificationSequence++;
       consumeStateValue(event.target.value, true);
     }
@@ -1206,6 +1222,7 @@
       }
       if (notification) {
         lastPacketTime = now;
+        acknowledgedAlarms.stale = false;
         stats.packetCount++;
         el.statPacketCount.innerText = stats.packetCount;
       }
@@ -1227,6 +1244,8 @@
       stateStartTime = null;
       activeAlarms.fastBreathing = false;
       activeAlarms.unattached = false;
+      acknowledgedAlarms.fastBreathing = false;
+      acknowledgedAlarms.unattached = false;
       el.stateHero.className = 'state-hero';
       el.stateName.innerText = reason;
       el.stateOrb.innerText = '?';
@@ -1248,7 +1267,7 @@
       if (reference !== null && now - reference > BLE_STALE_MS) {
         markUnavailable('BLE data stale / unavailable');
         el.connText.innerText = 'Connected; state data stale';
-        if (!activeAlarms.stale) {
+        if (!activeAlarms.stale && !acknowledgedAlarms.stale) {
           triggerAlarm('stale', 'BLE Data Stale', 'No valid state notification for over 3 seconds. Sensor or prediction may be unavailable; GATT is still connected.');
         }
       }
@@ -1264,6 +1283,7 @@
       notificationSequence = 0;
       sessionStartTime = null;
       Object.keys(activeAlarms).forEach(key => { activeAlarms[key] = false; });
+      Object.keys(acknowledgedAlarms).forEach(key => { acknowledgedAlarms[key] = false; });
       Object.keys(stats).forEach(key => { stats[key] = 0; });
       el.statPacketCount.innerText = '0';
       el.statAlarmCount.innerText = '0';
@@ -1297,6 +1317,8 @@
         // Reset duration alarm triggers for new state
         activeAlarms.fastBreathing = false;
         activeAlarms.unattached = false;
+        acknowledgedAlarms.fastBreathing = false;
+        acknowledgedAlarms.unattached = false;
         checkAlarmState();
 
         renderCurrentStateHero();
@@ -1316,7 +1338,9 @@
       const stateInfo = STATES[currentState] || { name: 'Unknown', class: 'unknown', color: '#94a3b8', icon: '❓' };
 
       // Update Card classes
-      el.stateHero.className = `state-hero state-${currentState}`;
+      const acknowledged = (currentState === 1 && acknowledgedAlarms.fastBreathing) ||
+                           (currentState === 2 && acknowledgedAlarms.unattached);
+      el.stateHero.className = `state-hero state-${currentState}${acknowledged ? ' acknowledged' : ''}`;
       el.stateOrb.innerText = stateInfo.icon;
       el.stateName.innerText = (isMockMode ? 'MOCK: ' : '') + stateInfo.name;
       el.stateCode.innerText = currentState;
@@ -1350,9 +1374,9 @@
           el.fastTimerLabel.innerText = `${stateSec.toFixed(1)}s / ${ALARM_LIMITS.FAST_BREATHING_SEC}s`;
 
           if (stateSec >= ALARM_LIMITS.FAST_BREATHING_SEC) {
-            el.fastStatusLabel.innerText = 'ALARM ACTIVE!';
-            el.fastStatusLabel.style.color = '#ef4444';
-            if (!activeAlarms.fastBreathing) {
+            el.fastStatusLabel.innerText = acknowledgedAlarms.fastBreathing ? 'Acknowledged (Silenced)' : 'ALARM ACTIVE!';
+            el.fastStatusLabel.style.color = acknowledgedAlarms.fastBreathing ? '#fbbf24' : '#ef4444';
+            if (!activeAlarms.fastBreathing && !acknowledgedAlarms.fastBreathing) {
               triggerAlarm('fast', 'Fast Breathing Alert (>15s)', 'Rapid breathing detected persistently for more than 15 seconds!');
             }
           } else {
@@ -1373,9 +1397,9 @@
           el.unattachedTimerLabel.innerText = `${stateSec.toFixed(1)}s / ${ALARM_LIMITS.UNATTACHED_SEC}s`;
 
           if (stateSec >= ALARM_LIMITS.UNATTACHED_SEC) {
-            el.unattachedStatusLabel.innerText = 'ALARM ACTIVE!';
-            el.unattachedStatusLabel.style.color = '#ef4444';
-            if (!activeAlarms.unattached) {
+            el.unattachedStatusLabel.innerText = acknowledgedAlarms.unattached ? 'Acknowledged (Silenced)' : 'ALARM ACTIVE!';
+            el.unattachedStatusLabel.style.color = acknowledgedAlarms.unattached ? '#fbbf24' : '#ef4444';
+            if (!activeAlarms.unattached && !acknowledgedAlarms.unattached) {
               triggerAlarm('unattached', 'Device Not Attached (>10s)', 'Sensor removed or not attached for more than 10 seconds!');
             }
           } else {
@@ -1397,10 +1421,10 @@
 
     // Trigger Alarm Helper
     function triggerAlarm(type, title, desc) {
-      if (type === 'fast') activeAlarms.fastBreathing = true;
-      if (type === 'unattached') activeAlarms.unattached = true;
-      if (type === 'disconnect') activeAlarms.disconnect = true;
-      if (type === 'stale') activeAlarms.stale = true;
+      const key = {fast: 'fastBreathing', unattached: 'unattached',
+                   disconnect: 'disconnect', stale: 'stale'}[type];
+      if (!key || acknowledgedAlarms[key] || activeAlarms[key]) return;
+      activeAlarms[key] = true;
 
       stats.alarmCount++;
       el.statAlarmCount.innerText = stats.alarmCount;
@@ -1441,13 +1465,17 @@
     }
 
     function silenceAlarms() {
-      // Silence audio and acknowledge visible banner
+      // Preserve acknowledgment until this condition recovers or a new
+      // connection/state incident begins. Never convert unavailable to Unknown.
       alarmAudio.stopSound();
       el.alarmBanner.classList.remove('active');
-      activeAlarms.fastBreathing = false;
-      activeAlarms.unattached = false;
-      activeAlarms.disconnect = false;
-      activeAlarms.stale = false;
+      Object.keys(activeAlarms).forEach(key => {
+        if (activeAlarms[key]) acknowledgedAlarms[key] = true;
+        activeAlarms[key] = false;
+      });
+      if (currentState !== null) renderCurrentStateHero();
+      if (acknowledgedAlarms.fastBreathing) el.fastStatusLabel.innerText = 'Acknowledged (Silenced)';
+      if (acknowledgedAlarms.unattached) el.unattachedStatusLabel.innerText = 'Acknowledged (Silenced)';
     }
 
     // Timeline Rendering onto Canvas
@@ -1617,6 +1645,7 @@
       window.mockStopScenario();
       if (!isMockMode) toggleMockMode();
       markUnavailable('MOCK: simulated connection loss');
+      acknowledgedAlarms.disconnect = false;
       triggerAlarm('disconnect', 'MOCK: BLE Connection Lost', 'Simulated disconnection; no hardware measurement.');
     };
 

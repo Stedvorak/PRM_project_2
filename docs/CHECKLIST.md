@@ -11,6 +11,10 @@
 - [ ] Evaluate registered methods with recording-group held-out data
 - [ ] Select exactly one genuinely evaluated final method
 - [x] Build demo firmware for explicit N16R8 and pass50 software tests (including14 actual client-JS runtime tests)
+- [x] Build separate50Hz acquisition firmware and pass68 integrated software tests (18 client-JS,14 recorder)
+- [x] Flash checked acquisition image to COM3 and verify written flash hashes
+- [x] Run actual sensor detection test: FAILED, no ACK at0x68/0x69 on GPIO8/9; no measurements fabricated
+- [ ] Connect/verify physical MPU-6050 and repeat detection successfully before labeled recording
 - [ ] Flash and verify sensor acquisition, failure handling and LED on physical board
 - [ ] Verify BLE read/notify, 1 Hz heartbeat, reconnect and Wi-Fi coexistence on hardware
 - [x] Integrate Antigravity embedded PROGMEM page and BLE monitor source from verified2064cf8; adapt to v0.2

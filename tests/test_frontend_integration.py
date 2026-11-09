@@ -161,6 +161,96 @@ characteristic.readValue=async()=>{
 await connectBLE(); assert.equal(currentState,3);
 """)
 
+    def test_duration_acknowledgment_persists_until_state_recovery(self):
+        for code, seconds, key in ((1, 15, "fastBreathing"), (2, 10, "unattached")):
+            with self.subTest(state=code):
+                self.run_scenario(r"""
+const code = CODE, limit = LIMIT, key = 'KEY';
+await connectBLE(); packet([code]);
+for(let i=0;i<limit;i++) { __clock.now+=1000; packet([code]); timerTick(); }
+assert.equal(activeAlarms[key],true);
+const alarmCount=stats.alarmCount;
+silenceAlarms();
+assert.equal(acknowledgedAlarms[key],true);
+assert.equal(activeAlarms[key],false);
+assert.ok(el.stateHero.className.includes('acknowledged'));
+for(let i=0;i<5;i++) { __clock.now+=1000; packet([code]); timerTick(); }
+assert.equal(activeAlarms[key],false);
+assert.equal(stats.alarmCount,alarmCount);
+assert.ok((code===1 ? el.fastStatusLabel : el.unattachedStatusLabel).innerText.includes('Acknowledged'));
+packet([0]);
+assert.equal(acknowledgedAlarms[key],false);
+packet([code]);
+for(let i=0;i<limit;i++) { __clock.now+=1000; packet([code]); timerTick(); }
+assert.equal(activeAlarms[key],true);
+assert.equal(stats.alarmCount,alarmCount+1);
+""".replace("CODE", str(code)).replace("LIMIT", str(seconds)).replace("KEY", key))
+
+    def test_duration_acknowledgment_rearms_after_unavailable_gap(self):
+        self.run_scenario(r"""
+await connectBLE(); packet([1]);
+for(let i=0;i<15;i++) { __clock.now+=1000; packet([1]); timerTick(); }
+silenceAlarms();
+packet([]);
+assert.equal(acknowledgedAlarms.fastBreathing,false);
+const unavailableTitle=el.stateName.innerText;
+silenceAlarms();
+assert.equal(currentState,null);
+assert.equal(el.stateName.innerText,unavailableTitle);
+assert.equal(el.stateClass.innerText,'Unavailable');
+packet([1]);
+for(let i=0;i<15;i++) { __clock.now+=1000; packet([1]); timerTick(); }
+assert.equal(activeAlarms.fastBreathing,true);
+""")
+
+    def test_stale_acknowledgment_persists_and_rearms_on_valid_notification(self):
+        self.run_scenario(r"""
+await connectBLE(); packet([0]);
+__clock.now+=3101; timerTick();
+assert.equal(activeAlarms.stale,true);
+const unavailableTitle=el.stateName.innerText;
+const alarmCount=stats.alarmCount;
+silenceAlarms();
+assert.equal(acknowledgedAlarms.stale,true);
+assert.equal(el.stateName.innerText,unavailableTitle);
+assert.equal(el.stateClass.innerText,'Unavailable');
+for(let i=0;i<5;i++) { __clock.now+=100; timerTick(); }
+packet([]); __clock.now+=100; timerTick();
+assert.equal(activeAlarms.stale,false);
+assert.equal(stats.alarmCount,alarmCount);
+assert.equal(currentState,null);
+packet([0]);
+assert.equal(acknowledgedAlarms.stale,false);
+__clock.now+=3101; timerTick();
+assert.equal(activeAlarms.stale,true);
+assert.equal(stats.alarmCount,alarmCount+1);
+""")
+
+    def test_disconnect_acknowledgment_persists_until_a_new_connection_incident(self):
+        self.run_scenario(r"""
+await connectBLE(); packet([0]); device.gatt.disconnect();
+assert.equal(activeAlarms.disconnect,true);
+const alarmCount=stats.alarmCount;
+const unavailableTitle=el.stateName.innerText;
+silenceAlarms();
+assert.equal(acknowledgedAlarms.disconnect,true);
+assert.equal(el.stateName.innerText,unavailableTitle);
+assert.equal(el.stateCode.innerText,'-');
+assert.equal(el.stateClass.innerText,'Unavailable');
+packet([0]); // A queued old notification cannot revive a disconnected device.
+assert.equal(currentState,null);
+assert.equal(el.stateName.innerText,unavailableTitle);
+device.gatt.disconnect();
+__clock.now+=500; timerTick();
+assert.equal(activeAlarms.disconnect,false);
+assert.equal(stats.alarmCount,alarmCount);
+await connectBLE(); packet([0]);
+assert.equal(acknowledgedAlarms.disconnect,false);
+device.gatt.disconnect();
+assert.equal(activeAlarms.disconnect,true);
+assert.equal(stats.alarmCount,1); // Reconnection starts a fresh statistics session.
+""")
+
 
 class EmbeddedDashboardRuntimeTests(unittest.TestCase):
     def run_scenario(self, scenario):

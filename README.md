@@ -8,12 +8,15 @@ interfaces. [Assignment](https://tomasvicar.github.io/AUI-public/labs/real-time-
 Firmware and a real-recording training pipeline are implemented for testing.
 There is no trained model or genuine classifier evaluation yet. The checked-in
 model deliberately returns unavailable; no mock prediction is exposed as real.
-Physical wiring, flashing, sensor acquisition, LED and BLE/AP demonstrations
+The separate50Hz acquisition image was flashed to COM3 with verified hashes.
+Its live probe found no ACK at0x68 or0x69 on GPIO8/9, so no sensor samples or
+labeled recordings were created. Sensor wiring, LED and BLE/AP demonstrations
 remain to be verified. This repository is not yet a complete lab submission.
 
 - [Shared BLE/HTTP interface v0.2](docs/INTERFACES.md)
 - [Build, wiring assumptions and hardware acceptance checks](docs/FIRMWARE.md)
 - [Collect real recordings, train, evaluate and export a model](docs/ML.md)
+- [Separate 50 Hz USB acquisition and timestamped session recorder](acquisition/README.md)
 - [Method registry](docs/METHODS.md) and [final method status](docs/FINAL_METHOD.md)
 - [Submission checklist](docs/CHECKLIST.md)
 
@@ -42,6 +45,13 @@ recordings; `firmware/data/` is reserved for tracked LittleFS frontend assets.
 - Deployed GitHub Pages monitoring URL.
 - Real recordings, labels, held-out evaluation and installed model identity.
 - All live demonstrations, chosen extension evidence and final remote commit.
+
+The separate acquisition project records all six real axes at50Hz over CH343
+COM3, with identity/configuration tests and a Python recorder. Its raw files must
+be explicitly downsampled before using M01's25Hz training pipeline. Acquisition
+does not change the agreed25Hz live signal API or install a classifier.
+The board currently runs this acquisition-only image, so the demo AP/BLE/page
+is not active on hardware. Reflash the main demo build after data collection.
 
 The proposed own extension is explicit sensor-fault/unavailable detection and
 recovery. It must be demonstrated on hardware before claiming completion.

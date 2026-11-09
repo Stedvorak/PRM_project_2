@@ -44,6 +44,16 @@ The mute and acknowledge buttons control synthesized Web Audio alerts. An
 intentional Disconnect clears the current prediction without a connection-loss
 alarm. Audio availability depends on browser policy and user interaction.
 
+Acknowledgment silences the current incident instead of re-firing on the next
+timer tick. Duration alarms re-arm after a state change or unavailable gap;
+stale-data alarms re-arm after a valid notification or reconnection; a new
+unexpected disconnect after reconnection starts a new connection-loss incident.
+Acknowledging unavailable data preserves the explicit unavailable display.
+
+The incident-scoped acknowledgment behavior adapts Antigravity commit
+`8f5a9bb`, extended to the v0.2 stale-data alarm while preserving the current
+payload validation, unavailable-state handling and mock isolation.
+
 ## Explicit mock testing
 
 Mock mode is enabled only by its controls, never by BLE failure. Its connection
