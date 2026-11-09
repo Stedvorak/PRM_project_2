@@ -33,6 +33,7 @@ sections4 and5; their existing frontend implementation is preserved.
 - [Collect real recordings, train, evaluate and export a model](docs/ML.md)
 - [Separate 50 Hz USB acquisition and timestamped session recorder](acquisition/README.md)
 - [Method registry](docs/METHODS.md) and [final method status](docs/FINAL_METHOD.md)
+- [Experimental breathing-rate extension](docs/RESPIRATION.md)
 - [Submission checklist](docs/CHECKLIST.md)
 
 ## Quick start (PowerShell)

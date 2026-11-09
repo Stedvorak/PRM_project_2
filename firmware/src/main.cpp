@@ -14,6 +14,7 @@
 #include "prm_model.h"
 #include "prm_runtime.h"
 #include "prm_diagnostics.h"
+#include "prm_respiration.h"
 #include "web_page.h"
 
 namespace {
@@ -29,6 +30,11 @@ struct Prediction {
 
 prm::SampleRing samples;
 Prediction prediction;
+prm::RespirationEstimator respiration;
+float respiratoryRate = 0;
+bool respiratoryRateValid = false;
+uint64_t respiratoryRateAt = 0;
+uint64_t nextRespiration = 0;
 portMUX_TYPE stateMux = portMUX_INITIALIZER_UNLOCKED;
 bool sensorHealthy = false;
 uint8_t activeMpuAddress = 0;  // No address is usable until ACK and identity pass.
@@ -124,10 +130,12 @@ void invalidateSensor(uint64_t now) {
   lockPublicationState();
   portENTER_CRITICAL(&stateMux);
   sensorHealthy = false;
+  respiratoryRateValid = false;
   prediction.valid = false;
   samples.clear();
   portEXIT_CRITICAL(&stateMux);
   unlockPublicationState();
+  respiration.clear();
   activeMpuAddress = 0;
   nextSensorAttempt = now + prm::kSensorRetryMs;
   queueBlePublication();
@@ -254,6 +262,12 @@ void sampleSensor(uint64_t now) {
   portEXIT_CRITICAL(&stateMux);
   unlockPublicationState();
   if (!pushed) { invalidateSensor(nowMs()); return; }
+  respiration.push(sample);
+  if (!respiration.hasWindow()) {
+    portENTER_CRITICAL(&stateMux);
+    respiratoryRateValid = false;
+    portEXIT_CRITICAL(&stateMux);
+  }
 #if PRM_CAPTURE_SERIAL
   Serial.printf("%llu,%.8f,%.8f,%.8f,%.8f,%.8f,%.8f\n",
                 static_cast<unsigned long long>(sample.t_ms), sample.ax_g, sample.ay_g,
@@ -308,6 +322,23 @@ void infer(uint64_t now) {
   }
 }
 
+// Runs only on the acquisition task; HTTP reads a small locked snapshot.
+void updateRespiration(uint64_t now) {
+  if (now < nextRespiration) return;
+  nextRespiration = now + 1000;
+  bool ready;
+  const Prediction current = predictionSnapshot(now, ready);
+  float rate = 0;
+  const bool breathing = ready && current.state < 2;
+  if (ready && !breathing) respiration.clear();
+  const bool valid = breathing && respiration.estimate(rate);
+  portENTER_CRITICAL(&stateMux);
+  respiratoryRate = rate;
+  respiratoryRateValid = valid;
+  respiratoryRateAt = now;
+  portEXIT_CRITICAL(&stateMux);
+}
+
 String timestampString(uint64_t value) {
   char text[24];
   snprintf(text, sizeof(text), "%llu", static_cast<unsigned long long>(value));
@@ -344,8 +375,17 @@ void handleStatus() {
     }
     body += "},\"confidence\":";
     body += String(copy.confidence, 8);
-    // Breathing rate is deliberately unavailable until a real estimator exists.
-    body += ",\"breaths_per_min\":null}";
+    float rate;
+    bool rateValid;
+    portENTER_CRITICAL(&stateMux);
+    rate = respiratoryRate;
+    rateValid = respiratoryRateValid && readyLocked(nowMs()) &&
+        prediction.state == copy.state && copy.state < 2 &&
+        now >= respiratoryRateAt && now - respiratoryRateAt <= 2500;
+    portEXIT_CRITICAL(&stateMux);
+    body += ",\"breaths_per_min\":";
+    body += rateValid ? String(rate, 1) : String("null");
+    body += '}';
   }
   sendJson(body);
 }
@@ -468,6 +508,7 @@ void acquisitionTask(void*) {
     checkFreshness(now);
     sampleSensor(now);
     infer(nowMs());
+    updateRespiration(nowMs());
     updateBleAndLed(nowMs());
     vTaskDelay(pdMS_TO_TICKS(1));
   }
