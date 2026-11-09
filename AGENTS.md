@@ -1,95 +1,47 @@
-﻿# PRM Project 2 - Image Processing
+﻿# PRM Project 2 - Real-Time AI
 
-## Mission
-Complete the image processing assignment within four hours.
-Prioritize correctness, reproducibility, and complete submission.
+Assignment:
+https://tomasvicar.github.io/AUI-public/labs/real-time-ai.html
 
-## Multi-agent coordination
-The main agent owns architecture, integration, and final delivery.
+## Team responsibilities
 
-Delegate independent work to subagents:
-- Data Explorer: inspect images, formats, dimensions, metadata, quality.
-- Methods Researcher: identify suitable image processing methods.
-- Validation Agent: design tests, metrics, and acceptance criteria.
-- Implementation Agent: implement independent components when useful.
+CODEX - Firmware and AI
+- ESP32-S3 firmware
+- MPU-6050 sensor acquisition
+- Signal processing and feature extraction
+- Classifier development and evaluation
+- RGB LED control
+- BLE service and notifications
+- Wi-Fi AP and HTTP API
+- Firmware testing
 
-Use parallel subagents only for independent tasks.
-Prefer read-only exploration before implementation.
-Never allow concurrent edits to the same files.
-Keep subagent reports concise.
+ANTIGRAVITY - Web interfaces
+- GitHub Pages BLE dashboard
+- Live state visualization and alarms
+- ESP32-hosted web frontend
+- Frontend testing and documentation
 
-## Technical guidelines
-- Use Python unless the assignment requires otherwise.
-- Prefer NumPy, OpenCV, SciPy, scikit-image and Matplotlib.
-- Use deterministic settings when applicable.
-- Preserve original input images.
-- Save important intermediate and final images.
-- Avoid unnecessary dependencies.
-- Do not invent results or metrics.
+## Coordination
 
-## Submission
-Maintain docs/CHECKLIST.md from the beginning.
-Verify all required code, figures, results and reports.
-Reserve at least 30 minutes for final verification.
-Verify Git push and submission status explicitly.
+Both agents must read docs/INTERFACES.md.
+Never modify files owned by the other agent.
+Agree on interface changes before implementation.
+Use separate Git branches and pull requests.
 
-## Algorithm naming and version control
+## Method tracking
 
-CRITICAL: Never lose track of the latest algorithm version.
+Every evaluated algorithm must have a unique ID.
+Maintain docs/METHODS.md.
+Record parameters, metrics and result files.
+Identify exactly one selected final algorithm.
+Never fabricate hardware measurements.
 
-1. Give every evaluated method a unique ID:
-   M01, M02, M03, etc.
+## Delivery
 
-2. Use descriptive names, e.g.:
-   M01_gaussian_baseline
-   M02_clahe
-   M03_combined_pipeline
-
-3. Keep a method registry in docs/METHODS.md.
-   Record:
-   - Method ID and version
-   - Algorithm description
-   - Source file
-   - Parameters
-   - Evaluation metrics
-   - Result files
-   - Status: experimental, candidate, selected, rejected
-
-4. Store experiment outputs in separate directories.
-   Never overwrite results from a different experiment.
-
-5. Maintain docs/FINAL_METHOD.md containing:
-   - Selected method ID and version
-   - Exact implementation path
-   - Parameters
-   - Evaluation results
-   - Git commit hash
-   - Verified remote branch and commit
-
-6. Do not silently replace the selected algorithm.
-   Any replacement requires updated results,
-   registry entries and explicit justification.
-
-7. Before every final push:
-   - Check git status.
-   - Verify the selected implementation is tracked.
-   - Run relevant tests.
-   - Commit all required deliverables.
-   - Push to the intended remote branch.
-   - Fetch the remote state.
-   - Verify the remote branch points to the
-     expected commit.
-   - Confirm the final algorithm and report
-     belong to that same commit.
-
-8. Never report "pushed successfully" based only
-   on a successful local commit.
-
-9. If the remote differs from local HEAD,
-   explicitly report the discrepancy.
-   Never force-push without user approval.
-
-10. Reserve the final 30 minutes for submission.
-    Stop experimenting and prioritize integration,
-    verification, documentation and delivery.
-
+Read the complete assignment and verify requirements.
+Maintain docs/CHECKLIST.md.
+Push at least three intermediate commits during the lab.
+Verify teacher access to the GitHub repository.
+Reserve the final 30 minutes for delivery.
+Verify the final commit exists on the remote.
+Never claim a successful push without verification.
