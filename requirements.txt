@@ -1,0 +1,7 @@
+# Python 3.11; PlatformIO pins the ESP32 platform and firmware libraries separately.
+platformio==6.1.18
+numpy==1.26.4
+scipy==1.14.1
+scikit-learn==1.6.0
+pyserial==3.5
+pytest==8.0.1
