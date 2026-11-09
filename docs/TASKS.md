@@ -1,29 +1,31 @@
-﻿# Task ownership
+# Task ownership
 
 ## CODEX
-- [ ] Sensor and ESP32 firmware
-- [ ] Data acquisition
-- [ ] Movement and breathing classification
-- [ ] RGB LED states
+- [x] Sensor and ESP32 firmware
+- [x] Data acquisition
+- [x] Movement and breathing classification
+- [x] RGB LED states
 - [ ] BLE notifications
-- [ ] Wi-Fi hotspot and HTTP API
-- [ ] ML evaluation and reproducibility
+- [x] Wi-Fi hotspot and HTTP API
+- [x] ML evaluation and reproducibility
 
 ## ANTIGRAVITY
-- [ ] BLE monitoring webpage
-- [ ] GitHub Pages deployment
-- [ ] Live visualization
-- [ ] Alarms and connection monitoring
-- [ ] ESP32 web frontend
-- [ ] Frontend documentation
+- [x] BLE monitoring webpage
+- [x] GitHub Pages deployment
+- [x] Live visualization
+- [x] Alarms and connection monitoring
+- [x] ESP32 web frontend
+- [x] Frontend documentation
 
 ## SHARED
-- [ ] Confirm interface contract
-- [ ] Collect real sensor data
-- [ ] Integrate both components
+- [x] Confirm interface contract
+- [x] Collect real sensor data
+- [x] Integrate both components
 - [ ] Test on physical hardware
 - [ ] Verify grading requirements
 - [ ] Complete live demonstrations
-- [ ] Verify required GitHub commits
-- [ ] Verify teacher access
+- [x] Verify required GitHub commits
+- [x] Verify teacher access
 - [ ] Verify final submission
+
+Verification note: David's frontend completion checks above mean implemented work. Actual AP/HTTP/browser/RGB and inference evidence is in SUBMISSION.md. Physical BLE notifications/alarms remain pending because the PC Bluetooth adapter is not ready. Sections1/2 teacher acceptance is user-confirmed. No extra section4/5 implementation was created during final integration.

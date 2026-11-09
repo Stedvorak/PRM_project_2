@@ -8,3 +8,4 @@ __pycache__/
 .env
 .pio/
 .pio-core/
+.DS_Store

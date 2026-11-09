@@ -43,3 +43,23 @@ outputs/verification/. Synthetic test fixtures exercise software behavior only.
 No reported static linker size is a runtime hardware measurement. Flashing,
 actual acquisition, BLE delivery/coexistence, LED wiring, browser/device pairing,
 model accuracy, deployment and teacher live demonstrations remain separate checks.
+
+
+## Reviewed development-branch integration
+
+The final merge incorporates origin/antigravity at8f5a9bb, including its parent
+2064cf8 and README/ACK commits. Seven expected conflicts were reviewed:
+.gitignore, README, frontend documentation, embedded page, station/readme and
+frontend tests. The existing integrated v0.2 implementations were preserved:
+they already contain David's visual/frontend work plus real-signal/null-state,
+stale-stream, one-byte payload and incident-acknowledgment fixes. No new UI or
+section4/5 feature was implemented during this merge. David's original history
+is retained as a merge parent.
+
+README now includes David B?rtek/?t?p?n Dvo??k, the actual /web-station/ URL and
+Antigravity/Gemini attribution. Unsupported older model paths/window parameters
+and the nonexistent wiring-photo claim were not restored. The ignore policy
+keeps anchored /data/ and firmware build caches, plus teammate .DS_Store.
+Frontend task completion checks survive; actual hardware verification is tracked
+separately in SUBMISSION.md. The M01 header must remain byte-identical to its
+selected artifact and final silent firmware evidence.
