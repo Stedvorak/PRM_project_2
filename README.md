@@ -9,9 +9,11 @@ Firmware and a real-recording training pipeline are implemented for testing.
 There is no trained model or genuine classifier evaluation yet. The checked-in
 model deliberately returns unavailable; no mock prediction is exposed as real.
 The separate50Hz acquisition image was flashed to COM3 with verified hashes.
-Its live probe found no ACK at0x68 or0x69 on GPIO8/9, so no sensor samples or
-labeled recordings were created. Sensor wiring, LED and BLE/AP demonstrations
-remain to be verified. This repository is not yet a complete lab submission.
+After wiring was checked, the existing firmware verified address0x68,
+WHO_AM_I0x68 and50Hz configuration on GPIO8/9. The first real30-second
+unattached/table session contains1499 valid samples at49.943Hz; its unchanged
+CSV and metadata are in data/raw/. LED and BLE/AP demonstrations remain to be
+verified. This repository is not yet a complete lab submission.
 
 - [Shared BLE/HTTP interface v0.2](docs/INTERFACES.md)
 - [Build, wiring assumptions and hardware acceptance checks](docs/FIRMWARE.md)

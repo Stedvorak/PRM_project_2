@@ -1,14 +1,18 @@
 ﻿# Final Selected Method
 
-Selected method: NONE — genuine recordings and evaluation are not available.
+Selected method: NONE — four-class recordings and classifier evaluation remain incomplete.
 
 Experimental candidate: M01 v1 (not evaluated, not selected).
 Default implementation: firmware/include/prm_model.h (unavailable-model guard).
 Feature implementation: firmware/include/prm_features.h.
 Training implementation and parameters: docs/ML.md; docs/METHODS.md.
-Evaluation results: unavailable; no genuine accuracy, breathing rate, inference
-latency, acquisition rate or on-board memory measurements have been recorded.
-Result files: none from real data. Software tests use temporary synthetic fixtures.
+Classifier evaluation results: unavailable; no genuine accuracy, breathing rate,
+inference latency or runtime on-board memory measurements have been recorded.
+Real acquisition evidence: first unattached/table session,1499 valid samples at
+49.94332199773288Hz; data/raw/20261109T135811_347025Z_unattached_07ff5cfb.csv
+and matching.json. Validation: outputs/verification/V06_unattached_session/validation.json.
+This is sensor acquisition evidence, not classifier evaluation or model selection.
+Software tests use temporary synthetic fixtures.
 Firmware/feature integration commit: cf6004e4513bf6466b194e81a4dc2a78dca6c19e.
 Verified remote firmware commit at integration checkpoint:
 cf6004e4513bf6466b194e81a4dc2a78dca6c19e (origin/codex/firmware, fetched and compared).

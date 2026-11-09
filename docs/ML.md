@@ -1,7 +1,8 @@
 # M01: real-recording decision-tree pipeline
 
-Status: implementation ready for data collection; no genuine recordings, trained
-model, classifier accuracy or hardware measurements have been produced yet.
+Status: first real unattached/table recording is available at50Hz under data/raw/.
+Four-class recordings, a trained model and genuine classifier evaluation remain
+pending. Preserve raw50Hz data and explicitly convert before this25Hz pipeline.
 `firmware/include/prm_model.h` intentionally returns unavailable until a model is
 explicitly trained, reviewed and installed. A live signal can exist before a
 prediction is available; do not invent probabilities.

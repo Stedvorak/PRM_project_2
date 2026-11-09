@@ -1,0 +1,3 @@
+# Preserve the original bytes of explicitly tracked raw sensor sessions.
+data/raw/*.csv -text whitespace=cr-at-eol
+data/raw/*.json -text whitespace=cr-at-eol
