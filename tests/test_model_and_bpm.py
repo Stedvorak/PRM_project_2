@@ -74,7 +74,24 @@ int main() {
     float bpm_fast = prm::estimate_bpm(dummy_samples, 100, 1);
     assert(bpm_fast > 0.0f && bpm_fast < 75.0f);
 
-    std::cout << "C++ verification passed! Calm BPM: " << bpm_calm << ", Fast BPM: " << bpm_fast << std::endl;
+    // Verify dynamic variation: different wave frequencies produce distinct BPM values (never static constants)
+    prm::Sample faster_samples[100];
+    for (int i = 0; i < 100; ++i) {
+        faster_samples[i].t_ms = i * 20;
+        faster_samples[i].ax_g = 0.0f;
+        faster_samples[i].ay_g = 0.0f;
+        faster_samples[i].az_g = 0.5f + 0.02f * std::sin(2.0f * 3.14159f * 0.45f * (i * 0.02f));
+        faster_samples[i].gx_dps = 0.0f;
+        faster_samples[i].gy_dps = 0.0f;
+        faster_samples[i].gz_dps = 0.0f;
+    }
+    float bpm_faster = prm::estimate_bpm(faster_samples, 100, 0);
+    assert(bpm_faster != bpm_calm);
+    assert(std::fabs(bpm_faster - bpm_calm) > 1.0f);
+
+    std::cout << "C++ verification passed! Calm BPM: " << bpm_calm 
+              << ", Faster BPM: " << bpm_faster 
+              << ", Fast BPM: " << bpm_fast << std::endl;
     return 0;
 }
 """, encoding="utf-8")

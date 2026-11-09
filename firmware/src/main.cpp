@@ -87,8 +87,12 @@ Prediction predictionSnapshot(uint64_t& now, bool& ready) {
 
 // Caller holds bleValueMutex. Do not hold stateMux around a NimBLE call.
 void applyReadableState(const Prediction& copy, bool ready) {
-  if (ready) stateCharacteristic->setValue(&copy.state, 1);
-  else {
+  if (ready) {
+    uint8_t payload[2];
+    payload[0] = copy.state;
+    payload[1] = (copy.breaths_per_min > 0.0f) ? static_cast<uint8_t>(std::round(copy.breaths_per_min)) : 0;
+    stateCharacteristic->setValue(payload, 2);
+  } else {
     const uint8_t empty = 0;
     stateCharacteristic->setValue(&empty, 0);
   }
@@ -419,8 +423,12 @@ void publishBleEvent(ble_npl_event*) {
   updateLed(ready, copy.state);
   if (now >= nextBle) {
     nextBle = now + prm::kBlePeriodMs;
-    if (ready && bleServer && bleServer->getConnectedCount())
-      stateCharacteristic->notify(&copy.state, 1);
+    if (ready && bleServer && bleServer->getConnectedCount()) {
+      uint8_t payload[2];
+      payload[0] = copy.state;
+      payload[1] = (copy.breaths_per_min > 0.0f) ? static_cast<uint8_t>(std::round(copy.breaths_per_min)) : 0;
+      stateCharacteristic->notify(payload, 2);
+    }
   }
   xSemaphoreGive(bleValueMutex);
 }
@@ -434,7 +442,7 @@ void initializeBle() {
   bleServer->setCallbacks(new ServerCallbacks());
   NimBLEService* service = bleServer->createService(prm::kServiceUuid);
   stateCharacteristic = service->createCharacteristic(
-      prm::kStateUuid, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY, 1);
+      prm::kStateUuid, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY, 2);
   stateCharacteristic->setCallbacks(new StateCallbacks());
   setReadableState(nowMs());
   service->start();

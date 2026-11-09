@@ -53,8 +53,11 @@ def test_web_station():
     assert 'acknowledgedAlarms.unattached = true' in src, "unattached acknowledge handling missing!"
     assert 'acknowledgedAlarms.fastBreathing = false' in src, "Incident reset on state change missing!"
 
-    # Own Extension: BPM estimation display checks
+    # Own Extension: BPM estimation display and protocol checks
     assert 'bpmBadge' in src and 'stateBpmText' in src, "BPM indicator missing from web-station state hero!"
+    assert 'byteLength >= 2' in src and 'getUint8(1)' in src, "2-byte BLE protocol parsing missing!"
+    assert 'fetchHttpApiStatus' in src and '/api/status' in src, "HTTP API dynamic status fetcher missing!"
+    assert 'updateBpmDisplay' in src, "Dynamic BPM display handler missing!"
 
     print(" -> web-station/index.html passed all contract and functional checks.")
 
