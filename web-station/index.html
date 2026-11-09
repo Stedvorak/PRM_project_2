@@ -266,9 +266,17 @@
       box-shadow: 0 0 35px rgba(239, 68, 68, 0.3);
       animation: pulse-danger 1s infinite alternate;
     }
+    .state-hero.state-1.acknowledged {
+      animation: none !important;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.2) !important;
+    }
     .state-hero.state-2 {
       border-color: var(--state-unattached);
       box-shadow: 0 0 35px rgba(59, 130, 246, 0.25);
+    }
+    .state-hero.state-2.acknowledged {
+      animation: none !important;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.2) !important;
     }
     .state-hero.state-3 {
       border-color: var(--state-shaking);
@@ -901,6 +909,13 @@
       disconnect: false
     };
 
+    // Acknowledged / Dismissed Alarms Tracking (for current incident)
+    const acknowledgedAlarms = {
+      fastBreathing: false,
+      unattached: false,
+      disconnect: false
+    };
+
     // Statistics
     const stats = {
       packetCount: 0,
@@ -1094,6 +1109,7 @@
         setConnectedUI(true, bleDevice.name || BLE_CONFIG.deviceName);
         sessionStartTime = Date.now();
         activeAlarms.disconnect = false;
+        acknowledgedAlarms.disconnect = false;
         checkAlarmState();
 
       } catch (err) {
@@ -1115,6 +1131,7 @@
     function onGattDisconnected(event) {
       console.warn('BLE GATT server disconnected!');
       setConnectedUI(false);
+      acknowledgedAlarms.disconnect = false;
       // Trigger connection lost alarm as required by assignment
       triggerAlarm('disconnect', 'BLE Connection Lost', 'Disconnected from PRM-Project-2. Bedside telemetry offline!');
     }
@@ -1179,9 +1196,11 @@
         stats.transitions++;
         el.statTransitions.innerText = stats.transitions;
 
-        // Reset duration alarm triggers for new state
+        // Reset duration alarm triggers and incident acknowledge flags for new state
         activeAlarms.fastBreathing = false;
         activeAlarms.unattached = false;
+        acknowledgedAlarms.fastBreathing = false;
+        acknowledgedAlarms.unattached = false;
         checkAlarmState();
 
         renderCurrentStateHero();
@@ -1200,8 +1219,10 @@
     function renderCurrentStateHero() {
       const stateInfo = STATES[currentState] || { name: 'Unknown', class: 'unknown', color: '#94a3b8', icon: '❓' };
 
-      // Update Card classes
-      el.stateHero.className = `state-hero state-${currentState}`;
+      // Update Card classes, applying .acknowledged to stop pulsating animations when dismissed
+      const isAcknowledged = (currentState === 1 && acknowledgedAlarms.fastBreathing) ||
+                             (currentState === 2 && acknowledgedAlarms.unattached);
+      el.stateHero.className = `state-hero state-${currentState}${isAcknowledged ? ' acknowledged' : ''}`;
       el.stateOrb.innerText = stateInfo.icon;
       el.stateName.innerText = stateInfo.name;
       el.stateCode.innerText = currentState;
@@ -1234,10 +1255,16 @@
           el.fastTimerLabel.innerText = `${stateSec.toFixed(1)}s / ${ALARM_LIMITS.FAST_BREATHING_SEC}s`;
 
           if (stateSec >= ALARM_LIMITS.FAST_BREATHING_SEC) {
-            el.fastStatusLabel.innerText = 'ALARM ACTIVE!';
-            el.fastStatusLabel.style.color = '#ef4444';
-            if (!activeAlarms.fastBreathing) {
-              triggerAlarm('fast', 'Fast Breathing Alert (>15s)', 'Rapid breathing detected persistently for more than 15 seconds!');
+            if (acknowledgedAlarms.fastBreathing) {
+              // Incident already acknowledged by user: keep silenced and visual flashing stopped
+              el.fastStatusLabel.innerText = 'Acknowledged (Silenced)';
+              el.fastStatusLabel.style.color = '#fbbf24';
+            } else {
+              el.fastStatusLabel.innerText = 'ALARM ACTIVE!';
+              el.fastStatusLabel.style.color = '#ef4444';
+              if (!activeAlarms.fastBreathing) {
+                triggerAlarm('fast', 'Fast Breathing Alert (>15s)', 'Rapid breathing detected persistently for more than 15 seconds!');
+              }
             }
           } else {
             el.fastStatusLabel.innerText = 'Monitoring...';
@@ -1257,10 +1284,16 @@
           el.unattachedTimerLabel.innerText = `${stateSec.toFixed(1)}s / ${ALARM_LIMITS.UNATTACHED_SEC}s`;
 
           if (stateSec >= ALARM_LIMITS.UNATTACHED_SEC) {
-            el.unattachedStatusLabel.innerText = 'ALARM ACTIVE!';
-            el.unattachedStatusLabel.style.color = '#ef4444';
-            if (!activeAlarms.unattached) {
-              triggerAlarm('unattached', 'Device Not Attached (>10s)', 'Sensor removed or not attached for more than 10 seconds!');
+            if (acknowledgedAlarms.unattached) {
+              // Incident already acknowledged by user: keep silenced and visual flashing stopped
+              el.unattachedStatusLabel.innerText = 'Acknowledged (Silenced)';
+              el.unattachedStatusLabel.style.color = '#fbbf24';
+            } else {
+              el.unattachedStatusLabel.innerText = 'ALARM ACTIVE!';
+              el.unattachedStatusLabel.style.color = '#ef4444';
+              if (!activeAlarms.unattached) {
+                triggerAlarm('unattached', 'Device Not Attached (>10s)', 'Sensor removed or not attached for more than 10 seconds!');
+              }
             }
           } else {
             el.unattachedStatusLabel.innerText = 'Monitoring...';
@@ -1281,9 +1314,18 @@
 
     // Trigger Alarm Helper
     function triggerAlarm(type, title, desc) {
-      if (type === 'fast') activeAlarms.fastBreathing = true;
-      if (type === 'unattached') activeAlarms.unattached = true;
-      if (type === 'disconnect') activeAlarms.disconnect = true;
+      if (type === 'fast') {
+        if (acknowledgedAlarms.fastBreathing) return;
+        activeAlarms.fastBreathing = true;
+      }
+      if (type === 'unattached') {
+        if (acknowledgedAlarms.unattached) return;
+        activeAlarms.unattached = true;
+      }
+      if (type === 'disconnect') {
+        if (acknowledgedAlarms.disconnect) return;
+        activeAlarms.disconnect = true;
+      }
 
       stats.alarmCount++;
       el.statAlarmCount.innerText = stats.alarmCount;
@@ -1319,12 +1361,29 @@
     }
 
     function silenceAlarms() {
-      // Silence audio and acknowledge visible banner
+      // Silence audio and stop visual flashing
       alarmAudio.stopSound();
       el.alarmBanner.classList.remove('active');
-      activeAlarms.fastBreathing = false;
-      activeAlarms.unattached = false;
-      activeAlarms.disconnect = false;
+
+      // Acknowledge all currently active alarms for this incident
+      if (activeAlarms.fastBreathing) {
+        acknowledgedAlarms.fastBreathing = true;
+        activeAlarms.fastBreathing = false;
+        el.fastStatusLabel.innerText = 'Acknowledged (Silenced)';
+        el.fastStatusLabel.style.color = '#fbbf24';
+      }
+      if (activeAlarms.unattached) {
+        acknowledgedAlarms.unattached = true;
+        activeAlarms.unattached = false;
+        el.unattachedStatusLabel.innerText = 'Acknowledged (Silenced)';
+        el.unattachedStatusLabel.style.color = '#fbbf24';
+      }
+      if (activeAlarms.disconnect) {
+        acknowledgedAlarms.disconnect = true;
+        activeAlarms.disconnect = false;
+      }
+
+      renderCurrentStateHero();
     }
 
     // Timeline Rendering onto Canvas

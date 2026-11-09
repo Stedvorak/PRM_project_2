@@ -47,6 +47,12 @@ def test_web_station():
     assert 'mockScenarioFastAlarm' in src, "Fast alarm test scenario missing!"
     assert 'mockScenarioUnattachedAlarm' in src, "Unattached alarm test scenario missing!"
 
+    # Acknowledge / dismiss behavior checks
+    assert 'acknowledgedAlarms' in src, "acknowledgedAlarms object missing!"
+    assert 'acknowledgedAlarms.fastBreathing = true' in src, "fastBreathing acknowledge handling missing!"
+    assert 'acknowledgedAlarms.unattached = true' in src, "unattached acknowledge handling missing!"
+    assert 'acknowledgedAlarms.fastBreathing = false' in src, "Incident reset on state change missing!"
+
     print(" -> web-station/index.html passed all contract and functional checks.")
 
 def test_firmware_web_page():
@@ -76,11 +82,88 @@ def test_firmware_include_header():
 
     print(" -> firmware/include/web_page.h passed header checks.")
 
+def test_alarm_state_machine():
+    print("[4] Testing Alarm Acknowledgment State Machine Logic...")
+    
+    # State machine simulation mirroring web-station/index.html logic
+    class AlarmStateMachine:
+        def __init__(self):
+            self.currentState = None
+            self.stateStartTime = 0
+            self.activeAlarms = {'fastBreathing': False, 'unattached': False}
+            self.acknowledgedAlarms = {'fastBreathing': False, 'unattached': False}
+            self.alarmsFiredCount = 0
+
+        def update_state(self, new_state, now):
+            if self.currentState != new_state:
+                self.currentState = new_state
+                self.stateStartTime = now
+                self.activeAlarms['fastBreathing'] = False
+                self.activeAlarms['unattached'] = False
+                self.acknowledgedAlarms['fastBreathing'] = False
+                self.acknowledgedAlarms['unattached'] = False
+
+        def tick(self, now):
+            stateSec = now - self.stateStartTime
+            if self.currentState == 1:
+                if stateSec >= 15:
+                    if not self.acknowledgedAlarms['fastBreathing'] and not self.activeAlarms['fastBreathing']:
+                        self.activeAlarms['fastBreathing'] = True
+                        self.alarmsFiredCount += 1
+            elif self.currentState == 2:
+                if stateSec >= 10:
+                    if not self.acknowledgedAlarms['unattached'] and not self.activeAlarms['unattached']:
+                        self.activeAlarms['unattached'] = True
+                        self.alarmsFiredCount += 1
+
+        def acknowledge(self):
+            if self.activeAlarms['fastBreathing']:
+                self.acknowledgedAlarms['fastBreathing'] = True
+                self.activeAlarms['fastBreathing'] = False
+            if self.activeAlarms['unattached']:
+                self.acknowledgedAlarms['unattached'] = True
+                self.activeAlarms['unattached'] = False
+
+    sm = AlarmStateMachine()
+    
+    # Incident 1: Fast breathing triggers after 15s
+    sm.update_state(1, 0)
+    sm.tick(10)
+    assert not sm.activeAlarms['fastBreathing'], "Alarm triggered too early!"
+    sm.tick(15)
+    assert sm.activeAlarms['fastBreathing'], "Alarm failed to trigger at 15s!"
+    assert sm.alarmsFiredCount == 1
+
+    # User acknowledges incident 1
+    sm.acknowledge()
+    assert not sm.activeAlarms['fastBreathing'], "Alarm should be silenced after acknowledge!"
+    assert sm.acknowledgedAlarms['fastBreathing'], "Alarm should be marked acknowledged!"
+
+    # Next tick: condition still holds (state 1, 20s), but alarm MUST NOT re-trigger
+    sm.tick(20)
+    assert not sm.activeAlarms['fastBreathing'], "BUG: Alarm re-triggered while acknowledged!"
+    assert sm.alarmsFiredCount == 1, "Alarm count incremented on acknowledged incident!"
+
+    # State returns to calm (0)
+    sm.update_state(0, 25)
+    assert not sm.acknowledgedAlarms['fastBreathing'], "Acknowledge flag not cleared on state change!"
+
+    # Incident 2: Patient fast breathes again
+    sm.update_state(1, 30)
+    sm.tick(40) # 10s into new incident
+    assert not sm.activeAlarms['fastBreathing']
+    sm.tick(45) # 15s into new incident: MUST trigger new alarm!
+    assert sm.activeAlarms['fastBreathing'], "New incident failed to trigger alarm!"
+    assert sm.alarmsFiredCount == 2
+
+    print(" -> Alarm state machine verified: no re-triggers during incident, re-arms on new incident.")
+
 if __name__ == '__main__':
     try:
         test_web_station()
         test_firmware_web_page()
         test_firmware_include_header()
+        test_alarm_state_machine()
         print("\nALL FRONTEND CONTRACT AND IMPLEMENTATION TESTS PASSED SUCCESSFULLY!")
     except AssertionError as e:
         print(f"\nTEST FAILED: {e}", file=sys.stderr)

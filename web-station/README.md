@@ -46,6 +46,11 @@ This station is designed with zero dependencies (vanilla HTML5, CSS3, ES6 JavaSc
 
 All audio alerts are synthesized on-the-fly using the Web Audio API without requiring any external audio files. A mute/unmute button and an acknowledge button are provided in the UI.
 
+### Alarm Acknowledgment Lifecycle
+- Clicking **Acknowledge / Silence** silences audio and stops visual flashing for the active incident.
+- The alarm will remain silenced while staying in that state (avoiding immediate re-triggering).
+- When the state changes (e.g. back to State 0 Calm), the incident is considered resolved and the alarm re-arms for any future incidents.
+
 ## Mock Testing Suite
 
 The page includes a built-in mock control panel:
