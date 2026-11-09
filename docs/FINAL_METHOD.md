@@ -24,6 +24,12 @@ parity evidence, not a hardware accuracy test.
 Selected model integration commit:619e0c6b3005f175d9e11638cd51de7ba227dc9c,
 verified on origin/codex/firmware. Later RGB/documentation/integration commits
 preserve the exact selected header SHA-256 above.
+Verified integrated main code commit:4ac1448007295eea1f42d1a000e763e219b7024e.
+Both development histories, final silent firmware, model, data, results and report
+are present there. D01_main_delivery/files-and-model.json verifies remote files.
+The Pages build at that code commit is verified in pages-code-deployment.json.
+Subsequent delivery changes are documentation/evidence only; firmware and model
+are unchanged, including the board image recorded in final-demo-integrity.json.
 Verified raw dataset remote commit: fa89ca242ae11dccdc65ededd9f67d704043e643
 on origin/codex/firmware (all24 originals/metadata tracked).
 Hardware verification: trained monitoring inference-check image uploaded toCOM3,

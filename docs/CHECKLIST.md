@@ -1,4 +1,4 @@
-﻿# Assignment checklist — delivery
+# Assignment checklist — delivery
 
 - [x] Read complete real-time AI assignment and identify deliverables.
 - [x] Shared interfacev0.2 approved and preserved.
@@ -24,8 +24,8 @@
 - [x] Teacher tomasvicar access reverified via GitHub API:write permission.
 - [x] Final silent monitor upload verified; actual Edge page and both live APIs checked over board AP.
 - [ ] BLE hardware connection/notifications confirmed on available operator device.
-- [ ] Both development histories integrated into main; final tests/push/fetch/hash/file verification.
-- [ ] GitHub Pages publishes integrated main; exact deployed monitor verified.
+- [x] Both development histories integrated into main via PR1;115post-merge tests and exact remote source/model/raw-file checks passed.
+- [x] GitHub Pages publishes integrated main; deployed monitor HTTP200 matches remote source, verified at4ac1448.
 - [ ] Final teacher demonstration/submission acknowledgement.
 
 User-directed delivery mode: no new algorithms or optional feature development.

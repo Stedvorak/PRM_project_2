@@ -1,0 +1,15 @@
+{
+  "checked_at_utc": "2026-11-09T15:15:00.679747+00:00",
+  "url": "https://stedvorak.github.io/PRM_project_2/web-station/",
+  "status": 200,
+  "pages_source": {
+    "branch": "main",
+    "path": "/"
+  },
+  "built_code_commit": "4ac1448007295eea1f42d1a000e763e219b7024e",
+  "build_status": "built",
+  "deployed_station_matches_remote_main_after_newline_normalization": true,
+  "normalized_station_sha256": "e5d19d34fc02d4cd5cdc572832924e347bb195d84726df3daae1f23b7dfaf25b",
+  "physical_ble_connection_verified": false,
+  "physical_ble_note": "PC adapter not ready; operator test pending"
+}

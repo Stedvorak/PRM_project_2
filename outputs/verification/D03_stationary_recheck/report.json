@@ -1,0 +1,198 @@
+{
+  "source": "actual ESP32 HTTP after operator confirmed stationary table",
+  "served_frontend_matches_verified_source": true,
+  "frontend_no_random_or_mock_values": true,
+  "records": [
+    {
+      "status": {
+        "ready": true,
+        "timestamp_ms": 972709,
+        "state": "unattached",
+        "state_id": 2,
+        "probabilities": {
+          "calm": 0.0,
+          "fast": 0.0,
+          "unattached": 1.0,
+          "shaking": 0.0
+        },
+        "confidence": 1.0,
+        "breaths_per_min": null
+      },
+      "signal_last": {
+        "t_ms": 972780,
+        "ax_g": -0.0970459,
+        "ay_g": -0.00048828,
+        "az_g": 0.93969727
+      },
+      "signal_first": {
+        "t_ms": 968816,
+        "ax_g": -0.09777832,
+        "ay_g": -0.00109863,
+        "az_g": 0.94165039
+      },
+      "samples": 100,
+      "unit": "g"
+    },
+    {
+      "status": {
+        "ready": true,
+        "timestamp_ms": 973864,
+        "state": "unattached",
+        "state_id": 2,
+        "probabilities": {
+          "calm": 0.0,
+          "fast": 0.0,
+          "unattached": 1.0,
+          "shaking": 0.0
+        },
+        "confidence": 1.0,
+        "breaths_per_min": null
+      },
+      "signal_last": {
+        "t_ms": 973863,
+        "ax_g": -0.09729004,
+        "ay_g": -0.00085449,
+        "az_g": 0.9420166
+      },
+      "signal_first": {
+        "t_ms": 969897,
+        "ax_g": -0.09753418,
+        "ay_g": -0.00061035,
+        "az_g": 0.94104004
+      },
+      "samples": 100,
+      "unit": "g"
+    },
+    {
+      "status": {
+        "ready": true,
+        "timestamp_ms": 975954,
+        "state": "unattached",
+        "state_id": 2,
+        "probabilities": {
+          "calm": 0.0,
+          "fast": 0.0,
+          "unattached": 1.0,
+          "shaking": 0.0
+        },
+        "confidence": 1.0,
+        "breaths_per_min": null
+      },
+      "signal_last": {
+        "t_ms": 976467,
+        "ax_g": -0.09765625,
+        "ay_g": -0.00061035,
+        "az_g": 0.94104004
+      },
+      "signal_first": {
+        "t_ms": 972500,
+        "ax_g": -0.0982666,
+        "ay_g": -0.00097656,
+        "az_g": 0.94189453
+      },
+      "samples": 100,
+      "unit": "g"
+    },
+    {
+      "status": {
+        "ready": true,
+        "timestamp_ms": 977924,
+        "state": "unattached",
+        "state_id": 2,
+        "probabilities": {
+          "calm": 0.0,
+          "fast": 0.0,
+          "unattached": 1.0,
+          "shaking": 0.0
+        },
+        "confidence": 1.0,
+        "breaths_per_min": null
+      },
+      "signal_last": {
+        "t_ms": 977948,
+        "ax_g": -0.09777832,
+        "ay_g": 0.0,
+        "az_g": 0.94421387
+      },
+      "signal_first": {
+        "t_ms": 973983,
+        "ax_g": -0.09716797,
+        "ay_g": -0.00061035,
+        "az_g": 0.94311523
+      },
+      "samples": 100,
+      "unit": "g"
+    },
+    {
+      "status": {
+        "ready": true,
+        "timestamp_ms": 979013,
+        "state": "unattached",
+        "state_id": 2,
+        "probabilities": {
+          "calm": 0.0,
+          "fast": 0.0,
+          "unattached": 1.0,
+          "shaking": 0.0
+        },
+        "confidence": 1.0,
+        "breaths_per_min": null
+      },
+      "signal_last": {
+        "t_ms": 979029,
+        "ax_g": -0.09765625,
+        "ay_g": -0.00146484,
+        "az_g": 0.94165039
+      },
+      "signal_first": {
+        "t_ms": 975066,
+        "ax_g": -0.09716797,
+        "ay_g": -0.00317383,
+        "az_g": 0.9420166
+      },
+      "samples": 100,
+      "unit": "g"
+    },
+    {
+      "status": {
+        "ready": true,
+        "timestamp_ms": 980353,
+        "state": "unattached",
+        "state_id": 2,
+        "probabilities": {
+          "calm": 0.0,
+          "fast": 0.0,
+          "unattached": 1.0,
+          "shaking": 0.0
+        },
+        "confidence": 1.0,
+        "breaths_per_min": null
+      },
+      "signal_last": {
+        "t_ms": 980391,
+        "ax_g": -0.0982666,
+        "ay_g": -0.00024414,
+        "az_g": 0.94238281
+      },
+      "signal_first": {
+        "t_ms": 976426,
+        "ax_g": -0.09729004,
+        "ay_g": -0.00073242,
+        "az_g": 0.94128418
+      },
+      "samples": 100,
+      "unit": "g"
+    }
+  ],
+  "states": [
+    "unattached",
+    "unattached",
+    "unattached",
+    "unattached",
+    "unattached",
+    "unattached"
+  ],
+  "status_timestamps_advance": true,
+  "signal_timestamps_advance": true,
+  "page_sha256": "ea4b4b09f6fe5a08b9d405f90ec90570d5387bc1843471072e5d211d5e0bc366"
+}

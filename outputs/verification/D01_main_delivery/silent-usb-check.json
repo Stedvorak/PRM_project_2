@@ -1,0 +1,9 @@
+{
+  "source": "actual COM3 observation of final silent firmware",
+  "duration_s": 3,
+  "bytes_received": 515,
+  "inference_diagnostic_lines": 0,
+  "capture_header_present": false,
+  "runtime_serial_stream_disabled": true,
+  "note": "Boot ROM output, if present, is separate from application inference/capture telemetry."
+}
