@@ -1,0 +1,74 @@
+{
+  "checked_at_utc": "2026-11-09T15:18:21.697934+00:00",
+  "shared_checkout_modified": false,
+  "untracked_entries": [
+    {
+      "path": ".pio-core",
+      "exists": true,
+      "kind": "directory",
+      "action": "read-only inspection; left untouched",
+      "top_level_entries": [
+        ".cache",
+        "appstate.json",
+        "packages",
+        "platforms"
+      ]
+    },
+    {
+      "path": ".pio",
+      "exists": true,
+      "kind": "directory",
+      "action": "read-only inspection; left untouched",
+      "top_level_entries": [
+        "build",
+        "libdeps"
+      ]
+    },
+    {
+      "path": "acquisition",
+      "exists": true,
+      "kind": "directory",
+      "action": "read-only inspection; left untouched",
+      "top_level_entries": [
+        ".pio"
+      ]
+    },
+    {
+      "path": "docs/SUBMISSION.md",
+      "exists": true,
+      "kind": "file",
+      "action": "read-only inspection; left untouched",
+      "sha256": "bf0d1c0d0b18b100fd692a9297e567f25001e7e2544d644292fe1e4575a3b5e2",
+      "preserved_original_bytes_base64": "77u/IyBTdWJtaXNzaW9uIHN0YXR1cyDigJQgZXZpZGVuY2UsIG5vdCBhc3N1bXB0aW9ucw0KDQotIFt4XSBTZWN0aW9uczEgYW5kMiBhY2NlcHRlZCBieSB0ZWFjaGVyLCByZXBvcnRlZCBleHBsaWNpdGx5IGJ5IHVzZXIuDQotIFt4XSBNMDEgdjEgc2VsZWN0ZWQsIGhlYWRlciBTSEEyNTYgYWJlMTEzYmM4MTMxOGJlYTRlZTJkNTk1YmI3Mjg4MGQ4OWM1M2RkYmEwNTNhNDZkMTg5Y2IwYTYxYmNiN2EyNy4NCi0gW3hdIEFsbDEyIHJlYWwgcmVjb3JkaW5ncyBhbmQgbWV0YWRhdGEgcHVzaGVkOyByYXcgZGF0YXNldCBjb21taXQgZmE4OWNhMjQyYWUxMWRjY2RjNjVlZGVkZDlmNjdkNzA0MDQzZTY0My4NCi0gW3hdIEdyb3VwZWQgZXZhbHVhdGlvbiBhbmQgYWxsNiBjYW5kaWRhdGVzL3Jlc3VsdHMvZmlndXJlcyBwdXNoZWQ7IG1vZGVsIGNvbW1pdDYxOWUwYzZiMzAwNWYxNzVkOWUxMTYzOGNkNTFkZTdiYTIyN2RjOWMuDQotIFt4XSBUcmFpbmVkIG1vbml0b3JpbmcgZmlybXdhcmUgdXBsb2FkZWQsIGhhc2ggdmVyaWZpZWQ7IHJlYWwgb25ib2FyZCBpbmZlcmVuY2UgYW5kIHNlbnNvciBkZXRlY3Rpb24gY29uZmlybWVkLg0KLSBbeF0gR1BJTzQ4IFJHQiByZWQvZ3JlZW4vYmx1ZS9tYWdlbnRhIHZpc3VhbGx5IGNvbmZpcm1lZCBieSB1c2VyOyBydW50aW1lIG1hcHBpbmcgZW5hYmxlZC4NCi0gW3hdIFJlYWwgRVNQMzIgQVAgYXNzb2NpYXRpb24gYW5kIGJvdGggSFRUUCBBUElzIHZlcmlmaWVkOyBlbWJlZGRlZCB3ZWJwYWdlIEhUVFAyMDAuDQotIFt4XSBGaW5hbCBzaWxlbnQgbW9uaXRvcmluZyBpbWFnZSBmbGFzaGVkIG9uQ09NMyB3aXRoIHZlcmlmaWVkIGhhc2hlczsgVVNCIGluZmVyZW5jZSBkaWFnbm9zdGljcyBkaXNhYmxlZC4NCi0gW3hdIEFjdHVhbCBFZGdlIGJyb3dzZXIgcmVuZGVyZWQgYm9hcmQgcGFnZSwgZm91ciBwcm9iYWJpbGl0aWVzIGFuZCBsaXZlIHJlYWwgWC9ZL1ogcGxvdDsxMHN0YXR1cy85c2lnbmFsIEhUVFAyMDByZXNwb25zZXMsIG5vIEpTZXhjZXB0aW9uczsgZXZpZGVuY2VIMDlfYnJvd3Nlcl9ib2FyZC9saXZlLXBhZ2UucG5nIGFuZCByZXBvcnQuanNvbi4NCi0gW3hdIFB1YmxpYyBIVFRQUyBtb25pdG9yIGV4aXN0cyBhdCBodHRwczovL3N0ZWR2b3Jhay5naXRodWIuaW8vUFJNX3Byb2plY3RfMi93ZWItc3RhdGlvbi8gLg0KLSBbIF0gUGh5c2ljYWwgQkxFIGNvbm5lY3Qvbm90aWZpY2F0aW9ucy90aW1lbGluZS9hbGFybXM6IFBDIGFkYXB0ZXIgY3VycmVudGx5IG5vdCByZWFkeTsgb3BlcmF0b3IgZGV2aWNlIGNoZWNrIHBlbmRpbmcuDQotIFt4XSBEYXZpZCBwcmVwYXJlZCBzZWN0aW9uczQgYW5kNTsgcHJlc2VydmUgaGlzIGltcGxlbWVudGF0aW9uICh1c2VyIHJlcG9ydDsgdGVhY2hlciBkZW1vbnN0cmF0aW9uIHJlbWFpbnMgY29vcmRpbmF0ZWQgd2l0aCBEYXZpZCkuDQotIFsgXSBBY3R1YWwgd2lyaW5nIHBob3RvZ3JhcGg6IG5vIGRvY3Mvd2lyaW5nLmpwZyBjdXJyZW50bHkgZXhpc3RzLiBXaXJpbmcgcGluIHRhYmxlIGFuZCBidWlsZCBpbnN0cnVjdGlvbnMgYXJlIGF2YWlsYWJsZS4NCi0gW3hdIFJldmlld2VkIGludGVncmF0aW9uIG9mIGJvdGggaGlzdG9yaWVzIHZpYSBQUjE7IGludGVncmF0ZWQgbWFpbiBjb2RlIGNvbW1pdDRhYzE0NDgwMDcyOTVlZWExZjQyZDFhMDAwZTc2M2UyMTliNzAyNGUgbWF0Y2hlcyB0ZXN0ZWQgZmlybXdhcmUgdHJlZS4gQWxsMjQgcmF3IGZpbGVzLCByZXF1aXJlZCBjb2RlL3Jlc3VsdHMvc2l0ZSBmaWxlcyBhbmQgc2VsZWN0ZWQgbW9kZWwgdmVyaWZpZWQgb24gZmV0Y2hlZCByZW1vdGUgbWFpbi4NCi0gWyBdIEZpbmFsIFBhZ2VzIGRlcGxveW1lbnQgZnJvbSBpbnRlZ3JhdGVkIG1haW4gdmVyaWZpZWQuDQotIFt4XSBUZWFjaGVyIHRvbWFzdmljYXIgYWNjZXNzOiBHaXRIdWIgQVBJIHJldHVybmVkIHdyaXRlIHBlcm1pc3Npb24gYXQgZGVsaXZlcnkgcmVjaGVjay4NCi0gW3hdIEF0IGxlYXN0MyBpbnRlcm1lZGlhdGUgY29tbWl0cyB3ZXJlIHB1c2hlZCBhcyB3b3JrIHByb2NlZWRlZCwgZWFjaCBwdXNoL2ZldGNoIHZlcmlmaWVkIGluIHRoaXMgc2Vzc2lvbjo5MTY2N2UwKDE0OjA3KSw3YzBmYTUxKDE0OjE2KSxjZjYwMDRlKDE0OjQzKSxkMjEyYjgzKDE0OjUyKSwxYjNmZTRhKDE1OjAxKSxmYTg5Y2EyKDE1OjIwKSw2MTllMGM2KDE1OjM0KSwyMDI2LTExLTA5RXVyb3BlL1ByYWd1ZS4NCi0gWyBdIEZpbmFsIHRlYWNoZXIgZGVtb25zdHJhdGlvbi9zdWJtaXNzaW9uIGFja25vd2xlZGdlbWVudC4gRG8gbm90IGNsYWltIGFjY2VwdGVkIHNlY3Rpb25zIGJleW9uZCB1c2VyLWNvbmZpcm1lZDEvMi4NCg0KR3JvdXA6IERhdmlkIELDoXJ0ZWssIMWgdMSbcMOhbiBEdm/FmcOhay4gRnJvbnRlbmQgdG9vbHM6IEFudGlncmF2aXR5L0dlbWluaTsgZmlybXdhcmUvTUwvaW50ZWdyYXRpb246IE9wZW5BSSBDb2RleCBhbmQgbmF0aXZlIHN1YmFnZW50cy4gQWxsIG1lbWJlcnMgbXVzdCBleHBsYWluIHRoZSBjb2RlLg0KDQpJbXBvcnRhbnQgbGltaXRhdGlvbnM6IHNhbWUgb3BlcmF0b3IvZGV2aWNlIGFuZCB0d28gaW5mZXJyZWQgYWNxdWlzaXRpb24gcm91bmRzOw0KTTAxIHBsYWNlbWVudCBkZXBlbmRlbmNlOyBwb29sZWQgdW5hdHRhY2hlZCByZWNhbGw1My4wOSU7IGxpdmUgY2FsbSBjaGVjazE1LzMwLg0KRmlndXJlcyBhcmUgZ2VudWluZSBncm91cGVkLUNWL2RhdGEgcGxvdHMsIG5vdCBhIHBoeXNpY2FsIHdpcmluZyBwaG90b2dyYXBoLg0K",
+      "archive": "outputs/verification/D01_main_delivery/shared-untracked-SUBMISSION-snapshot.md"
+    },
+    {
+      "path": "outputs",
+      "exists": true,
+      "kind": "directory",
+      "action": "read-only inspection; left untouched",
+      "top_level_entries": [
+        "temp",
+        "verification"
+      ]
+    }
+  ],
+  "required_acquisition_source_preserved_in_integrated_main": [
+    "acquisition/README.md",
+    "acquisition/platformio.ini",
+    "acquisition/src/main.cpp"
+  ],
+  "shared_compiled_image": {
+    "path": "C:\\dev\\PRM_project_2\\.pio\\build\\esp32-s3\\firmware.bin",
+    "exists": true,
+    "action": "preserved in place; no flash/build operation",
+    "sha256": "8704aca69d3c72dc552a405ce8ae53ca8ab6b75f43cf30af60f11663f8b0ffd8",
+    "matches_verified_final_image": true
+  },
+  "notes": [
+    "Build caches are preserved, not added as source deliverables.",
+    "All source, data and earlier verification outputs are already tracked in integrated main.",
+    "Untracked SUBMISSION content is archived; current authoritative status is docs/SUBMISSION.md.",
+    "No delete/reset/clean or shared branch switch was performed."
+  ]
+}

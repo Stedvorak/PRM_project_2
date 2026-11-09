@@ -1,0 +1,716 @@
+{
+  "source": "real Edge page and its actual ESP32 API responses",
+  "api": [
+    {
+      "host_ms": 1794237721222,
+      "ready": true,
+      "timestamp_ms": 725283,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237721637,
+      "ready": true,
+      "timestamp_ms": 725796,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237722168,
+      "ready": true,
+      "timestamp_ms": 726325,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237722688,
+      "ready": true,
+      "timestamp_ms": 726815,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237723324,
+      "ready": true,
+      "timestamp_ms": 727467,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237723715,
+      "ready": true,
+      "timestamp_ms": 727830,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237724181,
+      "ready": true,
+      "timestamp_ms": 728344,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237724710,
+      "ready": true,
+      "timestamp_ms": 728866,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237725307,
+      "ready": true,
+      "timestamp_ms": 729402,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237725706,
+      "ready": true,
+      "timestamp_ms": 729872,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237726271,
+      "ready": true,
+      "timestamp_ms": 730415,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237726777,
+      "ready": true,
+      "timestamp_ms": 730888,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237727214,
+      "ready": true,
+      "timestamp_ms": 731381,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237727806,
+      "ready": true,
+      "timestamp_ms": 731955,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237730181,
+      "ready": true,
+      "timestamp_ms": 734204,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237730594,
+      "ready": true,
+      "timestamp_ms": 734729,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237731107,
+      "ready": true,
+      "timestamp_ms": 735239,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237731579,
+      "ready": true,
+      "timestamp_ms": 735730,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237732081,
+      "ready": true,
+      "timestamp_ms": 736228,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237732747,
+      "ready": true,
+      "timestamp_ms": 736879,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237733125,
+      "ready": true,
+      "timestamp_ms": 737239,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237733836,
+      "ready": true,
+      "timestamp_ms": 737993,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237734155,
+      "ready": true,
+      "timestamp_ms": 738303,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237734602,
+      "ready": true,
+      "timestamp_ms": 738761,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237735765,
+      "ready": true,
+      "timestamp_ms": 739808,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237735886,
+      "ready": true,
+      "timestamp_ms": 740032,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237736296,
+      "ready": true,
+      "timestamp_ms": 740456,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237736820,
+      "ready": true,
+      "timestamp_ms": 740965,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237737339,
+      "ready": true,
+      "timestamp_ms": 741478,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237737879,
+      "ready": true,
+      "timestamp_ms": 741996,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237738345,
+      "ready": true,
+      "timestamp_ms": 742506,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237738874,
+      "ready": true,
+      "timestamp_ms": 743025,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237739372,
+      "ready": true,
+      "timestamp_ms": 743526,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237739888,
+      "ready": true,
+      "timestamp_ms": 744050,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237740441,
+      "ready": true,
+      "timestamp_ms": 744591,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    },
+    {
+      "host_ms": 1794237740922,
+      "ready": true,
+      "timestamp_ms": 745072,
+      "state": "shaking",
+      "state_id": 3,
+      "probabilities": {
+        "calm": 0,
+        "fast": 0,
+        "unattached": 0,
+        "shaking": 1
+      },
+      "confidence": 1,
+      "breaths_per_min": null
+    }
+  ],
+  "dom": [
+    {
+      "host_ms": 1794237721805,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 4.33 s / 25 Hz target / latest 725764 ms since boot",
+      "deviceTime": "device uptime 725.8 s"
+    },
+    {
+      "host_ms": 1794237722817,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 4.09 s / 25 Hz target / latest 726846 ms since boot",
+      "deviceTime": "device uptime 726.8 s"
+    },
+    {
+      "host_ms": 1794237723821,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 727807 ms since boot",
+      "deviceTime": "device uptime 727.8 s"
+    },
+    {
+      "host_ms": 1794237724831,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 728849 ms since boot",
+      "deviceTime": "device uptime 728.9 s"
+    },
+    {
+      "host_ms": 1794237725836,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 729371 ms since boot",
+      "deviceTime": "device uptime 729.4 s"
+    },
+    {
+      "host_ms": 1794237726850,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 730893 ms since boot",
+      "deviceTime": "device uptime 730.9 s"
+    },
+    {
+      "host_ms": 1794237727865,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 731935 ms since boot",
+      "deviceTime": "device uptime 732.0 s"
+    },
+    {
+      "host_ms": 1794237728880,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 731935 ms since boot",
+      "deviceTime": "device uptime 732.0 s"
+    },
+    {
+      "host_ms": 1794237729886,
+      "stateTitle": "PREDICTION UNAVAILABLE",
+      "stateIdText": "-",
+      "statusText": "Status stream stale",
+      "signalStatus": "Signal stream stale / no current measurements",
+      "deviceTime": "device uptime 732.0 s"
+    },
+    {
+      "host_ms": 1794237730896,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 734740 ms since boot",
+      "deviceTime": "device uptime 734.7 s"
+    },
+    {
+      "host_ms": 1794237731911,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 735741 ms since boot",
+      "deviceTime": "device uptime 735.7 s"
+    },
+    {
+      "host_ms": 1794237732929,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 736784 ms since boot",
+      "deviceTime": "device uptime 736.9 s"
+    },
+    {
+      "host_ms": 1794237733937,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 737985 ms since boot",
+      "deviceTime": "device uptime 738.0 s"
+    },
+    {
+      "host_ms": 1794237734943,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 738746 ms since boot",
+      "deviceTime": "device uptime 738.8 s"
+    },
+    {
+      "host_ms": 1794237735955,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.96 s / 25 Hz target / latest 739986 ms since boot",
+      "deviceTime": "device uptime 740.0 s"
+    },
+    {
+      "host_ms": 1794237736959,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.96 s / 25 Hz target / latest 740428 ms since boot",
+      "deviceTime": "device uptime 740.5 s"
+    },
+    {
+      "host_ms": 1794237737963,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 741472 ms since boot",
+      "deviceTime": "device uptime 741.5 s"
+    },
+    {
+      "host_ms": 1794237738965,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 742994 ms since boot",
+      "deviceTime": "device uptime 743.0 s"
+    },
+    {
+      "host_ms": 1794237739978,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 744036 ms since boot",
+      "deviceTime": "device uptime 744.0 s"
+    },
+    {
+      "host_ms": 1794237740982,
+      "stateTitle": "Shaking",
+      "stateIdText": "3",
+      "statusText": "Connected / valid prediction",
+      "signalStatus": "100 real samples / 3.97 s / 25 Hz target / latest 744596 ms since boot",
+      "deviceTime": "device uptime 744.6 s"
+    }
+  ],
+  "errors": [],
+  "api_states": [
+    "shaking"
+  ],
+  "dom_states": [
+    "3",
+    "-"
+  ],
+  "api_timestamps_advancing": true
+}

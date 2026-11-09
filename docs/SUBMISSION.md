@@ -1,4 +1,4 @@
-﻿# Submission status — evidence, not assumptions
+# Submission status — evidence, not assumptions
 
 - [x] Sections1 and2 accepted by teacher, reported explicitly by user.
 - [x] M01 v1 selected, header SHA256 abe113bc81318bea4ee2d595bb72880d89c53ddba053a46d189cb0a61bcb7a27.
@@ -13,8 +13,8 @@
 - [ ] Physical BLE connect/notifications/timeline/alarms: PC adapter currently not ready; operator device check pending.
 - [x] David prepared sections4 and5; preserve his implementation (user report; teacher demonstration remains coordinated with David).
 - [ ] Actual wiring photograph: no docs/wiring.jpg currently exists. Wiring pin table and build instructions are available.
-- [ ] Reviewed integration of antigravity and codex/firmware into main and final remote verification.
-- [ ] Final Pages deployment from integrated main verified.
+- [x] Reviewed integration via PR1; verified integrated code commit4ac1448007295eea1f42d1a000e763e219b7024e contains both histories, all24 raw files, results, website and exact selected model.
+- [x] Pages built integrated main at4ac1448007295eea1f42d1a000e763e219b7024e; actual HTTPS monitor matches remote source after newline normalization (D01_main_delivery/pages-code-deployment.json).
 - [x] Teacher tomasvicar access: GitHub API returned write permission at delivery recheck.
 - [x] At least3 intermediate commits were pushed as work proceeded, each push/fetch verified in this session:91667e0(14:07),7c0fa51(14:16),cf6004e(14:43),d212b83(14:52),1b3fe4a(15:01),fa89ca2(15:20),619e0c6(15:34),2026-11-09Europe/Prague.
 - [ ] Final teacher demonstration/submission acknowledgement. Do not claim accepted sections beyond user-confirmed1/2.

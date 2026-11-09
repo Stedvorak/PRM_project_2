@@ -1,0 +1,4 @@
+
+DevTools listening on ws://127.0.0.1:9224/devtools/browser/fadc5f83-a00b-4617-a9ee-0d4050af8e01
+[26468:30888:1109/162200.237:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
+[26468:37792:1109/162201.787:ERROR:chrome\elevation_service\edge_elevation_service_browser_helper.cc:94] LaunchUpdateCmdElevatedAndWait:  hr = 80070002 with exit code: 32

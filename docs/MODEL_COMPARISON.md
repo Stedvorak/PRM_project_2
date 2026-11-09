@@ -110,3 +110,20 @@ outputs/comparison/C02_invariant_v1. Both generated exports passed the installed
 ESP32 C++ compiler's syntax check; export_compile.json records this software-only
 result. These adaptive comparisons reuse the small existing CV dataset and are
 not an untouched final validation test.
+
+
+## Reproduce without replacing selected delivery artifacts
+
+The original version1 results already exist and are immutable. The committed
+model can be built/flashed without retraining. To independently reproduce grouped
+evaluation in a new directory, run from the repository root:
+
+```powershell
+.\.venv\Scripts\python.exe tools/compare_models.py data/validated/manifest.json --version reproduction --output-root outputs/reproduction/run1 --summary-root outputs/reproduction/run1_comparison
+```
+
+This does not install a model or modify original measurements. Do not copy rerun
+headers into the delivered firmware. Approved raw originals and explicit25Hz
+inputs are tracked despite /data/ being ignored by default. requirements.txt and
+platformio.ini pin the reproduction/build dependencies. No retraining was done
+while preparing final documentation.

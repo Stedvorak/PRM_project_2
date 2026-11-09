@@ -1,0 +1,32 @@
+{
+  "verified_integrated_code_commit": "4ac1448007295eea1f42d1a000e763e219b7024e",
+  "local_main_matches_fetched_remote": true,
+  "both_development_histories_included": true,
+  "tree_identical_to_tested_firmware_branch": true,
+  "raw_files_verified": 24,
+  "required_files_present": [
+    "README.md",
+    "AGENTS.md",
+    "docs/INTERFACES.md",
+    "docs/METHODS.md",
+    "docs/FINAL_METHOD.md",
+    "docs/RESULTS.md",
+    "docs/SUBMISSION.md",
+    "firmware/src/main.cpp",
+    "firmware/include/prm_model.h",
+    "firmware/include/prm_features.h",
+    "firmware/include/web_page.h",
+    "platformio.ini",
+    "requirements.txt",
+    "data/validated/manifest.json",
+    "outputs/results/M01_v1/metrics.json",
+    "outputs/results/M01_v1/prm_model.h",
+    "outputs/figures/delivery_v2/M01_v1_grouped_confusion.png",
+    "web-station/index.html",
+    "tools/compare_models.py"
+  ],
+  "selected_model": "M01 v1",
+  "selected_model_sha256": "abe113bc81318bea4ee2d595bb72880d89c53ddba053a46d189cb0a61bcb7a27",
+  "missing_required_wiring_photo": true,
+  "physical_ble_verification": "pending operator device; PC adapter not ready"
+}
