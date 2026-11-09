@@ -18,7 +18,7 @@ served directly from PROGMEM with no filesystem upload required. A real Edge
 browser loaded it over the ESP32 AP, rendered real classification/four
 probabilities/100real X/Y/Z samples and received continued live API responses.
 See outputs/verification/H09_browser_board/report.json and live-page.png.
-Breaths/minute is correctly unavailable, not estimated from a class label.
+The original verified build had no breathing-rate estimator. The later M07 extension is documented in RESPIRATION.md; it estimates periodic chest motion from real acceleration, never from a class label. Its physiological accuracy remains unverified.
 
 ## Verified source and results
 

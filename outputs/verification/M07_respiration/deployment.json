@@ -1,0 +1,21 @@
+{
+  "method": "M07 v1 experimental respiration extension",
+  "selected_classifier": "M01 v1 unchanged",
+  "base_main": "7181ac3b4c732de17a3eeb5dc25179d87c769ae2",
+  "build": "PASS esp32-s3",
+  "build_seconds": 206.1,
+  "static_ram_bytes": 57344,
+  "flash_program_bytes": 1025317,
+  "model_sha256": "abe113bc81318bea4ee2d595bb72880d89c53ddba053a46d189cb0a61bcb7a27",
+  "estimator_sha256": "6a78fa8a1047919c629e9454c1396ad84d2c099b3ae97b732246823126423c18",
+  "firmware_image_sha256": "12be84328c7ac7998ccc3838495fd03f90ff86bdca8d636ea4b6c7c7c82b98a4",
+  "physical_rate_accuracy": "UNVERIFIED: no counted breath-rate reference",
+  "expanded_validation": "stopped by explicit user request; synthetic C++ tests not executed",
+  "software_smoke_checks": "36 passed; one target syntax check failed while isolated toolchain copy was incomplete; subsequent full build succeeded using existing toolchain",
+  "wifi": "kept on eduroam per user request; no AP switch for this extension",
+  "timestamp_utc": "2026-11-09T16:14:22.856808+00:00",
+  "upload": "PASS COM3; esptool hash verified; hard reset via RTS",
+  "upload_seconds": 41.624,
+  "physical_numeric_bpm": "UNVERIFIED: awaiting operator on separate device",
+  "main_cpp_sha256": "de1e1da9fb5a1e913da99cf0f56f88ad9bf91bb50c5de33fde0228007c36816b"
+}

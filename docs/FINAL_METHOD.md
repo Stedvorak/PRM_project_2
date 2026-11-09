@@ -53,3 +53,5 @@ and the screenshot. Final upload/merge hashes recorded at delivery.
 Limitations: same-device/operator data, only two inferred rounds, correlated
 windows, placement dependence and weak unseen unattached orientations. Do not
 silently replace this selected model; record a new ID/version/results and rationale.
+
+Breathing-rate extension M07 v1 is separate from this selected classifier. Its implementation and evidence boundaries are documented in RESPIRATION.md. The M01 header hash, classifier parameters and measured validation results are unchanged. No classifier retraining was performed.

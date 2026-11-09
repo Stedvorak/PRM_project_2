@@ -24,3 +24,5 @@ Group: David Bártek, Štěpán Dvořák. Frontend tools: Antigravity/Gemini; fi
 Important limitations: same operator/device and two inferred acquisition rounds;
 M01 placement dependence; pooled unattached recall53.09%; live calm check15/30.
 Figures are genuine grouped-CV/data plots, not a physical wiring photograph.
+
+M07 v1 respiration extension: monitoring build passed (206.10 s), upload to COM3 passed (41.624 s), written image hash verified and board reset. M01 header unchanged. Physical numeric BPM/accuracy awaits operator verification on another device; this PC stays on eduroam. Expanded validation was stopped by user request. See RESPIRATION.md and outputs/verification/M07_respiration/deployment.json.

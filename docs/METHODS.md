@@ -16,3 +16,9 @@ All use 25Hz, 100-sample windows, stride25 and the twelve documented inertial fe
 The previously planned M01 evaluation used a per-class recording holdout; before its first real evaluation this was strengthened to two whole collection-round folds because adjacent follow-up takes are not independent. Groups are assigned before windowing; no overlapping windows cross folds. Twelve files are not twelve independent experimental sessions: three recordings and two separated bouts per class, one device/boot/operator. Candidate selection used this CV; no untouched final test exists.
 
 M01 is placement dependent (first split mean_ay); pooled unattached recall53.09%, weaker-fold29.63%. Selection prioritizes the best measured grouped score and smallest feasible deployment, not an unsupported accuracy claim. Actual results/figures: RESULTS.md; MODEL_COMPARISON.md. Hardware verification is separate from immutable offline metrics.
+
+## M07 v1 ? experimental respiration estimator
+
+Separate extension, not a replacement classifier. Source: firmware/include/prm_respiration.h. Parameters and demonstration: RESPIRATION.md. Approximately 20 s, detrended highest-variance axis, normalized autocorrelation, 9-45 breaths/min, correlation >=0.65. Status: experimental; physical rate accuracy unverified, expanded validation stopped by user. M01 v1 remains the selected trained classifier. No training data or previous evaluation results were changed.
+
+M07 deployment result: full ESP32-S3 build PASS; COM3 upload PASS with hash verification. Static RAM 57,344 bytes; program 1,025,317 bytes. Physiological accuracy and numeric BPM on live chest remain UNVERIFIED. Evidence: outputs/verification/M07_respiration/deployment.json.
