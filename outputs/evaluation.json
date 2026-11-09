@@ -1,0 +1,88 @@
+{
+  "method_id": "M02",
+  "model_type": "DecisionTreeClassifier",
+  "max_depth": 4,
+  "min_samples_leaf": 3,
+  "n_features": 10,
+  "feature_names": [
+    "acc_mag_std",
+    "acc_mag_range",
+    "gyro_mag_std",
+    "gyro_mag_range",
+    "var_ax",
+    "var_ay",
+    "var_az",
+    "mean_ax",
+    "mean_az",
+    "log_var_acc_mag"
+  ],
+  "train_samples": 452,
+  "test_samples": 225,
+  "train_accuracy": 0.9977876106194691,
+  "test_accuracy": 1.0,
+  "confusion_matrix": [
+    [
+      56,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      56,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      56,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      57
+    ]
+  ],
+  "classification_report": {
+    "calm (0)": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 56.0
+    },
+    "fast (1)": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 56.0
+    },
+    "unattached (2)": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 56.0
+    },
+    "shaking (3)": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 57.0
+    },
+    "accuracy": 1.0,
+    "macro avg": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 225.0
+    },
+    "weighted avg": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 225.0
+    }
+  }
+}

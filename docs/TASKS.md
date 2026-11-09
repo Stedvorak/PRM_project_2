@@ -1,13 +1,13 @@
 # Task ownership
 
 ## CODEX
-- [ ] Sensor and ESP32 firmware
-- [ ] Data acquisition
-- [ ] Movement and breathing classification
-- [ ] RGB LED states
-- [ ] BLE notifications
-- [ ] Wi-Fi hotspot and HTTP API
-- [ ] ML evaluation and reproducibility
+- [x] Sensor and ESP32 firmware
+- [x] Data acquisition
+- [x] Movement and breathing classification
+- [x] RGB LED states
+- [x] BLE notifications
+- [x] Wi-Fi hotspot and HTTP API
+- [x] ML evaluation and reproducibility
 
 ## ANTIGRAVITY
 - [x] BLE monitoring webpage
@@ -19,9 +19,9 @@
 
 ## SHARED
 - [x] Confirm interface contract
-- [ ] Collect real sensor data
-- [ ] Integrate both components
-- [ ] Test on physical hardware
+- [x] Collect real sensor data
+- [x] Integrate both components
+- [x] Test on physical hardware
 - [ ] Verify grading requirements
 - [ ] Complete live demonstrations
 - [ ] Verify required GitHub commits

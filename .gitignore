@@ -1,4 +1,5 @@
-data/
+/data/*
+!/data/raw/
 outputs/temp/
 outputs/cache/
 .venv/
@@ -7,4 +8,6 @@ __pycache__/
 *.pyc
 .env
 .DS_Store
+.pio/
+.pio-core/
 
