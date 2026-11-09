@@ -56,12 +56,13 @@ collection firmware during the final monitoring demonstration. Original
 recordings are preserved. MODEL_COMPARISON.md documents an optional isolated
 reproduction command; it is not needed for submission and never auto-installs.
 
+Actual operator-supplied wiring photograph is included as docs/wiring.jpg and displayed in README. Original JPEG bytes are preserved; no generated or edited image was used.
+
 ## Outstanding requirements
 
 - Real BLE connection, notifications, timeline, duration alarms and lost-link
   alarm still require a compatible operator device. This PC's RealtekBluetooth4.2
   adapter reports not ready; do not present software mocks as hardware success.
-- Add an actual wiring photograph: docs/wiring.jpg does not currently exist.
 - Coordinate David's prepared sections4/5 demonstration without rewriting them.
 - Obtain final teacher/submission acknowledgement. Only sections1/2 acceptance
   has been explicitly reported.

@@ -12,7 +12,7 @@
 - [x] Public HTTPS monitor exists at https://stedvorak.github.io/PRM_project_2/web-station/ .
 - [ ] Physical BLE connect/notifications/timeline/alarms: PC adapter currently not ready; operator device check pending.
 - [x] David prepared sections4 and5; preserve his implementation (user report; teacher demonstration remains coordinated with David).
-- [ ] Actual wiring photograph: no docs/wiring.jpg currently exists. Wiring pin table and build instructions are available.
+- [x] Actual wiring photograph: operator-supplied Image.jfif preserved byte-for-byte as docs/wiring.jpg and displayed in README; wiring pin table and build instructions are available.
 - [x] Reviewed integration via PR1; verified integrated code commit4ac1448007295eea1f42d1a000e763e219b7024e contains both histories, all24 raw files, results, website and exact selected model.
 - [x] Pages built integrated main at4ac1448007295eea1f42d1a000e763e219b7024e; actual HTTPS monitor matches remote source after newline normalization (D01_main_delivery/pages-code-deployment.json).
 - [x] Teacher tomasvicar access: GitHub API returned write permission at delivery recheck.
